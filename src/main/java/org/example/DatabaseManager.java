@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DatabaseManager {
     private Connection connection;
-    //private String url = "jdbc:mysql://localhost:3306/mydatabase"; // ניתן לשנות את ה-URL לפי המסד הנתונים שלך
+    //private String url = "jdbc:mysql://localhost:3306/mydatabase"; 
     private String url = "jdbc:mysql://localhost:3306/mydatabase?useUnicode=true&characterEncoding=UTF-8";
     private String username = "root"; // השם של משתמש במסד הנתונים
     private String password = "!S054910Yoni"; // הסיסמה של משתמש במסד הנתונים
