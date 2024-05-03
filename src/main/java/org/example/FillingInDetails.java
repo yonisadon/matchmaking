@@ -9,9 +9,9 @@ public class FillingInDetails {
         // יצירת אובייקט מהמחלקה שמייצגת את הנתונים של גברים
         Scanner scanner = new Scanner(System.in);
 
-            System.out.println("personID:");
-            int personID = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+//            System.out.println("personID:");
+//            int personID = scanner.nextInt();
+//            scanner.nextLine(); // consume newline
 
             System.out.println("Enter status:");// single or divorcee
             String status = scanner.nextLine();
@@ -39,7 +39,7 @@ public class FillingInDetails {
             System.out.println("Enter seeking:");//מלל חופשי
             String seeking = scanner.nextLine();
 
-        Men men = new Men(personID, status, firstName, lastName, age, height, location, style, seeking);
+        Men men = new Men(status, firstName, lastName, age, height, location, style, seeking);
 
         // השמת הערכים של הנתונים של הגברים
         men.setFirstName(firstName);

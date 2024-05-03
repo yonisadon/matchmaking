@@ -20,25 +20,27 @@ public class DatabaseManager {
 
     // פונקציה להכנסת רשומה חדשה לטבלת הגברים
     public void insertMenRecord(Men men) {
-        String query = "INSERT INTO men (PersonID, Status, FirstName, LastName, Age, Height, Location, Style, Seeking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO men (Status, FirstName, LastName, Age, Height, Location, Style, Seeking) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, men.getPersonID());
-            preparedStatement.setString(2, men.getStatus());
-            preparedStatement.setString(3, men.getFirstName());
-            preparedStatement.setString(4, men.getLastName());
-            preparedStatement.setInt(5, men.getAge());
-            preparedStatement.setFloat(6, men.getHeight());
-            preparedStatement.setString(7, men.getLocation());
-            preparedStatement.setString(8, men.getStyle());
-            preparedStatement.setString(9, men.getSeeking());
+            //preparedStatement.setInt(1, men.getPersonID());
+            preparedStatement.setString(1, men.getStatus());
+            preparedStatement.setString(2, men.getFirstName());
+            preparedStatement.setString(3, men.getLastName());
+            preparedStatement.setInt(4, men.getAge());
+            preparedStatement.setFloat(5, men.getHeight());
+            preparedStatement.setString(6, men.getLocation());
+            preparedStatement.setString(7, men.getStyle());
+            preparedStatement.setString(8, men.getSeeking());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 
     // פונקציה להכנסת רשומה חדשה לטבלת הנשים
     public void insertWomenRecord(Women women) {

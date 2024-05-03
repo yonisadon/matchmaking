@@ -13,8 +13,8 @@ public class Men {
         private String seeking;
 
         // קונסטרקטור
-        public Men(int personID, String status, String firstName, String lastName, int age,float height, String location, String style, String seeking) {
-            this.personID = personID;
+        public Men(String status, String firstName, String lastName, int age,float height, String location, String style, String seeking) {
+            //this.personID = personID;
             this.status = status;
             this.firstName = firstName;
             this.lastName = lastName;
