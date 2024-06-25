@@ -1,0 +1,52 @@
+
+ textarea {
+            direction: rtl;
+        }
+
+        /* סגנון לסרגל הלחצנים */
+        .navbar {
+            background-color: blue; /* רקע כחול */
+            padding: 15px; /* מרווח בין הלחצנים */
+            text-align: right; /* מיקום הלחצנים לימין */
+        }
+
+        /* סגנון לכפתורים בסרגל הלחצנים */
+        .navbar button {
+            background-color: #4CAF50; /* רקע ירוק */
+            color: white; /* צבע טקסט לבן */
+            border: none; /* אין גבול לכפתור */
+            padding: 10px 20px; /* גודל הכפתור */
+            text-align: center; /* מיקום הטקסט בתוך הכפתור */
+            text-decoration: none; /* אין קו תחתון לטקסט */
+            display: inline-block; /* טקסט באותו שורה כל עם הכפתור */
+            font-size: 16px; /* גודל הטקסט */
+            margin: 4px 2px; /* מרווח בין הכפתורים */
+            cursor: pointer; /* סמן העכבר כעטוף */
+            border-radius: 8px; /* עיגול קצוות */
+        }
+
+        /* סגנון עבור החלון הקופץ */
+        .modal {
+            display: none; /* חלון קופץ לא יופיע על המסך עד שילחץ על הכפתור */
+            position: fixed; /* תמיד יישאר באותו מקום גם בגלילה */
+            z-index: 1; /* שיהיה נראה מעל כל האלמנטים האחרים */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* לא יסתיר את הסרגל האופקי */
+            background-color: rgba(0,0,0,0.4); /* רקע עם שקיפות */
+            padding-top: 60px; /* מרווח מלמעלה */
+        }
+
+        /* עיצוב עבור הטופס */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% 5% 5% auto; /* מרווח מהצדדים, מצד שמאל מספר 5% ומצד ימין אוטומטי */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%; /* רוחב */
+            display: flex; /* הצגת התוכן כ־flex */
+            flex-direction: column; /* כל האלמנטים יוצגו בעמודה אחת */
+            align-items: flex-end; /* התוכן ייעמד בצד ימין של התיבה */
+        }
