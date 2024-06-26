@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import org.example.model.Men;
-import org.example.service.MenService;
+import org.example.service.MenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import java.util.List;
 @RequestMapping("/api/men")
 public class MenController {
 
-    private final MenService menService;
+    private final MenServiceImpl menService;
 
     @Autowired
-    public MenController(MenService menService) {
+    public MenController(MenServiceImpl menService) {
         this.menService = menService;
     }
 
@@ -37,32 +37,19 @@ public class MenController {
         }
     }
 
-//    @PostMapping
-//    public ResponseEntity<Void> addMen(@RequestBody Men men) {
-//        menService.addMen(men);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
-
-//    @PostMapping
-//    public ResponseEntity<Void> addMen(@RequestBody Men men) {
-//        System.out.println("Received POST request with data: " + men);
-//        menService.addMen(men);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
-
     @PostMapping
     //public ResponseEntity<Void> addMen(@RequestBody Men men) {
         public ResponseEntity<Men> addMen(@RequestBody Men men) {
 
         System.out.println("Received POST request with data: " + men);
-        System.out.println("firstName: " + men.getFirstName());
-        System.out.println("lastName: " + men.getLastName());
-        System.out.println("age: " + men.getAge());
-        System.out.println("height: " + men.getHeight());
-        System.out.println("location: " + men.getLocation());
-        System.out.println("style: " + men.getStyle());
-        System.out.println("seeking: " + men.getSeeking());
-        System.out.println("status: " + men.getStatus());
+//        System.out.println("firstName: " + men.getFirstName());
+//        System.out.println("lastName: " + men.getLastName());
+//        System.out.println("age: " + men.getAge());
+//        System.out.println("height: " + men.getHeight());
+//        System.out.println("location: " + men.getLocation());
+//        System.out.println("style: " + men.getStyle());
+//        System.out.println("seeking: " + men.getSeeking());
+//        System.out.println("status: " + men.getStatus());
         menService.addMen(men);
         //return new ResponseEntity<>(HttpStatus.CREATED);
         return new ResponseEntity<>(men, HttpStatus.CREATED);
