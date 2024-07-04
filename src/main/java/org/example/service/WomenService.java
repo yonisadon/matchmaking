@@ -8,5 +8,6 @@ public interface WomenService {
     List<Woman> getAllWomen();
     Woman getWomanById(int id);
     Woman addWoman(Woman woman);
+    List<Woman> searchWomen(String term, String criteria);
 }
 

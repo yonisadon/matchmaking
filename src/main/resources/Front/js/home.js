@@ -133,3 +133,48 @@ function resetFormFields() {
     document.getElementById("womenStyle").value = "";
     document.getElementById("womenSeeking").value = "";
 }
+//לחצן חפש
+    // שליחת בקשה לשרת עם הפרמטרים הנדרשים
+   function search() {
+       const searchTerm = document.getElementById('searchInput').value;
+       const gender = document.querySelector('input[name="gender"]:checked').value;
+       const criteria = document.getElementById('searchCriteria').value;
+
+       // קביעה של הנתיב הנכון על פי בחירת המגדר
+       const url = gender === 'men' ? 'http://localhost:8080/api/men/search' : 'http://localhost:8080/api/women/search';
+
+       console.log(`Fetching: ${url}?term=${searchTerm}&criteria=${criteria}`); // הוסף לוג זה
+
+       // שליחת בקשה לשרת עם הפרמטרים הנדרשים
+       fetch(`${url}?term=${searchTerm}&criteria=${criteria}`)
+           .then(response => {
+               if (!response.ok) {
+                   throw new Error(`HTTP error! status: ${response.status}`);
+               }
+               return response.json();
+           })
+           .then(data => {
+               // ניקוי הטבלה לפני הצגת התוצאות החדשות
+               const tableBody = document.querySelector('#resultsTable tbody');
+               tableBody.innerHTML = '';
+
+               if (data.length > 0) {
+                   data.forEach(result => {
+                       const row = document.createElement('tr');
+                       row.innerHTML = `
+                       <td>${result.height}</td>
+                       <td>${result.status}</td>
+                       <td>${result.location}</td>
+                       <td>${result.age}</td>
+                       <td>${result.lastName}</td>
+                       <td>${result.firstName}</td>
+                       <td>${result.id}</td>
+                       `;
+                       tableBody.appendChild(row);
+                   });
+               }
+           })
+           .catch(error => {
+               console.error('Error fetching search results:', error);
+           });
+   }

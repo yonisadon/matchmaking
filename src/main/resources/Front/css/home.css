@@ -25,28 +25,135 @@
             border-radius: 8px; /* עיגול קצוות */
         }
 
-        /* סגנון עבור החלון הקופץ */
-        .modal {
-            display: none; /* חלון קופץ לא יופיע על המסך עד שילחץ על הכפתור */
-            position: fixed; /* תמיד יישאר באותו מקום גם בגלילה */
-            z-index: 1; /* שיהיה נראה מעל כל האלמנטים האחרים */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* לא יסתיר את הסרגל האופקי */
-            background-color: rgba(0,0,0,0.4); /* רקע עם שקיפות */
-            padding-top: 60px; /* מרווח מלמעלה */
-        }
+/* סגנון עבור החלון הקופץ */
+.modal-title {
+   text-align: center; /* יישור למרכז */
+   margin-bottom: 20px; /* מרווח תחתון */
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+}
 
-        /* עיצוב עבור הטופס */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% 5% 5% auto; /* מרווח מהצדדים, מצד שמאל מספר 5% ומצד ימין אוטומטי */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 30%; /* רוחב */
-            display: flex; /* הצגת התוכן כ־flex */
-            flex-direction: column; /* כל האלמנטים יוצגו בעמודה אחת */
-            align-items: flex-end; /* התוכן ייעמד בצד ימין של התיבה */
-        }
+.modal-content {
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    max-width: 500px;
+    position: fixed;
+    top: 50%;
+    right: 5%;
+    transform: translate(0, -50%);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-left: 10px;
+    text-align: right;
+    width: 100px; /* התאם לפי הצורך */
+}
+
+.form-group input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.modal-content button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+
+// אזור חיפוש//
+        .search-container {
+                    margin: 20px 0;
+                    padding: 20px;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                .search-container input[type="text"] {
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    width: 200px;
+                    margin-right: 10px;
+                }
+                .search-container label {
+                    margin-right: 10px;
+                }
+                .search-container select, .search-container button {
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    margin-right: 10px;
+                    background-color: #007BFF;
+                    color: #fff;
+                    cursor: pointer;
+                }
+                .search-container select {
+                    background-color: #fff;
+                    color: #000;
+                }
+                table {
+                    width: 100%;
+                    max-width: 800px;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                table thead {
+                    background-color: #007BFF;
+                    color: #fff;
+                }
+                table th, table td {
+                    padding: 12px 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                table tbody tr:hover {
+                    background-color: #f1f1f1;
+                }
+                .search-container button:hover {
+                            background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+                        }
+
+
