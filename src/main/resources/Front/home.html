@@ -22,6 +22,7 @@
         <input type="radio" name="gender" value="women"> Women
     </label>
     <select id="searchCriteria">
+        <option value="all"></option>
         <option value="firstName">שם פרטי</option>
         <option value="age">גיל</option>
         <option value="location">מיקום</option>
@@ -49,6 +50,11 @@
     </thead>
     <tbody></tbody>
 </table>
+<br>
+<div class="deleteButton-container">
+<button id="deleteButton" onclick="deleteSelected()">מחיקה</button>
+<button id="updateButton" onclick="updateSelected()">עדכון</button>
+</div>
 
 <!-- המודל של גברים -->
 <div id="menModal" class="modal">
@@ -87,8 +93,8 @@
                 <label for="menSeeking">:מלל חופשי</label>
                 <input type="text" id="menSeeking" placeholder="Seeking">
             </div>
-            <button type="button" onclick="closeModal('menModal')">Close</button>
-            <button type="button" onclick="saveMenData()">Save</button>
+            <button type="button" onclick="closeModal('menModal')">סגור</button>
+            <button type="button" onclick="saveMenData()">שמור</button>
         </form>
     </div>
 </div>
@@ -130,8 +136,8 @@
                 <label for="womenSeeking">:מלל חופשי</label>
                 <input type="text" id="womenSeeking" placeholder="Seeking">
             </div>
-            <button type="button" onclick="closeModal('womenModal')">Close</button>
-            <button type="button" onclick="saveWomenData()">Save</button>
+            <button type="button" onclick="closeModal('womenModal')">סגור</button>
+            <button type="button" onclick="saveWomenData()">שמור</button>
         </form>
     </div>
 </div>

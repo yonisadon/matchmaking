@@ -6,8 +6,10 @@ import org.example.repository.WomenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WomenServiceImpl implements WomenService {
@@ -31,6 +33,16 @@ public class WomenServiceImpl implements WomenService {
         return womenRepository.save(woman);
     }
 
+    public Woman deleteWomen(int id) {
+        Optional<Woman> woman = womenRepository.findById(id);
+        if (woman.isPresent()) {
+            womenRepository.deleteById(id);
+            return woman.get();
+        } else {
+            throw new EntityNotFoundException("Woman with ID " + id + " not found.");
+        }
+    }
+
 //    @Override
 //    public List<Woman> searchWomen(String firstName, Integer age, String location, String lastName, String status, String style) {
 //        return womenRepository.findByFirstNameOrAgeOrLocationOrLastNameOrStatusOrStyle(firstName, age, location, lastName, status, style);
@@ -52,7 +64,7 @@ public class WomenServiceImpl implements WomenService {
             case "style":
                 return womenRepository.findByStyle(term);
             case "height":
-                return womenRepository.findByHeight(term);
+                return womenRepository.findByHeight(Float.parseFloat(term));
             default:
                 return new ArrayList<>();
         }

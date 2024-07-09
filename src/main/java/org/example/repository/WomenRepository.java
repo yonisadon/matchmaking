@@ -21,6 +21,6 @@ public interface WomenRepository extends JpaRepository<Woman, Integer> {
     List<Woman> findByLastName(String lastName);
     List<Woman> findByStatus(String status);
     List<Woman> findByStyle(String style);
-    List<Woman> findByHeight(String height);
+    List<Woman> findByHeight(Float height);
 
 }

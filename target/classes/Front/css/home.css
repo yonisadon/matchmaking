@@ -25,81 +25,86 @@
             border-radius: 8px; /* עיגול קצוות */
         }
 
-        /* סגנון עבור החלון הקופץ */
+        .navbar button:hover {
+             background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+        }
+
 /* סגנון עבור החלון הקופץ */
+.modal-title {
+   text-align: center; /* יישור למרכז */
+   margin-bottom: 20px; /* מרווח תחתון */
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+}
+
 .modal-content {
     background-color: #f9f9f9;
     color: #333;
     padding: 20px;
     border: 1px solid #888;
     width: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* התוכן ייעמד בצד שמאל של התיבה */
+    max-width: 500px;
+    position: fixed;
+    top: 50%;
+    right: 5%;
+    transform: translate(0, -50%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* סגנון עבור שדות הטקסט בחלונית הקופצת */
-.modal-content .form-group {
+.form-group {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
-    margin-bottom: 10px; /* מרווח בין שדות הטקסט */
+    margin-bottom: 10px;
 }
 
-.modal-content .form-group label {
-    width: 100px; /* רוחב התווית */
-    text-align: right; /* יישור טקסט לימין */
-    margin-right: 10px; /* מרווח מימין לתווית */
+.form-group label {
+    margin-left: 10px;
+    text-align: right;
+    width: 100px; /* התאם לפי הצורך */
 }
 
-.modal-content input[type="text"],
-.modal-content textarea {
-    flex: 1; /* שדה הטקסט יתמקם בכל הרוחב הפנוי */
+.form-group input {
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* כולל את ה- padding וה- border בגודל */
-    text-align: right; /* יישור טקסט לימין */
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.modal-content button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
 }
 
 
- /* סגנון עבור כפתור ה-SAVE בחלונית הקופצת */
- .modal-content button {
-     background-color: #007BFF;
-     color: white;
-     border: none;
-     padding: 10px 20px;
-     text-align: center;
-     text-decoration: none;
-     display: inline-block;
-     font-size: 16px;
-     margin-top: 10px;
-     cursor: pointer;
-     border-radius: 8px;
- }
-
- .modal-content button:hover {
-     background-color: #0056b3;
- }
-
- /* סגנון עבור כפתור ה-SAVE בחלונית הקופצת */
- .modal-content .close {
-     color: #aaa;
-     float: right;
-     font-size: 28px;
-     font-weight: bold;
- }
-
- .modal-content .close:hover,
- .modal-content .close:focus {
-     color: black;
-     text-decoration: none;
-     cursor: pointer;
- }
-
-
-// אזור חיפוש//
+/* // אזור חיפוש
+ */
         .search-container {
                     margin: 20px 0;
                     padding: 20px;
@@ -126,6 +131,11 @@
                     color: #fff;
                     cursor: pointer;
                 }
+
+                .search-container button:hover {
+                    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+                }
+
                 .search-container select {
                     background-color: #fff;
                     color: #000;
@@ -149,11 +159,44 @@
                     text-align: left;
                     border-bottom: 1px solid #ddd;
                 }
-                table tbody tr:hover {
-                    background-color: #f1f1f1;
-                }
-                .search-container button:hover {
-                            background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
-                        }
+
+      .selected {
+          background-color: #d1e7fd; /* צבע רקע כחול בהיר לשורה הנבחרת */
+          color: #100; /* צבע טקסט */
+      }
+
+      table tbody tr:hover {
+          background-color: #f1f1f1; /* צבע רקע בעת מעבר עם העכבר */
+          cursor: pointer; /* שינוי סמן העכבר לכף יד */
+      }
+
+/* //בחירה של שורה  למחיקה או עדכון//
+ */
+.selected {
+    background-color: #f2f2f2; /* צבע רקע להדגשת השורה הנבחרת */
+}
+
+/* עיצוב לחצן מחיקה */
+.deleteButton-container {
+    display: inline-block;
+    margin-top: 10px;
+}
+.deleteButton-container button:hover {
+    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+}
+
+/* עיצוב לחצן מחיקה */
+.deleteButton-container button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
 
 

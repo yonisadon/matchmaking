@@ -25,6 +25,10 @@
             border-radius: 8px; /* עיגול קצוות */
         }
 
+        .navbar button:hover {
+             background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+        }
+
 /* סגנון עבור החלון הקופץ */
 .modal-title {
    text-align: center; /* יישור למרכז */
@@ -99,7 +103,8 @@
 }
 
 
-// אזור חיפוש//
+/* // אזור חיפוש
+ */
         .search-container {
                     margin: 20px 0;
                     padding: 20px;
@@ -126,6 +131,11 @@
                     color: #fff;
                     cursor: pointer;
                 }
+
+                .search-container button:hover {
+                    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+                }
+
                 .search-container select {
                     background-color: #fff;
                     color: #000;
@@ -149,11 +159,44 @@
                     text-align: left;
                     border-bottom: 1px solid #ddd;
                 }
-                table tbody tr:hover {
-                    background-color: #f1f1f1;
-                }
-                .search-container button:hover {
-                            background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
-                        }
+
+      .selected {
+          background-color: #d1e7fd; /* צבע רקע כחול בהיר לשורה הנבחרת */
+          color: #100; /* צבע טקסט */
+      }
+
+      table tbody tr:hover {
+          background-color: #f1f1f1; /* צבע רקע בעת מעבר עם העכבר */
+          cursor: pointer; /* שינוי סמן העכבר לכף יד */
+      }
+
+/* //בחירה של שורה  למחיקה או עדכון//
+ */
+.selected {
+    background-color: #f2f2f2; /* צבע רקע להדגשת השורה הנבחרת */
+}
+
+/* עיצוב לחצן מחיקה */
+.deleteButton-container {
+    display: inline-block;
+    margin-top: 10px;
+}
+.deleteButton-container button:hover {
+    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+}
+
+/* עיצוב לחצן מחיקה */
+.deleteButton-container button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
 
 

@@ -1,26 +1,12 @@
 var modal = document.getElementById("menModal");
 
 var btn = document.getElementById("openModalButton");
-var closeBtn = document.getElementsByClassName("close")[0];
-
-function openMenModal() {
-    var modal = document.getElementById("menModal");
-    modal.style.display = "block";
-}
-
-function openWomenModal() {
-    var modal = document.getElementById("womenModal");
-    modal.style.display = "block";
-}
 
 function closeModal(modalId) {
-    var modal = document.getElementById(modalId);
-    modal.style.display = "none";
+var modal = document.getElementById(modalId);
+modal.style.display = "none";
 }
 
-closeBtn.onclick = function() {
-    modal.style.display = "none";
-}
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -135,46 +121,133 @@ function resetFormFields() {
 }
 //לחצן חפש
     // שליחת בקשה לשרת עם הפרמטרים הנדרשים
-   function search() {
-       const searchTerm = document.getElementById('searchInput').value;
-       const gender = document.querySelector('input[name="gender"]:checked').value;
-       const criteria = document.getElementById('searchCriteria').value;
+  document.addEventListener('DOMContentLoaded', function() {
+      let selectedRecordId = null;
+      let selectedGender = null;
 
-       // קביעה של הנתיב הנכון על פי בחירת המגדר
-       const url = gender === 'men' ? 'http://localhost:8080/api/men/search' : 'http://localhost:8080/api/women/search';
+  function search() {
+      const searchTerm = document.getElementById('searchInput').value;
+      const gender = document.querySelector('input[name="gender"]:checked').value;
+      const criteria = document.getElementById('searchCriteria').value;
 
-       console.log(`Fetching: ${url}?term=${searchTerm}&criteria=${criteria}`); // הוסף לוג זה
+      let url;
+      if (criteria === 'all') {
+          url = gender === 'men' ? 'http://localhost:8080/api/men/searchAll' : 'http://localhost:8080/api/women/searchAll';
+      } else {
+          url = gender === 'men' ? `http://localhost:8080/api/men/search?term=${searchTerm}&criteria=${criteria}` : `http://localhost:8080/api/women/search?term=${searchTerm}&criteria=${criteria}`;
+      }
 
-       // שליחת בקשה לשרת עם הפרמטרים הנדרשים
-       fetch(`${url}?term=${searchTerm}&criteria=${criteria}`)
-           .then(response => {
-               if (!response.ok) {
-                   throw new Error(`HTTP error! status: ${response.status}`);
-               }
-               return response.json();
-           })
-           .then(data => {
-               // ניקוי הטבלה לפני הצגת התוצאות החדשות
-               const tableBody = document.querySelector('#resultsTable tbody');
-               tableBody.innerHTML = '';
+      console.log(`Fetching: ${url}`);
+      fetch(url)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+          })
+          .then(data => {
+              const tableBody = document.querySelector('#resultsTable tbody');
+              tableBody.innerHTML = '';
 
-               if (data.length > 0) {
-                   data.forEach(result => {
-                       const row = document.createElement('tr');
-                       row.innerHTML = `
-                       <td>${result.height}</td>
-                       <td>${result.status}</td>
-                       <td>${result.location}</td>
-                       <td>${result.age}</td>
-                       <td>${result.lastName}</td>
-                       <td>${result.firstName}</td>
-                       <td>${result.id}</td>
-                       `;
-                       tableBody.appendChild(row);
-                   });
-               }
-           })
-           .catch(error => {
-               console.error('Error fetching search results:', error);
-           });
-   }
+              if (data.length > 0) {
+                  data.forEach(result => {
+                      const row = document.createElement('tr');
+                      row.innerHTML = `
+                          <td>${result.height}</td>
+                          <td>${result.status}</td>
+                          <td>${result.location}</td>
+                          <td>${result.age}</td>
+                          <td>${result.lastName}</td>
+                          <td>${result.firstName}</td>
+                          <td>${result.id}</td>
+                      `;
+                      row.onclick = () => selectRecord(result.id, gender, row);
+                      tableBody.appendChild(row);
+                  });
+              }
+          })
+          .catch(error => {
+              console.error('Error fetching search results:', error);
+          });
+  }
+
+  function selectRecord(id, gender, row) {
+      selectedRecordId = id;
+      selectedGender = gender;
+
+      // הסרת בחירה מכל השורות
+      const rows = document.querySelectorAll('#resultsTable tbody tr');
+      rows.forEach(r => r.classList.remove('selected'));
+
+      // הוספת מחלקת "נבחר" לשורה שנבחרה
+      row.classList.add('selected');
+  }
+
+  function deleteSelected() {
+      if (!selectedRecordId) {
+          alert("אנא בחר רשומה למחיקה.");
+          return;
+      }
+
+      const url = selectedGender === 'men' ? `http://localhost:8080/api/men/${selectedRecordId}` : `http://localhost:8080/api/women/${selectedRecordId}`;
+
+      fetch(url, {
+          method: 'DELETE'
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          console.log(`Record with id ${selectedRecordId} deleted successfully`);
+          search(); // רענן את תוצאות החיפוש לאחר המחיקה
+          selectedRecordId = null; // איפוס ה-ID הנבחר לאחר המחיקה
+          selectedGender = null; // איפוס המגדר הנבחר לאחר המחיקה
+      })
+      .catch(error => {
+          console.error('Error deleting record:', error);
+      });
+  }
+
+  function updateSelected() {
+        if (!selectedRecordId) {
+            alert("אנא בחר רשומה לעדכון.");
+            return;
+        }
+
+        const url = selectedGender === 'men' ? `http://localhost:8080/api/men/${selectedRecordId}` : `http://localhost:8080/api/women/${selectedRecordId}`;
+
+        fetch(url, {
+            method: 'PUT'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+        })
+        .catch(error => {
+            console.error('Error deleting record:', error);
+        });
+    }
+
+ function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.style.display = "none";
+    }
+
+    function openMenModal() {
+        document.getElementById('menModal').style.display = 'block';
+    }
+
+    function openWomenModal() {
+        document.getElementById('womenModal').style.display = 'block';
+    }
+
+    window.search = search;
+    window.selectRecord = selectRecord;
+    window.deleteSelected = deleteSelected;
+    window.updateSelected = updateSelected;
+    window.closeModal = closeModal;
+    window.openMenModal = openMenModal;
+    window.openWomenModal = openWomenModal;
+});

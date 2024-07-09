@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.Men;
+import org.example.model.Woman;
 import org.example.service.MenServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:63342")
@@ -24,11 +26,10 @@ public class MenController {
         this.menService = menService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Men>> getAllMen() {
-//        List<Men> menList = menService.getAllMen();
-//        return new ResponseEntity<>(menList, HttpStatus.OK);
-//    }
+    @GetMapping("/searchAll")
+    public List<Men> getAllMen() {
+        return menService.getAllMen();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Men> getMenById(@PathVariable("id") int id) {
@@ -55,6 +56,16 @@ public class MenController {
         System.out.println("Results: " + results);
         return results;
         //return menService.searchMen(term, criteria);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletemen(@PathVariable int id) {
+        try {
+            Men deleteMen = menService.deleteMen(id);
+            return ResponseEntity.ok(deleteMen);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
 
