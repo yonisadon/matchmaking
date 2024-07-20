@@ -11,10 +11,11 @@
 <div class="navbar">
     <button id="openMenModalButton" onclick="openMenModal()">הוסף איש</button>
     <button id="openWomenModalButton" onclick="openWomenModal()">הוסף אישה</button>
+    <button id="openModalButton" onclick="openModal()">התאמות</button>
 </div>
 <!-- שדה חפש -->
 <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Enter search term">
+    <input type="text" id="searchInput" placeholder="הערך לחיפוש">
     <label>
         <input type="radio" name="gender" value="men" checked> Men
     </label>
@@ -63,50 +64,128 @@
             <h2 class="modal-title">טופס הוספת גבר</h2>
             <div class="form-group">
                 <label for="menStatus">:סטטוס</label>
-                <input type="text" id="menStatus" placeholder="Status">
-            </div>
-            <div class="form-group">
-                <label for="menFirstName">:שם פרטי</label>
-                <input type="text" id="menFirstName" placeholder="First Name">
-            </div>
-            <div class="form-group">
-                <label for="menLastName">:שם משפחה</label>
-                <input type="text" id="menLastName" placeholder="Last Name">
-            </div>
-            <div class="form-group">
-                <label for="menAge">:גיל</label>
-                <input type="number" id="menAge" placeholder="Age">
-            </div>
-            <div class="form-group">
-                <label for="menHeight">:גובה</label>
-                <input type="number" id="menHeight" placeholder="Height">
-            </div>
-            <div class="form-group">
-                <label for="menLocation">:מיקום</label>
-                <input type="text" id="menLocation" placeholder="Location">
-            </div>
+                <select id="menStatus">
+                    <option></option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                </select>
+              </div>
             <div class="form-group">
                 <label for="menStyle">:סגנון</label>
-                <input type="text" id="menStyle" placeholder="Style">
+                <select id="menStyle">
+                    <option></option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label for="menSeeking">:מלל חופשי</label>
-                <input type="text" id="menSeeking" placeholder="Seeking">
-            </div>
+              <div class="form-group">
+                  <label for="menFirstName">:שם פרטי</label>
+                  <input type="text" id="menFirstName" placeholder="First Name">
+              </div>
+              <div class="form-group">
+                  <label for="menLastName">:שם משפחה</label>
+                  <input type="text" id="menLastName" placeholder="Last Name">
+              </div>
+              <div class="form-group">
+                  <label for="menAge">:גיל</label>
+                  <input type="number" id="menAge" placeholder="Age">
+              </div>
+              <div class="form-group">
+                  <label for="menHeight">:גובה</label>
+                  <input type="number" id="menHeight" placeholder="Height">
+              </div>
+              <div class="form-group">
+                  <label for="menLocation">:מיקום</label>
+                  <input type="text" id="menLocation" placeholder="Location">
+              </div>
+              <div class="form-group">
+                  <label for="menSeeking">:מלל חופשי</label>
+                  <input type="text" id="menSeeking" placeholder="Seeking">
+              </div>
             <button type="button" onclick="closeModal('menModal')">סגור</button>
             <button type="button" onclick="saveMenData()">שמור</button>
+<!--            <button type="button" onclick="openPreferencesModal()">הוספת העדפות</button>-->
+          </form>
+      </div>
+  </div>
+
+<!-- מודל העדפות אישיות לגבר -->
+<div id="preferencesModal" class="modal">
+    <div class="modal-content">
+        <form id="preferencesForm">
+            <h2 class="modal-title">העדפות אישיות</h2>
+            <div class="form-group">
+                <label for="idMen">:מזהה גבר</label>
+                <input type="text" id="idMen" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה על ידי המשתמש -->
+            </div>
+            <div class="form-group">
+                <label for="preferredRegion">:אזור מגורים</label>
+                <input type="text" id="preferredRegion">
+            </div>
+            <div class="form-group">
+                <label for="preferredCommunity">:עדה</label>
+                <input type="text" id="preferredCommunity">
+            </div>
+            <div class="form-group">
+                <label for="handkerchiefOrWig">:מטפחת/פאה</label>
+                <select id="handkerchiefOrWig">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="smokerOrNonSmoker">מעשן/לא מעשן</label>
+                <select id="smokerOrNonSmoker">
+                    <option></option>
+                    <option value="מעשן">מעשן</option>
+                    <option value="לא מעשן">לא מעשן</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
+                <select id="kosherOrNonKosherDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredStatus">סטטוס</label>
+                <select id="preferredStatus">
+                    <option></option>
+                    <option value="חרדית">חרדית</option>
+                    <option value="חרדית-מודרנית">חרדית-מודרנית</option>
+                </select>
+            </div>
+            <button type="button" onclick="closeModal('preferencesModal')">סגור</button>
+            <button type="button" onclick="savePreferencesData()">שמור</button>
         </form>
     </div>
 </div>
 
-<!-- המודל של נשים -->
+
+  <!-- המודל של נשים -->
 <div id="womenModal" class="modal">
     <div class="modal-content">
         <form id="womenForm">
             <h2 class="modal-title">טופס הוספת אישה</h2>
             <div class="form-group">
                 <label for="womenStatus">:סטטוס</label>
-                <input type="text" id="womenStatus" placeholder="Status">
+                <select id="womenStatus">
+                    <option></option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="womenStyle">:סגנון</label>
+                <select id="womenStyle">
+                    <option></option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="womenFirstName">:שם פרטי</label>
@@ -129,10 +208,6 @@
                 <input type="text" id="womenLocation" placeholder="Location">
             </div>
             <div class="form-group">
-                <label for="womenStyle">:סגנון</label>
-                <input type="text" id="womenStyle" placeholder="Style">
-            </div>
-            <div class="form-group">
                 <label for="womenSeeking">:מלל חופשי</label>
                 <input type="text" id="womenSeeking" placeholder="Seeking">
             </div>
@@ -142,6 +217,44 @@
     </div>
 </div>
 
-<script src="js/home.js"></script>
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <form id="UpForm">
+            <h2 class="modal-title">עדכון רשומה</h2>
+            <div class="form-group">
+                <label for="UpStatus">:סטטוס</label>
+                <select id="UpStatus">
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="UpFirstName">:שם פרטי</label>
+                <input type="text" id="UpFirstName" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label for="UpLastName">:שם משפחה</label>
+                <input type="text" id="UpLastName" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+                <label for="UpAge">:גיל</label>
+                <input type="number" id="UpAge" placeholder="Age">
+            </div>
+            <div class="form-group">
+                <label for="UpHeight">:גובה</label>
+                <input type="number" id="UpHeight" placeholder="Height">
+            </div>
+            <div class="form-group">
+                <label for="UpLocation">:מיקום</label>
+                <input type="text" id="UpLocation" placeholder="Location">
+            </div>
+            <button type="button" onclick="closeModal('updateModal')">סגור</button>
+            <button type="button" onclick="saveUpdateData()">שמור</button>
+        </form>
+    </div>
+</div>
+
+<!--<script src="js/home.js"></script>-->
+<script src="js/data.js"></script>
 </body>
 </html>

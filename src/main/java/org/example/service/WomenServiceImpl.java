@@ -69,4 +69,18 @@ public class WomenServiceImpl implements WomenService {
                 return new ArrayList<>();
         }
     }
+
+    public Woman updateWoman(int id, Woman updatedWoman) {
+        Woman existingWoman = womenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Woman not found"));
+
+        // עדכון השדות
+        existingWoman.setAge(updatedWoman.getAge());
+        existingWoman.setFirstName(updatedWoman.getFirstName());
+        existingWoman.setLastName(updatedWoman.getLastName());
+        existingWoman.setHeight(updatedWoman.getHeight());
+        existingWoman.setStatus(updatedWoman.getStatus());
+        existingWoman.setLocation(updatedWoman.getLocation());
+
+        return womenRepository.save(existingWoman);
+    }
 }

@@ -19,7 +19,8 @@ public class Person {
     private String style;
     private String seeking;
 
-    public Person(String status, String firstName, String lastName, int age, float height, String location, String style, String seeking) {
+    public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking) {
+        this.id = id;
         this.status = status;
         this.firstName = firstName;
         this.lastName = lastName;

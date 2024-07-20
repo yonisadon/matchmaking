@@ -1,9 +1,8 @@
 package org.example.service;
 
 import org.example.model.Men;
-import org.example.model.Woman;
-
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MenService {

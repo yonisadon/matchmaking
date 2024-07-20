@@ -34,6 +34,11 @@
    text-align: center; /* יישור למרכז */
    margin-bottom: 20px; /* מרווח תחתון */
 }
+.modals-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
 .modal {
     display: none;
     position: fixed;
@@ -75,7 +80,7 @@
     width: 100px; /* התאם לפי הצורך */
 }
 
-.form-group input {
+.form-group input, .form-group select {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;

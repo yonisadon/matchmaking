@@ -30,17 +30,17 @@ public class WomenController {
     }
 
 
-    @PostMapping
+    @PostMapping("/saveWomenData")
     public ResponseEntity<Woman> addWomen(@RequestBody Woman woman) {
         System.out.println("Received POST request with data: " + woman);
-        System.out.println("firstName: " + woman.getFirstName());
-        System.out.println("lastName: " + woman.getLastName());
-        System.out.println("age: " + woman.getAge());
-        System.out.println("height: " + woman.getHeight());
-        System.out.println("location: " + woman.getLocation());
-        System.out.println("style: " + woman.getStyle());
-        System.out.println("seeking: " + woman.getSeeking());
-        System.out.println("status: " + woman.getStatus());
+//        System.out.println("firstName: " + woman.getFirstName());
+//        System.out.println("lastName: " + woman.getLastName());
+//        System.out.println("age: " + woman.getAge());
+//        System.out.println("height: " + woman.getHeight());
+//        System.out.println("location: " + woman.getLocation());
+//        System.out.println("style: " + woman.getStyle());
+//        System.out.println("seeking: " + woman.getSeeking());
+//        System.out.println("status: " + woman.getStatus());
         womenService.addWoman(woman);
         return new ResponseEntity<>(woman, HttpStatus.CREATED);
     }
@@ -65,6 +65,17 @@ public class WomenController {
         try {
             Woman deletedWoman = womenService.deleteWomen(id);
             return ResponseEntity.ok(deletedWoman);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateWoman(@PathVariable int id, @RequestBody Woman updatedWoman) {
+        try {
+            System.out.println("/{id}");
+            Woman updated = womenService.updateWoman(id, updatedWoman);
+            return ResponseEntity.ok(updated);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

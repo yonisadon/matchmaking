@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.model.Men;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,5 +21,11 @@ public interface MenRepository extends JpaRepository<Men, Integer> {
     List<Men> findByStatus(String status);
     List<Men> findByStyle(String style);
     List<Men> findByHeight(Float height);
+   // List<Men> findAll();
+
+
+
 
 }
+
+

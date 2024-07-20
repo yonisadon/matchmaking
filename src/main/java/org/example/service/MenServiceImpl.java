@@ -20,18 +20,18 @@ public class MenServiceImpl implements MenService {
         this.menRepository = menRepository;
     }
 
-    @Override
+    //@Override
     public List<Men> getAllMen() {
-        return menRepository.findAll();
+        List<Men> menList = menRepository.findAll();
+        System.out.println("Number of records found: " + menList.size());
+        return menList;
     }
-
-    @Override
     public Men getMenById(int id) {
         return menRepository.findById(id).orElse(null);
     }
 
-    @Override
     public Men addMen(Men men) {
+
         return menRepository.save(men);
     }
 
@@ -45,10 +45,6 @@ public class MenServiceImpl implements MenService {
         }
     }
 
-//    @Override
-//    public List<Men> searchMen(String firstName, Integer age, String location, String lastName, String status, String style) {
-//        return menRepository.findByFirstNameOrAgeOrLocationOrLastNameOrStatusOrStyle(firstName, age, location, lastName, status, style);
-//    }
 @Override
 public List<Men> searchMen(String term, String criteria) {
     switch (criteria) {
@@ -71,4 +67,26 @@ public List<Men> searchMen(String term, String criteria) {
             return new ArrayList<>();
     }
 }
+
+    public Men updateMen(int id, Men updateMen) {
+        System.out.println("db1");
+        Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Men not found"));
+        System.out.println("db2");
+
+        // עדכון השדות
+        existingMen.setAge(updateMen.getAge());
+        existingMen.setFirstName(updateMen.getFirstName());
+        existingMen.setLastName(updateMen.getLastName());
+        existingMen.setHeight(updateMen.getHeight());
+        existingMen.setStatus(updateMen.getStatus());
+        existingMen.setLocation(updateMen.getLocation());
+        System.out.println("db3");
+
+        return menRepository.save(existingMen);
+
+    }
+
+//    public Optional<Men> findById(int id) {
+//        return menRepository.findById(id);
+//    }
 }

@@ -4,22 +4,14 @@ Repository: מתקשר עם מסד הנתונים ומבצע את השאילתו
 Model: מייצג את מבנה הנתונים של האובייקטים במערכת.
 
 
-table tbody tr:hover {
-background-color: #f1f1f1;
-}
-
-
-
-function openMenModal() {
-var modal = document.getElementById("menModal");
-modal.style.display = "block";
-}
-
-function openWomenModal() {
-var modal = document.getElementById("womenModal");
-modal.style.display = "block";
-}
-
-closeBtn.onclick = function() {
-modal.style.display = "none";
-}
+CREATE TABLE preferencesMen (
+id INT AUTO_INCREMENT PRIMARY KEY,
+menId INT,
+preferredRegion VARCHAR(255),
+preferredCommunity VARCHAR(255),
+handkerchiefOrWig VARCHAR(255),
+smokerOrNonSmoker VARCHAR(255),
+kosherOrNonKosherDevice VARCHAR(255),
+preferredStatus VARCHAR(255),
+FOREIGN KEY (menId) REFERENCES men(id)
+);
