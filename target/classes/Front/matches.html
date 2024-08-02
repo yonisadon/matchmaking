@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>שידוכים</title>
+    <link rel="stylesheet" href="css/matches.css">
+</head>
+<body>
+<div class="navbar">
+    <button id="openMenModalButton" onclick="openMenModal()">חיפוש התאמה</button>
+    <button onclick="openHomeModal()">עמוד הבית</button>
+</div>
+
+<div class="main-container">
+    <!-- צד ימין - חיפושים -->
+    <div class="search-section right-side">
+        <!-- שדה חפש -->
+        <div class="search-container">
+                <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
+                <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
+            <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+            <label>
+                <input type="radio" name="gender" value="men" checked> Men
+            </label>
+            <label>
+                <input type="radio" name="gender" value="women"> Women
+            </label>
+            <select id="searchCriteria">
+                <option value="all"></option>
+                <option value="firstName">שם פרטי</option>
+                <option value="age">גיל</option>
+                <option value="location">מיקום</option>
+                <option value="lastName">שם משפחה</option>
+                <option value="status">סטטוס</option>
+                <option value="style">סגנון</option>
+                <option value="height">גובה</option>
+            </select>
+            <button onclick="search()">חפש</button>
+        </div>
+
+        <div id="searchResults"></div>
+        <table id="resultsTable" class="right-table">
+            <thead>
+            <tr>
+                <th>גובה</th>
+                <th>סטטוס</th>
+                <th>מיקום</th>
+                <th>גיל</th>
+                <th>שם משפחה</th>
+                <th>שם פרטי</th>
+                <th>סגנון</th>
+                <th>עדה</th>
+                <th>כיסוי ראש/מטפחת</th>
+                <th>מכשיר</th>
+                <th>מס"ד</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div id="findingOtherSideCriteriaResults"></div>
+        <table id="tableFromFindingOtherSide" class="right-table">
+            <thead>
+            <tr>
+                <th>גובה</th>
+                <th>סטטוס</th>
+                <th>מיקום</th>
+                <th>גיל</th>
+                <th>שם משפחה</th>
+                <th>שם פרטי</th>
+                <th>סגנון</th>
+                <th>עדה</th>
+                <th>כיסוי ראש/מטפחת</th>
+                <th>מכשיר</th>
+                <th>מס"ד</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- צד שמאל - העדפות -->
+    <div class="preferences-section left-side">
+        <div class="findingMatch-container">
+            <div id="findingMatchCriteriaResults"></div>
+            <table id="resultsTableFromFindingMatch" class="left-table">
+                <thead>
+                <tr>
+
+                    <th>טווח גילאים</th>
+                    <th>טווח גובה</th>
+                    <th>עדה</th>
+                    <th>מכשיר</th>
+                    <th>סטטוס</th>
+                    <th>מיקום</th>
+                    <th>מטפחת</th>
+                    <th>סגנון</th>
+                    <th>מסד-העדפות</th>
+                    <th>מס"ד</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="findingMatch-container">
+            <div id="findingMatchOtherSideCriteriaResults"></div>
+            <table id="resultsTableFromFindingMatchOtherSide" class="left-table">
+                <thead>
+                <tr>
+                    <th>סגנון</th>
+                    <th>סטטוס</th>
+                    <th>מיקום</th>
+                    <th>גיל</th>
+                    <th>מטפחת</th>
+                    <th>מעשן</th>
+                    <th>מס"ד</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--<div class="ButtonFromSearch-container">-->
+<!--    <button id="searchMatches" onclick="updateSelected()">חפש התאמה</button>-->
+<!--    <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>-->
+<!--</div>-->
+
+<script src="js/matches.js"></script>
+</body>
+</html>
+
+
+

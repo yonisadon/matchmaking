@@ -248,6 +248,7 @@ function savePreferencesData() {
     .then(data => {
         if (data.success) {
             console.log('Preferences data saved successfully:', preferencesData);
+            resetFormFields();
             closeModal('preferencesModal'); // סגירת החלונית לאחר שמירת ההעדפות
         } else {
             console.error('Error saving preferences data:', data.message, preferencesData);
@@ -310,6 +311,16 @@ function resetFormFields() {
     document.getElementById("menLocation").value = "";
     document.getElementById("menStyle").value = "";
     document.getElementById("menSeeking").value = "";
+
+     document.getElementById("preferredRegion").value = "";
+        document.getElementById("preferredCommunity").value = "";
+        document.getElementById("handkerchiefOrWig").value = "";
+        document.getElementById("smokerOrNonSmoker").value = "";
+        document.getElementById("kosherOrNonKosherDevice").value = "";
+        document.getElementById("preferredStatus").value = "";
+        document.getElementById("menStyle").value = "";
+        document.getElementById("menSeeking").value = "";
+
 
     document.getElementById("womenStatus").value = "";
     document.getElementById("womenFirstName").value = "";

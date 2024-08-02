@@ -1,6 +1,7 @@
 package org.example.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 public class Person {
@@ -18,8 +19,34 @@ public class Person {
     private String location;
     private String style;
     private String seeking;
+    @Column(name = "community")
+    private String community;
 
-    public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking) {
+    @Column(name = "head_covering")
+    private String headCovering;
+
+    @Column(name = "device")
+    private String device;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
+                  String community, String headCovering, String device) {
         this.id = id;
         this.status = status;
         this.firstName = firstName;
@@ -29,6 +56,9 @@ public class Person {
         this.location = location;
         this.style = style;
         this.seeking = seeking;
+        this.community = community;
+        this.headCovering = headCovering;
+        this.device = device;
     }
 
     public Person() {
@@ -106,5 +136,37 @@ public class Person {
 
     public void setSeeking(String seeking) {
         this.seeking = seeking;
+    }
+
+    public String getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(String community) {
+        this.community = community;
+    }
+
+    public String getHeadCovering() {
+        return headCovering;
+    }
+
+    public void setHeadCovering(String headCovering) {
+        this.headCovering = headCovering;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

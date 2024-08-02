@@ -12,7 +12,8 @@ public class Woman extends Person {
     }
 
     // קונסטרוקטור של האישה
-    public Woman(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking) {
-        super(id, status, firstName, lastName, age, height, location, style, seeking);
+    public Woman(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
+                 String community, String headCovering, String device) {
+        super(id, status, firstName, lastName, age, height, location, style, seeking, community, headCovering, device);
     }
 }

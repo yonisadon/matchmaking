@@ -11,7 +11,7 @@
 <div class="navbar">
     <button id="openMenModalButton" onclick="openMenModal()">הוסף איש</button>
     <button id="openWomenModalButton" onclick="openWomenModal()">הוסף אישה</button>
-    <button id="openModalButton" onclick="openModal()">התאמות</button>
+    <button onclick="openMatchModal()">התאמות</button>
 </div>
 <!-- שדה חפש -->
 <div class="search-container">
@@ -46,6 +46,10 @@
         <th>גיל</th>
         <th>שם משפחה</th>
         <th>שם פרטי</th>
+        <th>סגנון</th>
+        <th>עדה</th>
+        <th>כיסוי ראש/מטפחת</th>
+        <th>מכשיר</th>
         <th>מס"ד</th>
     </tr>
     </thead>
@@ -68,6 +72,7 @@
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
                 </select>
               </div>
             <div class="form-group">
@@ -76,6 +81,7 @@
                     <option></option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
                 </select>
             </div>
               <div class="form-group">
@@ -96,8 +102,29 @@
               </div>
               <div class="form-group">
                   <label for="menLocation">:מיקום</label>
-                  <input type="text" id="menLocation" placeholder="Location">
+                  <input type="text" id="menLocation"  placeholder="לדוגמה: אשקלון, דרום">
               </div>
+            <div class="form-group">
+                <label for="menCommunity">:עדה</label>
+                <input type="text" id="menCommunity">
+            </div>
+            <div class="form-group">
+                <label for="menHeadCovering">:כיסוי ראש/מטפחת</label>
+                <select id="menHeadCovering">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="menDevice">:מכשיר</label>
+                <select id="menDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
+            </div>
               <div class="form-group">
                   <label for="menSeeking">:מלל חופשי</label>
                   <input type="text" id="menSeeking" placeholder="Seeking">
@@ -116,7 +143,7 @@
             <h2 class="modal-title">העדפות אישיות</h2>
             <div class="form-group">
                 <label for="idMen">:מזהה גבר</label>
-                <input type="text" id="idMen" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה על ידי המשתמש -->
+                <input type="text" id="idMen" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה  -->
             </div>
             <div class="form-group">
                 <label for="preferredRegion">:אזור מגורים</label>
@@ -127,7 +154,15 @@
                 <input type="text" id="preferredCommunity">
             </div>
             <div class="form-group">
-                <label for="handkerchiefOrWig">:מטפחת/פאה</label>
+                <label for="preferredAgeRange">טווח גילאים:</label>
+                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            </div>
+            <div class="form-group">
+                <label for="preferredHeightRange">טווח גובה:</label>
+                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            </div>
+            <div class="form-group">
+                <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
                 <select id="handkerchiefOrWig">
                     <option></option>
                     <option value="מטפחת">מטפחת</option>
@@ -135,11 +170,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="smokerOrNonSmoker">מעשן/לא מעשן</label>
-                <select id="smokerOrNonSmoker">
+                <label for="preferredStyle">סגנון</label>
+                <select id="preferredStyle">
                     <option></option>
-                    <option value="מעשן">מעשן</option>
-                    <option value="לא מעשן">לא מעשן</option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
                 </select>
             </div>
             <div class="form-group">
@@ -155,11 +191,12 @@
                 <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
-                    <option value="חרדית">חרדית</option>
-                    <option value="חרדית-מודרנית">חרדית-מודרנית</option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
                 </select>
             </div>
-            <button type="button" onclick="closeModal('preferencesModal')">סגור</button>
+<!--            <button type="button" onclick="closeModal('preferencesModal')">סגור</button>-->
             <button type="button" onclick="savePreferencesData()">שמור</button>
         </form>
     </div>
@@ -177,6 +214,7 @@
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
                 </select>
             </div>
             <div class="form-group">
@@ -185,6 +223,7 @@
                     <option></option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
                 </select>
             </div>
             <div class="form-group">
@@ -205,7 +244,28 @@
             </div>
             <div class="form-group">
                 <label for="womenLocation">:מיקום</label>
-                <input type="text" id="womenLocation" placeholder="Location">
+                <input type="text" id="womenLocation"  placeholder="לדוגמה: אשקלון, דרום">
+            </div>
+            <div class="form-group">
+                <label for="womenCommunity">:עדה</label>
+                <input type="text" id="womenCommunity">
+            </div>
+            <div class="form-group">
+                <label for="womenHeadCovering">:כיסוי ראש/מטפחת</label>
+                <select id="womenHeadCovering">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="womenDevice">:מכשיר</label>
+                <select id="womenDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="womenSeeking">:מלל חופשי</label>
@@ -216,6 +276,7 @@
         </form>
     </div>
 </div>
+
 
 <div id="updateModal" class="modal">
     <div class="modal-content">
@@ -254,7 +315,8 @@
     </div>
 </div>
 
-<!--<script src="js/home.js"></script>-->
-<script src="js/data.js"></script>
+<script src="js/home.js"></script>
+<script src="js/search.js"></script>
+<!--<script src="js/data.js"></script>-->
 </body>
 </html>

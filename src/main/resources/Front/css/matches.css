@@ -1,0 +1,159 @@
+textarea {
+    direction: rtl;
+}
+
+/* סגנון לסרגל הלחצנים */
+.navbar {
+    background-color: blue; /* רקע כחול */
+    padding: 15px; /* מרווח בין הלחצנים */
+    text-align: right; /* מיקום הלחצנים לימין */
+}
+
+/* סגנון לכפתורים בסרגל הלחצנים */
+.navbar button {
+    background-color: #4CAF50; /* רקע ירוק */
+    color: white; /* צבע טקסט לבן */
+    border: none; /* אין גבול לכפתור */
+    padding: 10px 20px; /* גודל הכפתור */
+    text-align: center; /* מיקום הטקסט בתוך הכפתור */
+    text-decoration: none; /* אין קו תחתון לטקסט */
+    display: inline-block; /* טקסט באותו שורה כל עם הכפתור */
+    font-size: 16px; /* גודל הטקסט */
+    margin: 4px 2px; /* מרווח בין הכפתורים */
+    cursor: pointer; /* סמן העכבר כעטוף */
+    border-radius: 8px; /* עיגול קצוות */
+}
+
+.navbar button:hover {
+     background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
+}
+
+/* סגנון לקונטיינר הראשי */
+.main-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.right-side, .left-side {
+    display: flex;
+    flex-direction: column;
+}
+
+/* עיצוב קונטיינר החיפוש */
+.search-container {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end; /* ממקם את שדות החיפוש בצד ימין */
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+/* עיצוב שדה חיפוש טקסט */
+.search-container input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+/* עיצוב תוויות */
+.search-container label {
+    margin: 0 10px;
+}
+
+/* עיצוב תפריטים וכפתורים */
+.search-container select, .search-container button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* צבע רקע בעת ריחוף מעל הכפתור */
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+/* עיצוב תפריטים */
+.search-container select {
+    background-color: #fff;
+    color: #000;
+}
+
+table {
+    width: 100%;
+    max-width: 800px;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.selected {
+    background-color: #d1e7fd;
+    color: #100;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+/* צבע רקע לכותרות של הטבלאות בצד שמאל */
+.left-table thead {
+    background-color: #d3d3d3; /* צבע אפור בהיר */
+    color: #333; /* צבע טקסט כהה להבהרה */
+}
+
+/* צבע רקע לכותרות של הטבלאות בצד ימין (למניעת שיבוש) */
+.right-table thead {
+    background-color: #007BFF; /* צבע כחול */
+    color: #fff; /* צבע טקסט לבן */
+}
+
+.right-table {
+    float: right;
+}
+
+.left-table {
+   float: left;
+   margin-top: 87px;
+
+
+}
+
+.preferences-section {
+    flex: 1;
+    margin-top: 50px; /* הוסף רווח עליון לקונטיינר */
+
+}
+
+.findingMatch-container {
+    margin-bottom: 100px;
+}
+
+.findingMatch-container {
+    margin-bottom: 10px; /* רווח בין הטבלאות בצד שמאל */
+}
+
+/* אם אתה רוצה לשלוט על הרווח ספציפית בין כל זוג טבלאות */
+.findingMatch-container:first-of-type {
+    margin-bottom: -65px; /* פחות רווח מתחת לטבלה הראשונה */
+}
