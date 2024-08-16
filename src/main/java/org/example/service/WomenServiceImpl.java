@@ -1,7 +1,11 @@
 package org.example.service;
 
 
-import org.example.model.Woman;
+import org.example.exception.ResourceNotFoundException;
+import org.example.model.*;
+import org.example.model.Women;
+import org.example.repository.MenRepository;
+import org.example.repository.PreferencesWomenRepository;
 import org.example.repository.WomenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,34 +14,38 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WomenServiceImpl implements WomenService {
     private final WomenRepository womenRepository;
-
+    private final PreferencesWomenRepository preferencesWomenRepository;
+    private final MenRepository menRepository;
     @Autowired
-    public WomenServiceImpl(WomenRepository womenRepository) {
+    public WomenServiceImpl(WomenRepository womenRepository,PreferencesWomenRepository preferencesWomenRepository, MenRepository menRepository ) {
         this.womenRepository = womenRepository;
+        this.preferencesWomenRepository = preferencesWomenRepository;
+        this.menRepository = menRepository;
     }
 
-    public List<Woman> getAllWomen() {
+    public List<Women> getAllWomen() {
         return womenRepository.findAll();
     }
 
-    public Woman getWomanById(int id) {
+    public Women getWomanById(int id) {
         return womenRepository.findById(id).orElse(null);
     }
 
-    public Woman addWoman(Woman woman) {
+    public Women addWomen(Women women) {
         //System.out.println(woman);
-        return womenRepository.save(woman);
+        return womenRepository.save(women);
     }
 
-    public Woman deleteWomen(int id) {
-        Optional<Woman> woman = womenRepository.findById(id);
-        if (woman.isPresent()) {
+    public Women deleteWomen(int id) {
+        Optional<Women> women = womenRepository.findById(id);
+        if (women.isPresent()) {
             womenRepository.deleteById(id);
-            return woman.get();
+            return women.get();
         } else {
             throw new EntityNotFoundException("Woman with ID " + id + " not found.");
         }
@@ -49,10 +57,16 @@ public class WomenServiceImpl implements WomenService {
 //    }
 
     @Override
-    public List<Woman> searchWomen(String term, String criteria) {
+    public List<Women> searchWomen(String term, String criteria) {
         switch (criteria) {
             case "firstName":
-                return womenRepository.findByFirstName(term);
+                if (term != null && !term.trim().isEmpty()) {
+                    return womenRepository.findByFirstNameContainingIgnoreCase(term);
+                } else {
+                    // return new ArrayList<>(); // או תוצאה ריקה אחרת במקרה שה-term ריק או null
+                    return womenRepository.findByFirstName(term);
+                }
+                //return womenRepository.findByFirstName(term);
             case "age":
                 return womenRepository.findByAge(Integer.parseInt(term));
             case "location":
@@ -70,8 +84,8 @@ public class WomenServiceImpl implements WomenService {
         }
     }
 
-    public Woman updateWoman(int id, Woman updatedWoman) {
-        Woman existingWoman = womenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Woman not found"));
+    public Women updateWoman(int id, Women updatedWoman) {
+        Women existingWoman = womenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Woman not found"));
 
         // עדכון השדות
         existingWoman.setAge(updatedWoman.getAge());
@@ -82,5 +96,93 @@ public class WomenServiceImpl implements WomenService {
         existingWoman.setLocation(updatedWoman.getLocation());
 
         return womenRepository.save(existingWoman);
+    }
+
+    public List<Men> findMatchesByWomenPreferences(int womenId) {
+        Women women = womenRepository.findById(womenId).orElseThrow(() -> new ResourceNotFoundException("Women not found"));
+        PreferencesWomen preferences = preferencesWomenRepository.findByWomenId(womenId).orElseThrow(() -> new ResourceNotFoundException("Preferences not found"));
+        System.out.println("womenId: " + womenId);
+        List<Men> allMen = menRepository.findAll();
+        return allMen.stream()
+                .filter(men -> matchesPreferences(preferences, men))
+                .collect(Collectors.toList());
+    }
+
+    private boolean matchesPreferences(PreferencesWomen preferences, Men men) {
+        return  isRegionMatch(preferences, men) &&
+                isCommunityMatch(preferences, men) &&
+                isStatusMatch(preferences, men) &&
+                isAgeMatch(preferences, men) &&
+                isHeightMatch(preferences, men) &&
+                isDeviceMatch(preferences, men) &&
+                isStyleMatch(preferences, men) &&
+                isHeadCoveringMatch(preferences, men);
+    }
+
+    private boolean isRegionMatch(PreferencesWomen preferencesWomen, Men men){
+        if (preferencesWomen.getPreferredRegion().isEmpty() || men.getLocation().isEmpty()){
+            return true;
+        }
+        String[] menLocationParts = men.getLocation().split("-");
+        String menCity = menLocationParts[0].trim();
+        String menRegion = menLocationParts.length > 1 ? menLocationParts[1].trim() : "";
+
+        String[] preferredRegionParts = preferencesWomen.getPreferredRegion().split("-");
+        String preferredCity = preferredRegionParts[0].trim();
+        String preferredRegion = preferredRegionParts.length > 1 ? preferredRegionParts[1].trim() : "";
+
+        return preferredCity.contains(menCity) || preferredCity.contains(menRegion) ||
+                preferredRegion.contains(menCity) || preferredRegion.contains(menRegion);
+    }
+
+    private boolean isCommunityMatch(PreferencesWomen preferences, Men men) {
+        if (preferences.getPreferredCommunity().isEmpty() || men.getCommunity().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredCommunity().contains(men.getCommunity());
+    }
+
+    private boolean isStatusMatch(PreferencesWomen preferences, Men men) {
+        if (preferences.getPreferredStatus().isEmpty() || men.getStatus().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredStatus().equals(men.getStatus());
+    }
+
+    private boolean isAgeMatch(PreferencesWomen preferences, Men men) {
+        int[] ageRange = {preferences.getPreferredAgeFrom(), preferences.getPreferredAgeTo()};
+        if (ageRange[0] == 0 || ageRange[1] == 0 || ageRange[0] > ageRange[1]) {
+            return true;
+        }
+        return men.getAge() >= ageRange[0] && men.getAge() <= ageRange[1];
+    }
+
+    private boolean isHeightMatch(PreferencesWomen preferences, Men men){
+        float[] heightRange = {preferences.getPreferredHeightFrom(), preferences.getPreferredHeightTo()};
+        if (heightRange[0] == 0 || heightRange[1] == 0 || heightRange[0] > heightRange[1]) {
+            return true;
+        }
+        return men.getAge() >= heightRange[0] && men.getAge() <= heightRange[1];
+    }
+
+    private boolean isDeviceMatch(PreferencesWomen preferences, Men men) {
+        if (preferences.getKosherOrNonKosherDevice().isEmpty() || men.getDevice().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getKosherOrNonKosherDevice().equals(men.getDevice());
+    }
+
+    private boolean isStyleMatch(PreferencesWomen preferences, Men men) {
+        if (preferences.getPreferredStyle() == null || preferences.getPreferredStyle().isEmpty() || men.getStyle().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredStyle().equals(men.getStyle());
+    }
+
+    private boolean isHeadCoveringMatch(PreferencesWomen preferences, Men men) {
+        if (preferences.getHandkerchiefOrWig().isEmpty() || men.getHeadCovering().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getHandkerchiefOrWig().equals(men.getHeadCovering());
     }
 }

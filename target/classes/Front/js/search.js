@@ -90,13 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
         row.classList.add('selected');
     }
 
-    function deleteSelected() {
-        if (!selectedRecordId) {
-            alert("אנא בחר רשומה למחיקה.");
-            return;
-        }
+function deleteSelected() {
+    if (!selectedRecordId) {
+        alert("אנא בחר רשומה למחיקה.");
+        return;
+    }
 
-        const url = selectedGender === 'men' ? `http://localhost:8080/api/men/${selectedRecordId}` : `http://localhost:8080/api/women/${selectedRecordId}`;
+    if (confirm("בטוח שזו הרשומה למחיקה?")) {
+        const url = selectedGender === 'men'
+            ? `http://localhost:8080/api/men/delete/${selectedRecordId}`
+            : `http://localhost:8080/api/women/delete/${selectedRecordId}`;
 
         fetch(url, {
             method: 'DELETE'
@@ -114,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error deleting record:', error);
         });
     }
+}
 
     function updateSelected() {
         if (!selectedRecordId) {
@@ -130,16 +134,64 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('UpAge').value = selectedRecordData.age;
         document.getElementById('UpHeight').value = selectedRecordData.height;
         document.getElementById('UpLocation').value = selectedRecordData.location;
+        document.getElementById('UpStyle').value = selectedRecordData.style;
+        document.getElementById('UpCommunity').value = selectedRecordData.community;
+        document.getElementById('UpHeadCovering').value = selectedRecordData.headCovering;
+        document.getElementById('UpDevice').value = selectedRecordData.device;
+
     }
 
-    function saveUpdateData() {
+//    function saveUpdateData() {
+//        const updatedData = {
+//        if(style){
+//        }
+//
+//            status: document.getElementById('UpStatus').value,
+//            firstName: document.getElementById('UpFirstName').value,
+//            lastName: document.getElementById('UpLastName').value,
+//            age: document.getElementById('UpAge').value,
+//            height: document.getElementById('UpHeight').value,
+//            location: document.getElementById('UpLocation').value,
+//            style: document.getElementById('UpStyle').value,
+//            community: document.getElementById('UpCommunity').value,
+//            headCovering: document.getElementById('UpHeadCovering').value,
+//            device: document.getElementById('UpDevice').value,
+//        };
+
+function saveUpdateData() {
+    const status = document.getElementById('UpStatus').value.trim();
+    const firstName = document.getElementById('UpFirstName').value.trim();
+    const lastName = document.getElementById('UpLastName').value.trim();
+    const age = document.getElementById('UpAge').value.trim();
+    const height = document.getElementById('UpHeight').value.trim();
+    const location = document.getElementById('UpLocation').value.trim();
+    const style = document.getElementById('UpStyle').value.trim();
+    const community = document.getElementById('UpCommunity').value.trim();
+    const headCovering = document.getElementById('UpHeadCovering').value.trim();
+    const device = document.getElementById('UpDevice').value.trim();
+
+    // בדיקת שדות ריקים
+    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
+        alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
+        return; // עצור את הפעולה אם אחד השדות ריק
+    }
+  if (!/^\d+$/.test(height)) {
+        alert(' הכנס גובה בפורמט תקין, לדוגמה: 156');
+        return;
+    }
+
+    // יצירת אובייקט מעודכן רק אם כל השדות מלאים
         const updatedData = {
-            status: document.getElementById('UpStatus').value,
-            firstName: document.getElementById('UpFirstName').value,
-            lastName: document.getElementById('UpLastName').value,
-            age: document.getElementById('UpAge').value,
-            height: document.getElementById('UpHeight').value,
-            location: document.getElementById('UpLocation').value,
+            status,
+            firstName,
+            lastName,
+            age,
+            height,
+            location,
+            style,
+            community,
+            headCovering,
+            device,
         };
 
         const url = selectedGender === 'men' ? `http://localhost:8080/api/men/update/${selectedRecordId}` : `http://localhost:8080/api/women/update/${selectedRecordId}`;

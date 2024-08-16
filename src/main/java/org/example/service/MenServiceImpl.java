@@ -3,7 +3,8 @@ package org.example.service;
 import org.example.exception.ResourceNotFoundException;
 import org.example.model.Men;
 import org.example.model.PreferencesMen;
-import org.example.model.Woman;
+import org.example.model.Women;
+import org.example.model.Women;
 import org.example.repository.MenRepository;
 import org.example.repository.PreferencesMenRepository;
 import org.example.repository.WomenRepository;
@@ -38,12 +39,14 @@ public class MenServiceImpl implements MenService {
         this.preferencesMenRepository = preferencesMenRepository;
         this.womenRepository = womenRepository;
     }
+
     //@Override
     public List<Men> getAllMen() {
         List<Men> menList = menRepository.findAll();
         System.out.println("Number of records found: " + menList.size());
         return menList;
     }
+
     public Men getMenById(int id) {
         return menRepository.findById(id).orElse(null);
     }
@@ -63,34 +66,41 @@ public class MenServiceImpl implements MenService {
         }
     }
 
-@Override
-public List<Men> searchMen(String term, String criteria) {
-    switch (criteria) {
-        case "firstName":
-            //System.out.println(term);
-            return menRepository.findByFirstName(term);
-        case "age":
-            return menRepository.findByAge(Integer.parseInt(term));
-        case "location":
-            return menRepository.findByLocation(term);
-        case "lastName":
-            return menRepository.findByLastName(term);
-        case "status":
-            return menRepository.findByStatus(term);
-        case "style":
-            return menRepository.findByStyle(term);
-        case "height":
-            return menRepository.findByHeight(Float.parseFloat(term));
-        default:
-            return new ArrayList<>();
+    @Override
+    public List<Men> searchMen(String term, String criteria) {
+        switch (criteria) {
+            case "firstName":
+                if (term != null && !term.trim().isEmpty()) {
+                    return menRepository.findByFirstNameContainingIgnoreCase(term);
+                } else {
+                   // return new ArrayList<>(); // או תוצאה ריקה אחרת במקרה שה-term ריק או null
+                    return menRepository.findByFirstName(term);
+                }
+                //System.out.println(term);
+                //return menRepository.findByFirstName(term);
+            case "age":
+                return menRepository.findByAge(Integer.parseInt(term));
+            case "location":
+                return menRepository.findByLocation(term);
+            case "lastName":
+                return menRepository.findByLastName(term);
+            case "status":
+                return menRepository.findByStatus(term);
+            case "style":
+                return menRepository.findByStyle(term);
+            case "height":
+                return menRepository.findByHeight(Float.parseFloat(term));
+            default:
+                return new ArrayList<>();
+        }
     }
-}
 
     public Men updateMen(int id, Men updateMen) {
-        System.out.println("db1");
         Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Men not found"));
-        System.out.println("db2");
 
+//        if (updateMen.getAge() <= 0 || updateMen.getAge() > 120) {
+//            throw new IllegalArgumentException("Age must be between 1 and 120");
+//        }
         // עדכון השדות
         existingMen.setAge(updateMen.getAge());
         existingMen.setFirstName(updateMen.getFirstName());
@@ -98,60 +108,103 @@ public List<Men> searchMen(String term, String criteria) {
         existingMen.setHeight(updateMen.getHeight());
         existingMen.setStatus(updateMen.getStatus());
         existingMen.setLocation(updateMen.getLocation());
-        System.out.println("db3");
-
         return menRepository.save(existingMen);
-
     }
 
-    //@Override
-    public List<Woman> findMatchesByMenPreferences(int menId) {
+    public List<Women> findMatchesByMenPreferences(int menId) {
         Men men = menRepository.findById(menId).orElseThrow(() -> new ResourceNotFoundException("Men not found"));
         PreferencesMen preferences = preferencesMenRepository.findByMenId(menId).orElseThrow(() -> new ResourceNotFoundException("Preferences not found"));
-
-        System.out.println("1 " +menId);
-        System.out.println("2 " +preferences.getMen());
-        System.out.println("2 " +preferences.getPreferredCommunity());
-        System.out.println("2 " +preferences.getHandkerchiefOrWig());
-        System.out.println("3 " + men.getPreferences());
-        List<Woman> allWomen = womenRepository.findAll();
-        System.out.println("4 " +allWomen);
-
+        System.out.println("menId: " + menId);
+        List<Women> allWomen = womenRepository.findAll();
         return allWomen.stream()
                 .filter(woman -> matchesPreferences(preferences, woman))
                 .collect(Collectors.toList());
     }
 
-    private boolean matchesPreferences(PreferencesMen preferences, Woman woman) {
-
-
-        boolean regionMatch = preferences.getPreferredRegion().isEmpty() || woman.getLocation().isEmpty() || isRegionMatch(preferences, woman);
-
-        return (regionMatch || preferences.getPreferredRegion().isEmpty() || woman.getLocation().isEmpty()) &&
-                (preferences.getPreferredCommunity().isEmpty() || preferences.getPreferredCommunity().contains(woman.getCommunity())) &&
-                (preferences.getPreferredStatus().isEmpty() || preferences.getPreferredStatus().equals(woman.getStatus())) &&
-                (preferences.getPreferredAgeFrom() == 0 || preferences.getPreferredAgeTo() == 0 ||
-                        (woman.getAge() >= preferences.getPreferredAgeFrom() && woman.getAge() <= preferences.getPreferredAgeTo())) &&
-                (preferences.getPreferredHeightFrom() == 0 || preferences.getPreferredHeightTo() == 0 ||
-                        (woman.getHeight() >= preferences.getPreferredHeightFrom() && woman.getHeight() <= preferences.getPreferredHeightTo())) &&
-                (preferences.getKosherOrNonKosherDevice().isEmpty() || preferences.getKosherOrNonKosherDevice().equals(woman.getDevice())) &&
-                (preferences.getPreferredStyle() == null || preferences.getPreferredStyle().isEmpty() || preferences.getPreferredStyle().equals(woman.getStyle())) &&
-                (preferences.getHandkerchiefOrWig().isEmpty() || preferences.getHandkerchiefOrWig().equals(woman.getHeadCovering()));
+    private boolean matchesPreferences(PreferencesMen preferences, Women women) {
+        return  isRegionMatch(preferences, women) &&
+                isCommunityMatch(preferences, women) &&
+                isStatusMatch(preferences, women) &&
+                isAgeMatch(preferences, women) &&
+                isHeightMatch(preferences, women) &&
+                isDeviceMatch(preferences, women) &&
+                isStyleMatch(preferences, women) &&
+                isHeadCoveringMatch(preferences, women);
     }
 
-    public boolean isRegionMatch(PreferencesMen preferences, Woman woman){
+    private boolean isRegionMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getPreferredRegion().isEmpty() || women.getLocation().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        String[] womanLocationParts = women.getLocation().split("-");
+        String womanCity = womanLocationParts[0].trim();
+        String womanRegion = womanLocationParts.length > 1 ? womanLocationParts[1].trim() : "";
 
-            // פיצול העיר והאזור לשני חלקים בטבלת MEN
-            String[] womanLocationParts = woman.getLocation().split(",");
-            String womanCity = womanLocationParts[0].trim();
-            String womanRegion = womanLocationParts.length > 1 ? womanLocationParts[1].trim() : "";
+        String[] preferredRegionParts = preferences.getPreferredRegion().split("-");
+        String preferredCity = preferredRegionParts[0].trim();
+        String preferredRegion = preferredRegionParts.length > 1 ? preferredRegionParts[1].trim() : "";
 
-            // פיצול העיר והאזור בטבלת העדפות לשני חלקים
-            String[] preferredRegionParts = preferences.getPreferredRegion().split(",");
-            String preferredCity = preferredRegionParts[0].trim();
-            String preferredRegion = preferredRegionParts.length > 1 ? preferredRegionParts[1].trim() : "";
+        return preferredCity.contains(womanCity) || preferredCity.contains(womanRegion) ||
+                preferredRegion.contains(womanCity) || preferredRegion.contains(womanRegion);
+    }
 
-        return preferredCity.equals(womanCity) || preferredCity.equals(womanRegion) ||
-                preferredRegion.equals(womanCity) || preferredRegion.equals(womanRegion);
+    private boolean isCommunityMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getPreferredCommunity().isEmpty() || women.getCommunity().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredCommunity().contains(women.getCommunity());
+    }
+
+    private boolean isStatusMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getPreferredStatus().isEmpty() || women.getStatus().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredStatus().equals(women.getStatus());
+    }
+
+    private boolean isAgeMatch(PreferencesMen preferences, Women women) {
+//        if (preferences.getPreferredAgeFrom() == 0 || preferences.getPreferredAgeTo() == 0) {
+//            return true; // Ignore if either is empty
+//        }
+        int[] ageRange = {preferences.getPreferredAgeFrom(), preferences.getPreferredAgeTo()};
+        if (ageRange[0] == 0 || ageRange[1] == 0 || ageRange[0] > ageRange[1]) {
+            return true;
+        }
+        //return women.getAge() >= preferences.getPreferredAgeFrom() && women.getAge() <= preferences.getPreferredAgeTo();
+        return women.getAge() >= ageRange[0] && women.getAge() <= ageRange[1];
+    }
+
+    private boolean isHeightMatch(PreferencesMen preferences, Women women) {
+//        if (preferences.getPreferredHeightFrom() == 0 || preferences.getPreferredHeightTo() == 0) {
+//            return true; // Ignore if either is empty
+//        }
+        int[] heightRange = {preferences.getPreferredAgeFrom(), preferences.getPreferredAgeTo()};
+        if (heightRange[0] == 0 || heightRange[1] == 0 || heightRange[0] > heightRange[1]) {
+            return true;
+        }
+        return women.getAge() >= heightRange[0] && women.getAge() <= heightRange[1];
+        //return women.getHeight() >= preferences.getPreferredHeightFrom() && women.getHeight() <= preferences.getPreferredHeightTo();
+    }
+
+    private boolean isDeviceMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getKosherOrNonKosherDevice().isEmpty() || women.getDevice().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getKosherOrNonKosherDevice().equals(women.getDevice());
+    }
+
+    private boolean isStyleMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getPreferredStyle() == null || preferences.getPreferredStyle().isEmpty() || women.getStyle().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getPreferredStyle().equals(women.getStyle());
+    }
+
+    private boolean isHeadCoveringMatch(PreferencesMen preferences, Women women) {
+        if (preferences.getHandkerchiefOrWig().isEmpty() || women.getHeadCovering().isEmpty()) {
+            return true; // Ignore if either is empty
+        }
+        return preferences.getHandkerchiefOrWig().equals(women.getHeadCovering());
     }
 }
+

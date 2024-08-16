@@ -131,77 +131,9 @@
               </div>
             <button type="button" onclick="closeModal('menModal')">סגור</button>
             <button type="button" onclick="saveMenData()">שמור</button>
-<!--            <button type="button" onclick="openPreferencesModal()">הוספת העדפות</button>-->
           </form>
       </div>
   </div>
-
-<!-- מודל העדפות אישיות לגבר -->
-<div id="preferencesModal" class="modal">
-    <div class="modal-content">
-        <form id="preferencesForm">
-            <h2 class="modal-title">העדפות אישיות</h2>
-            <div class="form-group">
-                <label for="idMen">:מזהה גבר</label>
-                <input type="text" id="idMen" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה  -->
-            </div>
-            <div class="form-group">
-                <label for="preferredRegion">:אזור מגורים</label>
-                <input type="text" id="preferredRegion">
-            </div>
-            <div class="form-group">
-                <label for="preferredCommunity">:עדה</label>
-                <input type="text" id="preferredCommunity">
-            </div>
-            <div class="form-group">
-                <label for="preferredAgeRange">טווח גילאים:</label>
-                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
-            </div>
-            <div class="form-group">
-                <label for="preferredHeightRange">טווח גובה:</label>
-                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
-            </div>
-            <div class="form-group">
-                <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
-                <select id="handkerchiefOrWig">
-                    <option></option>
-                    <option value="מטפחת">מטפחת</option>
-                    <option value="פאה">פאה</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="preferredStyle">סגנון</label>
-                <select id="preferredStyle">
-                    <option></option>
-                    <option value="רווק/ה">רווק/ה</option>
-                    <option value="גרוש/ה">גרוש/ה</option>
-                    <option value="אלמן/ה">אלמן/ה</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
-                <select id="kosherOrNonKosherDevice">
-                    <option></option>
-                    <option value="מכשיר כשר">מכשיר כשר</option>
-                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
-                    <option value="מכשיר מסונן">מכשיר מסונן</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="preferredStatus">סטטוס</label>
-                <select id="preferredStatus">
-                    <option></option>
-                    <option value="חרדי/ת">חרדי/ת</option>
-                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
-                    <option value="דתי/יה">דתי/יה</option>
-                </select>
-            </div>
-<!--            <button type="button" onclick="closeModal('preferencesModal')">סגור</button>-->
-            <button type="button" onclick="savePreferencesData()">שמור</button>
-        </form>
-    </div>
-</div>
-
 
   <!-- המודל של נשים -->
 <div id="womenModal" class="modal">
@@ -277,7 +209,72 @@
     </div>
 </div>
 
+<!-- מודל העדפות אישיות לגבר -->
+<div id="preferencesModal" class="modal">
+    <div class="modal-content">
+        <form id="preferencesForm">
+            <h2 class="modal-title">העדפות אישיות</h2>
+            <div class="form-group">
+                <label for="idPerson">:מזהה</label>
+                <input type="text" id="idPerson" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה  -->
+            </div>
+            <div class="form-group">
+                <label for="preferredRegion">:אזור מגורים</label>
+                <input type="text" id="preferredRegion">
+            </div>
+            <div class="form-group">
+                <label for="preferredCommunity">:עדה</label>
+                <input type="text" id="preferredCommunity">
+            </div>
+            <div class="form-group">
+                <label for="preferredAgeRange">טווח גילאים:</label>
+                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            </div>
+            <div class="form-group">
+                <label for="preferredHeightRange">טווח גובה:</label>
+                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            </div>
+            <div class="form-group">
+                <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
+                <select id="handkerchiefOrWig">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredStyle">סגנון</label>
+                <select id="preferredStyle">
+                    <option></option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
+                <select id="kosherOrNonKosherDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredStatus">סטטוס</label>
+                <select id="preferredStatus">
+                    <option></option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                </select>
+            </div>
+            <button type="button" onclick="savePreferencesData()">שמור</button>
+        </form>
+    </div>
+</div>
 
+<!-- עדכון -->
 <div id="updateModal" class="modal">
     <div class="modal-content">
         <form id="UpForm">
@@ -285,8 +282,10 @@
             <div class="form-group">
                 <label for="UpStatus">:סטטוס</label>
                 <select id="UpStatus">
+                    <option></option>
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
                 </select>
             </div>
             <div class="form-group">
@@ -307,10 +306,44 @@
             </div>
             <div class="form-group">
                 <label for="UpLocation">:מיקום</label>
-                <input type="text" id="UpLocation" placeholder="Location">
+                <input type="text" id="UpLocation"  placeholder="לדוגמה: אשקלון, דרום">
             </div>
-            <button type="button" onclick="closeModal('updateModal')">סגור</button>
-            <button type="button" onclick="saveUpdateData()">שמור</button>
+            <div class="form-group">
+                <label for="UpStyle">:סגנון</label>
+                <select id="UpStyle">
+                    <option></option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="UpCommunity">:עדה</label>
+                <input type="text" id="UpCommunity">
+            </div>
+            <div class="form-group">
+                <label for="UpHeadCovering">:כיסוי ראש/מטפחת</label>
+                <select id="UpHeadCovering">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="UpDevice">:מכשיר</label>
+                <select id="UpDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="UpSeeking">:מלל חופשי</label>
+                <input type="text" id="UpSeeking" placeholder="Seeking">
+            </div>
+        <button type="button" onclick="closeModal('updateModal')">סגור</button>
+        <button type="button" onclick="saveUpdateData()">שמור</button>
         </form>
     </div>
 </div>

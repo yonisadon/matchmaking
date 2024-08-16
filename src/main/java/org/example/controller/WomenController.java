@@ -1,7 +1,12 @@
 package org.example.controller;
 
-import org.example.model.Men;
-import org.example.model.Woman;
+import org.example.DTO.PreferencesMenDTO;
+import org.example.DTO.PreferencesWomenDTO;
+import org.example.model.*;
+import org.example.model.Women;
+import org.example.repository.PreferencesWomenRepository;
+import org.example.repository.WomenRepository;
+import org.example.service.WomenPreferencesServiceImpl;
 import org.example.service.WomenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,72 +19,173 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:63342")
 @RestController
-@RequestMapping("/api/women")
+@RequestMapping("/api")
 public class WomenController {
+    @Autowired
+    private WomenRepository womenRepository;
     private final WomenServiceImpl womenService;
+    private final WomenPreferencesServiceImpl womenPreferencesService;
+    private final PreferencesWomenRepository preferencesWomenRepository;
     private static final Logger logger = LoggerFactory.getLogger(WomenController.class);
 
 
     @Autowired
-    public WomenController(WomenServiceImpl womenService) {
+    public WomenController(WomenServiceImpl womenService, WomenPreferencesServiceImpl womenPreferencesService, PreferencesWomenRepository preferencesWomenRepository) {
         this.womenService = womenService;
+        this.womenPreferencesService = womenPreferencesService;
+        this.preferencesWomenRepository = preferencesWomenRepository;
     }
 
-
-    @PostMapping("/saveWomenData")
-    public ResponseEntity<Woman> addWomen(@RequestBody Woman woman) {
-        System.out.println("Received POST request with data: " + woman);
-//        System.out.println("firstName: " + woman.getFirstName());
-//        System.out.println("lastName: " + woman.getLastName());
-//        System.out.println("age: " + woman.getAge());
-//        System.out.println("height: " + woman.getHeight());
-//        System.out.println("location: " + woman.getLocation());
-//        System.out.println("style: " + woman.getStyle());
-//        System.out.println("seeking: " + woman.getSeeking());
-//        System.out.println("status: " + woman.getStatus());
-        womenService.addWoman(woman);
-        return new ResponseEntity<>(woman, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/searchAll")
-    public List<Woman> getAllWomen() {
+    @GetMapping("/women/searchAll")
+    public List<Women> getAllWomen() {
         return womenService.getAllWomen();
     }
 
-    @GetMapping("/search")
-    public List<Woman> searchWomen(@RequestParam String term, @RequestParam String criteria) {
+    @GetMapping("/women/search")
+    public List<Women> searchWomen(@RequestParam String term, @RequestParam String criteria) {
         System.out.println(term + criteria);
         logger.info("Received search request for women with term: {} and criteria: {}", term, criteria);
-        List<Woman> results = womenService.searchWomen(term, criteria);
+        List<Women> results = womenService.searchWomen(term, criteria);
         System.out.println("Results: " + results);
         return results;
         //return womenService.searchWomen(term, criteria);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteWomen(@PathVariable int id) {
-        try {
-            Woman deletedWoman = womenService.deleteWomen(id);
-            return ResponseEntity.ok(deletedWoman);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
+//    @DeleteMapping("/women/{id}")
+//    public ResponseEntity<?> deleteWomen(@PathVariable int id) {
+//        try {
+//            Women deletedWoman = womenService.deleteWomen(id);
+//            return ResponseEntity.ok(deletedWoman);
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
+@DeleteMapping("/women/delete/{id}")
+public ResponseEntity<?> deleteWomen(@PathVariable int id) {
+    try {
+        // שלב 1: חיפוש רשומת העדפות אישה לפי ה-ID של הגבר
+        Optional<PreferencesWomen> preferencesWomenOpt = preferencesWomenRepository.findByWomenId(id);
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateWoman(@PathVariable int id, @RequestBody Woman updatedWoman) {
+        // שלב 2: אם רשומת העדפות אישה קיימת, מחק אותה
+        preferencesWomenOpt.ifPresent(preferencesWomen -> preferencesWomenRepository.deleteById(preferencesWomen.getIdPreferencesWomen()));
+
+        // שלב 3: מחיקת רשומת אישה
+        Women deleteWomen = womenService.deleteWomen(id);
+
+        return ResponseEntity.ok(deleteWomen);
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
+
+    @PutMapping("/women/update/{id}")
+    public ResponseEntity<?> updateWoman(@PathVariable int id, @RequestBody Women updatedWoman) {
         try {
             System.out.println("/{id}");
-            Woman updated = womenService.updateWoman(id, updatedWoman);
+            Women updated = womenService.updateWoman(id, updatedWoman);
             return ResponseEntity.ok(updated);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+//    @PostMapping("/saveWomenData")
+//    public ResponseEntity<Women> addWomen(@RequestBody Women women) {
+//        System.out.println("Received POST request with data: " + women);
+//        womenService.addWomen(women);
+//        return new ResponseEntity<>(women, HttpStatus.CREATED);
+//    }
+
+    @PostMapping("/women/saveWomen")
+    public ResponseEntity<Map<String, Object>> saveWomenData(@RequestBody Women women) {
+        try {
+            System.out.println("Received POST request with data: " + women);
+            System.out.println(women.getId());
+
+            Women savedWoman = womenService.addWomen(women);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("id", savedWoman.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/women/savePreferences")
+    public ResponseEntity<Map<String, Object>> savePreferences(@RequestBody PreferencesWomen preferencesWomen) {
+        try {
+
+            // לוודא ש-idMen מועבר ונשמר בצורה נכונה
+            Women women = preferencesWomen.getWomen();
+            if (women == null || women.getId() == 0) {
+                throw new IllegalArgumentException("Men object or idMen is missing");
+            }
+
+            PreferencesWomen savedPreferences = womenPreferencesService.addPreferencesWomen(preferencesWomen);
+
+            System.out.println("Saved preferences: " + savedPreferences);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("idPreferencesMen", savedPreferences.getIdPreferencesWomen());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("preferences_women/byWomenId/{womenId}")
+    public ResponseEntity<PreferencesWomenDTO> getPreferencesById(@PathVariable int womenId) {
+        PreferencesWomen preferences = womenPreferencesService.getPreferencesWomenByWomenId(womenId);
+        if (preferences != null) {
+            PreferencesWomenDTO dto = convertToDTO(preferences);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private PreferencesWomenDTO convertToDTO(PreferencesWomen preferences) {
+        PreferencesWomenDTO dto = new PreferencesWomenDTO();
+        dto.setIdPreferencesWomen(preferences.getIdPreferencesWomen());
+        dto.setPreferredRegion(preferences.getPreferredRegion());
+        dto.setPreferredCommunity(preferences.getPreferredCommunity());
+        dto.setHandkerchiefOrWig(preferences.getHandkerchiefOrWig());
+        dto.setPreferredStyle(preferences.getPreferredStyle());
+        dto.setKosherOrNonKosherDevice(preferences.getKosherOrNonKosherDevice());
+        dto.setPreferredStatus(preferences.getPreferredStatus());
+        dto.setPreferredAgeFrom(preferences.getPreferredAgeFrom());
+        dto.setPreferredAgeTo(preferences.getPreferredAgeTo());
+
+        dto.setPreferredHeightFrom(preferences.getPreferredHeightFrom());
+        dto.setPreferredHeightTo(preferences.getPreferredHeightTo());
+        dto.setWomenId(preferences.getWomen() != null ? preferences.getWomen().getId() : 0);
+        System.out.println(dto.getWomenId());
+        System.out.println(dto.getIdPreferencesWomen());
+        System.out.println(dto.getHandkerchiefOrWig());
+        return dto;
+    }
+
+    @GetMapping("/women/searchMatches")
+    public List<Men> searchMatches(@RequestParam int womenId) {
+        return womenService.findMatchesByWomenPreferences(womenId);
+    }
 }
+
 
 

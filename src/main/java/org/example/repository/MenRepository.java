@@ -7,13 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//@Repository
-//public interface MenRepository extends JpaRepository<Men, Integer> {
-//    List<Men> findByFirstNameOrAgeOrLocationOrLastNameOrStatusOrStyle(String firstName, Integer age, String location, String lastName, String status, String style);
-//}
-
 @Repository
 public interface MenRepository extends JpaRepository<Men, Integer> {
+
+    List<Men> findByFirstNameContainingIgnoreCase(String term);
     List<Men> findByFirstName(String firstName);
     List<Men> findByAge(Integer age);
     List<Men> findByLocation(String location);

@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-
     function displayPreferencesInLeftTable(data) {
         const leftTableBody = document.querySelector('#resultsTableFromFindingMatch tbody');
         leftTableBody.innerHTML = ''; // נקה את הטבלה הקיימת
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td>${data.handkerchiefOrWig || ''}</td>
             <td>${data.preferredStyle || ''}</td>
             <td>${data.idPreferencesMen || ''}</td>
-            <td>${data.menId || ''}</td>
+            ${selectedGender === 'men' ? `<td>${data.menId || ''}</td>` : `<td>${data.womenId || ''}</td>`}
         `;
         leftTableBody.appendChild(row);
     }
@@ -134,124 +133,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-//function searchMatchesSelected(){
-//        if (!selectedRecordId) {
-//            alert("אנא בחר רשומה לחיפוש התאמה.");
-//            return;
-//        }
-//        const gender = document.querySelector('input[name="gender"]:checked').value;
-//        console.log(gender);
-//
-//        //url = gender === 'men' ? 'http://localhost:8080/api/women/searchAll' : 'http://localhost:8080/api/men/searchAll';
-//        url = gender === 'men' ? 'http://localhost:8080/api/men/searchAll' : 'http://localhost:8080/api/men/searchAll';//לזכור לבצע שינוי חזרה כי פה שניהם MEN
-//
-//        fetch(url, {
-//             method: 'GET'
-//        })
-//          .then(response => {
-//                          if (!response.ok) {
-//                              throw new Error(`HTTP error! status: ${response.status}`);
-//                          }
-//                          return response.json();
-//                      })
-//                      .then(data => {
-//                          const tableBody = document.querySelector('#tableFromFindingOtherSide tbody');
-//                          tableBody.innerHTML = '';
-//
-//                          // איפוס הבחירה של השורה הנוכחית
-//                          selectedGender = null;
-//
-//                          if (data.length > 0) {
-//                              data.forEach(result => {
-//                                  const row = document.createElement('tr');
-//                                  row.innerHTML = `
-//                                      <td>${result.height}</td>
-//                                      <td>${result.status}</td>
-//                                      <td>${result.location}</td>
-//                                      <td>${result.age}</td>
-//                                      <td>${result.lastName}</td>
-//                                      <td>${result.firstName}</td>
-//                                      <td>${result.id}</td>
-//                                  `;
-//                                  row.onclick = () => selectRecord(gender);
-//                                  tableBody.appendChild(row);
-//                              });
-//                          }
-//                      })
-//                      .catch(error => {
-//                          console.error('Error fetching search results:', error);
-//                      });
-//              }
-
-//function searchMatchesSelected() {
-//    if (!selectedRecordId) {
-//        alert("אנא בחר רשומה לחיפוש התאמה.");
-//        return;
-//    }
-//    const gender = document.querySelector('input[name="gender"]:checked').value;
-//
-//    // קבלת ההעדפות מהרשומה שנבחרה
-//    const preferencesUrl = gender === 'men'
-//        ? `http://localhost:8080/api/preferences_men/byMenId/${selectedRecordId}`
-//        : `http://localhost:8080/api/preferences_women/byWomenId/${selectedRecordId}`;
-//
-//    fetch(preferencesUrl)
-//        .then(response => {
-//            if (!response.ok) {
-//                throw new Error(`HTTP error! status: ${response.status}`);
-//            }
-//            return response.json();
-//        })
-//        .then(preferences => {
-//            // חיפוש התאמות בהתבסס על ההעדפות שהתקבלו
-//            const searchUrl = gender === 'men'
-//                ? `http://localhost:8080/api/men/searchByPreferences?community=${preferences.preferredCommunity}&region=${preferences.preferredRegion}&status=${preferences.preferredStatus}&device=${preferences.kosherOrNonKosherDevice}&smoker=${preferences.smokerOrNonSmoker}&headgear=${preferences.handkerchiefOrWig}`
-//                : `http://localhost:8080/api/women/searchByPreferences?community=${preferences.preferredCommunity}&region=${preferences.preferredRegion}&status=${preferences.preferredStatus}&device=${preferences.kosherOrNonKosherDevice}&smoker=${preferences.smokerOrNonSmoker}&headgear=${preferences.handkerchiefOrWig}`;
-//
-//            return fetch(searchUrl);
-//        })
-//        .then(response => {
-//            if (!response.ok) {
-//                throw new Error(`HTTP error! status: ${response.status}`);
-//            }
-//            return response.json();
-//        })
-//        .then(data => {
-//            const tableBody = document.querySelector('#tableFromFindingOtherSide tbody');
-//            tableBody.innerHTML = '';
-//
-//            if (data.length > 0) {
-//                data.forEach(result => {
-//                    const row = document.createElement('tr');
-//                    row.innerHTML = `
-//                        <td>${result.height}</td>
-//                        <td>${result.status}</td>
-//                        <td>${result.location}</td>
-//                        <td>${result.age}</td>
-//                        <td>${result.lastName}</td>
-//                        <td>${result.firstName}</td>
-//                        <td>${result.id}</td>
-//                    `;
-//                    tableBody.appendChild(row);
-//                });
-//            } else {
-//                const row = document.createElement('tr');
-//                row.innerHTML = `<td colspan="7">לא נמצאו התאמות</td>`;
-//                tableBody.appendChild(row);
-//            }
-//        })
-//        .catch(error => {
-//            console.error('Error fetching search results:', error);
-//        });
-//}
-
 function searchMatchesSelected() {
     if (!selectedRecordId) {
         alert("אנא בחר רשומה לחיפוש התאמה.");
         return;
     }
 
-    fetch(`http://localhost:8080/api/men/searchMatches?menId=${selectedRecordId}`)
+       let url;
+       url = selectedGender === 'men' ? `http://localhost:8080/api/men/searchMatches?menId=${selectedRecordId}` : `http://localhost:8080/api/women/searchMatches?womenId=${selectedRecordId}`;
+        fetch(url, {
+            method: 'GET'
+        })
+    //fetch(`http://localhost:8080/api/men/searchMatches?menId=${selectedRecordId}`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.querySelector('#tableFromFindingOtherSide tbody');

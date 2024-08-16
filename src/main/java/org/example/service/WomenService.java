@@ -1,15 +1,17 @@
 package org.example.service;
 
-import org.example.model.Woman;
+import org.example.model.Women;
+import org.example.model.Women;
 
 import java.util.List;
 
 public interface WomenService {
-    List<Woman> getAllWomen();
-    Woman getWomanById(int id);
-    Woman addWoman(Woman woman);
-    List<Woman> searchWomen(String term, String criteria);
+    List<Women> getAllWomen();
+    Women getWomanById(int id);
+    Women addWomen(Women women);
 
-    Woman deleteWomen(int id);
+    List<Women> searchWomen(String term, String criteria);
+
+    Women deleteWomen(int id);
 }
 

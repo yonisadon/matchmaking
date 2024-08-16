@@ -1,23 +1,22 @@
 package org.example.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "preferences_men")
-public class PreferencesMen {
+@Table(name = "preferences_women")
+public class PreferencesWomen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idPreferencesMen")
-    private int idPreferencesMen;
+    @Column(name = "idPreferencesWomen")
+    private int idPreferencesWomen;
 
     @ManyToOne
-    @JoinColumn(name = "idMen", nullable = false)
+    @JoinColumn(name = "idWomen", nullable = false)
     @JsonBackReference
-    private Men men;
+    private Women women;
 
     @Column(name = "preferred_region")
     private String preferredRegion;
@@ -36,15 +35,18 @@ public class PreferencesMen {
 
     @Column(name = "preferred_status")
     private String preferredStatus;
+
     @Column(name = "preferred_age_from")
     private Integer preferredAgeFrom;
+
     @Column(name = "preferred_age_to")
     private Integer preferredAgeTo;
 
-
-
-    private float preferredHeightTo;
+    @Column(name = "preferred_height_from")
     private float preferredHeightFrom;
+
+    @Column(name = "preferred_height_to")
+    private float preferredHeightTo;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -63,13 +65,13 @@ public class PreferencesMen {
         updatedAt = LocalDateTime.now();
     }
 
-    public PreferencesMen() {
+    public PreferencesWomen() {
     }
 
-    public PreferencesMen(Men men, String preferredRegion, String preferredCommunity, String handkerchiefOrWig, String preferredStyle, String kosherOrNonKosherDevice, String preferredStatus, int preferredAgeFrom, int preferredAgeTo, Float preferredHeightFrom,
-                          float preferredHeightTo) {
+    public PreferencesWomen(Women women, String preferredRegion, String preferredCommunity, String handkerchiefOrWig, String preferredStyle, String kosherOrNonKosherDevice, String preferredStatus, int preferredAgeFrom, int preferredAgeTo, float preferredHeightFrom,
+                            float preferredHeightTo) {
 
-        this.men = men;
+        this.women = women;
         this.preferredRegion = preferredRegion;
         this.preferredCommunity = preferredCommunity;
         this.handkerchiefOrWig = handkerchiefOrWig;
@@ -77,25 +79,25 @@ public class PreferencesMen {
         this.kosherOrNonKosherDevice = kosherOrNonKosherDevice;
         this.preferredStatus = preferredStatus;
         this.preferredAgeFrom = preferredAgeFrom;
-        this.preferredAgeTo   = preferredAgeTo;
+        this.preferredAgeTo = preferredAgeTo;
         this.preferredHeightFrom = preferredHeightFrom;
         this.preferredHeightTo = preferredHeightTo;
     }
 
-    public int getIdPreferencesMen() {
-        return idPreferencesMen;
+    public int getIdPreferencesWomen() {
+        return idPreferencesWomen;
     }
 
-    public void setIdPreferencesMen(int idPreferencesMen) {
-        this.idPreferencesMen = idPreferencesMen;
+    public void setIdPreferencesWomen(int idPreferencesWomen) {
+        this.idPreferencesWomen = idPreferencesWomen;
     }
 
-    public Men getMen() {
-        return men;
+    public Women getWomen() {
+        return women;
     }
 
-    public void setMen(Men men) {
-        this.men = men;
+    public void setWomen(Women women) {
+        this.women = women;
     }
 
     public String getPreferredRegion() {

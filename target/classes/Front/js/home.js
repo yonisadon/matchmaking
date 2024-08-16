@@ -14,136 +14,9 @@ window.onclick = function(event) {
     }
 }
 
-//function openPreferencesModal() {
-//    const preferencesModal = document.getElementById('preferencesModal');
-//    preferencesModal.style.display = 'block';
-//}
-
-//let preferencesData = {};
-//
-//// פונקציה לשמירת העדפות לגבר במשתנה זמני
-//function savePreferencesData() {
-//    const preferredRegion = document.getElementById('preferredRegion').value;
-//    const preferredCommunity = document.getElementById('preferredCommunity').value;
-//    const handkerchiefOrWig = document.getElementById('handkerchiefOrWig').value;
-//    const smokerOrNonSmoker = document.getElementById('smokerOrNonSmoker').value;
-//    const kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
-//    const preferredStatus = document.getElementById('preferredStatus').value;
-////    preferencesData = {
-////        preferredRegion: preferredRegion,
-////        preferredCommunity: preferredCommunity,
-////        handkerchiefOrWig: handkerchiefOrWig,
-////        smokerOrNonSmoker: smokerOrNonSmoker,
-////        kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-////        preferredStatus: preferredStatus
-////    };
-//        preferencesData = {
-//            preferredRegion: "11",
-//            preferredCommunity: "11",
-//            handkerchiefOrWig: "11",
-//            smokerOrNonSmoker: "11",
-//            kosherOrNonKosherDevice: "11",
-//            preferredStatus: "11"
-//        };
-//
-//    console.log('Preferences to be sent:', preferencesData);
-//    closeModal('preferencesModal');
-//}
-//
-//
-//function saveMenData() {
-//    var status = document.getElementById("menStatus").value;
-//    var firstName = document.getElementById("menFirstName").value;
-//    var lastName = document.getElementById("menLastName").value;
-//    var age = document.getElementById("menAge").value;
-//    var height = document.getElementById("menHeight").value;
-//    var location = document.getElementById("menLocation").value;
-//    var style = document.getElementById("menStyle").value;
-//    var seeking = document.getElementById("menSeeking").value;
-//
-//    // בדיקת תקינות
-//    if (!status) {
-//        alert("שדה 'סטטוס' הוא חובה.");
-//        return;
-//    }
-//    if (!age) {
-//        alert("שדה 'גיל' הוא חובה.");
-//        return;
-//    }
-//    if (!height) {
-//        alert("שדה 'גובה' הוא חובה.");
-//        return;
-//    }
-//
-//    var menData = {
-//        status: status,
-//        firstName: firstName,
-//        lastName: lastName,
-//        age: age,
-//        height: height,
-//        location: location,
-//        style: style,
-//        seeking: seeking
-//    };
-//
-//    fetch('http://localhost:8080/api/men/saveMen', {
-//        method: 'POST',
-//        headers: {
-//            'Content-Type': 'application/json'
-//        },
-//        body: JSON.stringify(menData)
-//    })
-//    .then(response => response.json())
-//    .then(data => {
-//        if (data.success) {
-//            console.log('Men data saved successfully:', menData, data);
-//            const menId = data.id;
-//
-//            const preferencesWithMenId = {
-//                menId: menId,
-//                ...preferencesData
-//            };
-//
-//            fetch('http://localhost:8080/api/men/savePreferences', {
-//                method: 'POST',
-//                headers: {
-//                    'Content-Type': 'application/json',
-//                },
-//                body: JSON.stringify(preferencesWithMenId),
-//            })
-//            .then(response => {
-//                if (!response.ok) {
-//                    throw new Error('Network response was not ok');
-//                }
-//                return response.json();
-//            })
-//            .then(data => {
-//                if (data.success) {
-//                    console.log('Preferences data saved successfully:', preferencesWithMenId);
-//                    closeModal('menModal');
-//                    preferencesData = {}; // איפוס המשתנה הזמני לאחר השמירה
-//                } else {
-//                    console.error('Error saving preferences data:', data.message);
-//                }
-//            })
-//            .catch(error => {
-//                console.error('Fetch error:', error);
-//            });
-//
-//
-//
-//            resetFormFields(); // איפוס השדות בטופס
-//        } else {
-//            console.error('Error saving men data:', data.message);
-//        }
-//    })
-//    .catch(error => {
-//        console.error('Error saving men data:', error);
-//    });
-//}
-
-let idMen; // משתנה לאחסון ה-ID של MEN
-
+let idMen;
+let idWomen;
+var currentGender;
 // פונקציה לשמירת נתוני MEN
 function saveMenData() {
     var status = document.getElementById("menStatus").value;
@@ -158,17 +31,13 @@ function saveMenData() {
     var device = document.getElementById('menDevice').value;
     var seeking = document.getElementById("menSeeking").value;
 
-    // בדיקת תקינות
-    if (!status) {
-        alert("שדה 'סטטוס' הוא חובה.");
-        return;
+    // בדיקת שדות ריקים
+    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
+        alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
+        return; // עצור את הפעולה אם אחד השדות ריק
     }
-    if (!age) {
-        alert("שדה 'גיל' הוא חובה.");
-        return;
-    }
-    if (!height) {
-        alert("שדה 'גובה' הוא חובה.");
+  if (!/^\d+$/.test(height)) {
+        alert(' הכנס גובה בפורמט תקין, לדוגמה: 156');
         return;
     }
 
@@ -199,9 +68,12 @@ function saveMenData() {
             console.log('Men data saved successfully:', menData, data);
 
             idMen = data.id; // שמירת ה-ID שהתקבל מהשרת
-            document.getElementById('idMen').value = idMen; // עדכון השדה בחלונית העדפות
+            document.getElementById('idPerson').value = idMen; // עדכון השדה בחלונית העדפות
             console.log(idMen);
             resetFormFields();
+
+            currentGender = "men";
+            console.log(currentGender);
             openPreferencesModal(); // פתיחת החלונית להוספת העדפות
         } else {
             console.error('Error saving men data:', data.message);
@@ -212,20 +84,107 @@ function saveMenData() {
     });
 }
 
-// פונקציה לפתיחת החלונית להוספת העדפות
+function saveWomenData() {
+    var status = document.getElementById("womenStatus").value;
+    var firstName = document.getElementById("womenFirstName").value;
+    var lastName = document.getElementById("womenLastName").value;
+    var age = document.getElementById("womenAge").value;
+    var height = document.getElementById("womenHeight").value;
+    var location = document.getElementById("womenLocation").value;
+    var style = document.getElementById("womenStyle").value;
+    var community = document.getElementById('womenCommunity').value;
+    var headCovering = document.getElementById('womenHeadCovering').value;
+    var device = document.getElementById('womenDevice').value;
+    var seeking = document.getElementById("womenSeeking").value;
+
+    // בדיקת שדות ריקים
+    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
+        alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
+        return; // עצור את הפעולה אם אחד השדות ריק
+    }
+    if (!/^\d+$/.test(height)) {
+        alert(' הכנס גובה בפורמט תקין, לדוגמה: 156');
+        return;
+    }
+
+    var data = {
+        status: status,
+        firstName: firstName,
+        lastName: lastName,
+        age: age,
+        height: height,
+        location: location,
+        style: style,
+        community: community,
+        headCovering: headCovering,
+        device: device,
+        seeking: seeking
+    };
+
+    fetch('http://localhost:8080/api/women/saveWomen', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Data saved successfully:', data);
+
+     idWomen = data.id;
+     document.getElementById('idPerson').value = idWomen;
+     console.log(idWomen);
+     resetFormFields();
+
+     currentGender = "women";
+     console.log(currentGender);
+     openPreferencesModal();
+    })
+    .catch(error => {
+        console.error('There was an error!', error);
+    });
+}
+
 function openPreferencesModal() {
     document.getElementById('preferencesModal').style.display = 'block';
 }
 
-// פונקציה לשמירת העדפות לגבר במשתנה זמני ולאחר מכן למסד הנתונים
-// פונקציה לשמירת העדפות לגבר במשתנה זמני ולאחר מכן למסד הנתונים
 function savePreferencesData() {
-    console.log('men data3:', idMen);
+    var preferredAgeRange = document.getElementById('preferredAgeRange').value.trim();
+    var preferredHeightRange = document.getElementById('preferredHeightRange').value.trim();
 
-    var preferredAgeRange = document.getElementById('preferredAgeRange').value;
-        var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => age.trim());
-    var preferredHeightRange = document.getElementById('preferredHeightRange').value;
-        var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => height.trim());
+     if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
+        alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
+        return;
+    }
+
+    if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
+        alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
+        return;
+    }
+
+    var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => parseInt(age.trim()));
+    var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => parseInt(height.trim()));
+
+    if (preferredAgeFrom > preferredAgeTo) {
+        alert('הגיל ההתחלתי לא יכול להיות גדול מהגיל הסופי');
+        return;
+    }
+
+    if (preferredHeightFrom > preferredHeightTo) {
+        alert('הגובה ההתחלתי לא יכול להיות גדול מהגובה הסופי');
+        return;
+    }
+    //var preferredAgeRange = document.getElementById('preferredAgeRange').value;
+        //var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => age.trim());
+    //var preferredHeightRange = document.getElementById('preferredHeightRange').value;
+        //var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => height.trim());
     var preferredRegion = document.getElementById('preferredRegion').value;
     var preferredCommunity = document.getElementById('preferredCommunity').value;
     var handkerchiefOrWig = document.getElementById('handkerchiefOrWig').value;
@@ -233,25 +192,42 @@ function savePreferencesData() {
     var kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
     var preferredStatus = document.getElementById('preferredStatus').value;
 
-    var preferencesData = {
-        men: {
-            id: idMen // ה-ID של MEN ישמש גם כמפתח ראשי ב-preferences_men
-        },
-        preferredAgeFrom: preferredAgeFrom,
-        preferredAgeTo: preferredAgeTo,
-        preferredHeightFrom: preferredHeightFrom,
-        preferredHeightTo: preferredHeightTo,
-        preferredRegion: preferredRegion,
-        preferredCommunity: preferredCommunity,
-        handkerchiefOrWig: handkerchiefOrWig,
-        preferredStyle: preferredStyle,
-        kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-        preferredStatus: preferredStatus
-    };
-
+    var preferencesData;
+        if (currentGender === 'men') {
+            preferencesData = {
+                men: { id: idMen }, // ה-ID של MEN ישמש גם כמפתח ראשי ב-preferences_men
+                preferredAgeFrom: preferredAgeFrom,
+                preferredAgeTo: preferredAgeTo,
+                preferredHeightFrom: preferredHeightFrom,
+                preferredHeightTo: preferredHeightTo,
+                preferredRegion: preferredRegion,
+                preferredCommunity: preferredCommunity,
+                handkerchiefOrWig: handkerchiefOrWig,
+                preferredStyle: preferredStyle,
+                kosherOrNonKosherDevice: kosherOrNonKosherDevice,
+                preferredStatus: preferredStatus
+            };
+        } else {
+            preferencesData = {
+                women: { id: idWomen }, // ה-ID של WOMEN ישמש גם כמפתח ראשי ב-preferences_women
+                preferredAgeFrom: preferredAgeFrom,
+                preferredAgeTo: preferredAgeTo,
+                preferredHeightFrom: preferredHeightFrom,
+                preferredHeightTo: preferredHeightTo,
+                preferredRegion: preferredRegion,
+                preferredCommunity: preferredCommunity,
+                handkerchiefOrWig: handkerchiefOrWig,
+                preferredStyle: preferredStyle,
+                kosherOrNonKosherDevice: kosherOrNonKosherDevice,
+                preferredStatus: preferredStatus
+            };
+        }
     console.log('Preferences to be sent:', preferencesData);
 
-    fetch('http://localhost:8080/api/men/savePreferences', {
+    let url = currentGender === 'men' ? `http://localhost:8080/api/men/savePreferences` : `http://localhost:8080/api/women/savePreferences`;
+    fetch(url, {
+
+    //fetch('http://localhost:8080/api/men/savePreferences', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -273,55 +249,6 @@ function savePreferencesData() {
     });
 }
 
-function saveWomenData() {
-    var status = document.getElementById("womenStatus").value;
-    var firstName = document.getElementById("womenFirstName").value;
-    var lastName = document.getElementById("womenLastName").value;
-    var age = document.getElementById("womenAge").value;
-    var height = document.getElementById("womenHeight").value;
-    var location = document.getElementById("womenLocation").value;
-    var style = document.getElementById("womenStyle").value;
-    var community = document.getElementById('womenCommunity').value;
-    var headCovering = document.getElementById('womenHeadCovering').value;
-    var device = document.getElementById('womenDevice').value;
-    var seeking = document.getElementById("womenSeeking").value;
-
-    var data = {
-        status: status,
-        firstName: firstName,
-        lastName: lastName,
-        age: age,
-        height: height,
-        location: location,
-        style: style,
-        community: community,
-        headCovering: headCovering,
-        device: device,
-        seeking: seeking
-    };
-
-    fetch('http://localhost:8080/api/women/saveWomenData', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        resetFormFields();
-        console.log('Data saved successfully:', data);
-    })
-    .catch(error => {
-        console.error('There was an error!', error);
-    });
-}
-
 function resetFormFields() {
     document.getElementById("menStatus").value = "";
     document.getElementById("menFirstName").value = "";
@@ -335,12 +262,14 @@ function resetFormFields() {
     document.getElementById('menDevice').value = '';
     document.getElementById("menSeeking").value = "";
 
-     document.getElementById("preferredRegion").value = "";
-        document.getElementById("preferredCommunity").value = "";
-        document.getElementById("handkerchiefOrWig").value = "";
-        document.getElementById("preferredStyle").value = "";
-        document.getElementById("kosherOrNonKosherDevice").value = "";
-        document.getElementById("preferredStatus").value = "";
+    document.getElementById("preferredRegion").value = "";
+    document.getElementById("preferredCommunity").value = "";
+    document.getElementById("handkerchiefOrWig").value = "";
+    document.getElementById("preferredStyle").value = "";
+    document.getElementById("kosherOrNonKosherDevice").value = "";
+    document.getElementById("preferredStatus").value = "";
+    document.getElementById("preferredAgeRange").value = "";
+    document.getElementById("preferredHeightRange").value = "";
 
 
     document.getElementById("womenStatus").value = "";
