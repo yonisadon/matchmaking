@@ -116,44 +116,111 @@ table tbody tr:hover {
     background-color: #f1f1f1;
     cursor: pointer;
 }
+
 /* צבע רקע לכותרות של הטבלאות בצד שמאל */
 .left-table thead {
     background-color: #d3d3d3; /* צבע אפור בהיר */
     color: #333; /* צבע טקסט כהה להבהרה */
 }
 
-/* צבע רקע לכותרות של הטבלאות בצד ימין (למניעת שיבוש) */
+/* צבע רקע לכותרות של הטבלאות בצד ימין */
 .right-table thead {
     background-color: #007BFF; /* צבע כחול */
     color: #fff; /* צבע טקסט לבן */
 }
 
-.right-table {
-    float: right;
-}
-
-.left-table {
-   float: left;
-   margin-top: 87px;
-
-
+/* תיקון עיצוב טבלאות */
+.left-table, .right-table {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .preferences-section {
+    margin-top: 50px; /* רווח עליון לקונטיינר */
+}
+
+/* שימוש ב-Flexbox עבור יישור הטבלאות */
+.preferences-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.findingMatch-container {
+    margin-bottom: 10px; /* רווח אחיד בין הטבלאות */
+}
+
+.modal-title {
+   text-align: center; /* יישור למרכז */
+   margin-bottom: 20px; /* מרווח תחתון */
+}
+.modals-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.modal-content {
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    max-width: 500px;
+    position: fixed;
+    top: 50%;
+    right: 5%;
+    transform: translate(0, -50%);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.modal-content button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-left: 10px;
+    text-align: right;
+    width: 100px; /* התאם לפי הצורך */
+}
+
+.form-group input, .form-group select {
     flex: 1;
-    margin-top: 50px; /* הוסף רווח עליון לקונטיינר */
-
-}
-
-.findingMatch-container {
-    margin-bottom: 100px;
-}
-
-.findingMatch-container {
-    margin-bottom: 10px; /* רווח בין הטבלאות בצד שמאל */
-}
-
-/* אם אתה רוצה לשלוט על הרווח ספציפית בין כל זוג טבלאות */
-.findingMatch-container:first-of-type {
-    margin-bottom: -65px; /* פחות רווח מתחת לטבלה הראשונה */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
 }

@@ -20,15 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class MenServiceImpl implements MenService {
 
-//    private final MenRepository menRepository;
-//    @Autowired
-//    private WomenRepository womenRepository;
-//
-//    @Autowired
-//    public MenServiceImpl(MenRepository menRepository) {
-//        this.menRepository = menRepository;
-//    }
-
     private final MenRepository menRepository;
     private final PreferencesMenRepository preferencesMenRepository;
     private final WomenRepository womenRepository;
@@ -102,6 +93,11 @@ public class MenServiceImpl implements MenService {
 //            throw new IllegalArgumentException("Age must be between 1 and 120");
 //        }
         // עדכון השדות
+        existingMen.setDevice(updateMen.getDevice());
+        existingMen.setCommunity(updateMen.getCommunity());
+        existingMen.setHeadCovering(updateMen.getHeadCovering());
+        existingMen.setStyle(updateMen.getStyle());
+        existingMen.setDateOfBirth(updateMen.getDateOfBirth());
         existingMen.setAge(updateMen.getAge());
         existingMen.setFirstName(updateMen.getFirstName());
         existingMen.setLastName(updateMen.getLastName());
@@ -175,15 +171,11 @@ public class MenServiceImpl implements MenService {
     }
 
     private boolean isHeightMatch(PreferencesMen preferences, Women women) {
-//        if (preferences.getPreferredHeightFrom() == 0 || preferences.getPreferredHeightTo() == 0) {
-//            return true; // Ignore if either is empty
-//        }
-        int[] heightRange = {preferences.getPreferredAgeFrom(), preferences.getPreferredAgeTo()};
+        float[] heightRange = {preferences.getPreferredHeightFrom(), preferences.getPreferredHeightTo()};
         if (heightRange[0] == 0 || heightRange[1] == 0 || heightRange[0] > heightRange[1]) {
             return true;
         }
-        return women.getAge() >= heightRange[0] && women.getAge() <= heightRange[1];
-        //return women.getHeight() >= preferences.getPreferredHeightFrom() && women.getHeight() <= preferences.getPreferredHeightTo();
+        return women.getHeight() >= heightRange[0] && women.getHeight() <= heightRange[1];
     }
 
     private boolean isDeviceMatch(PreferencesMen preferences, Women women) {

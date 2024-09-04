@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,8 @@ public class Women extends Person {
 
     // קונסטרוקטור של האישה
     public Women(String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
-                 String community, String headCovering, String device) {
-        super(0, status, firstName, lastName, age, height, location, style, seeking, community, headCovering, device);
+                 String community, String headCovering, String device,  LocalDate dateOfBirth) {
+        super(0, status, firstName, lastName, age, height, location, style, seeking, community, headCovering, device, dateOfBirth);
     }
 
     public Set<PreferencesWomen> getPreferencesWomen() {

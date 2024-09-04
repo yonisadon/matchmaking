@@ -1,6 +1,7 @@
 package org.example.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -34,6 +35,8 @@ public class Person {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private LocalDate dateOfBirth;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -46,7 +49,7 @@ public class Person {
     }
 
     public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
-                  String community, String headCovering, String device) {
+                  String community, String headCovering, String device, LocalDate dateOfBirth) {
         this.id = id;
         this.status = status;
         this.firstName = firstName;
@@ -59,6 +62,7 @@ public class Person {
         this.community = community;
         this.headCovering = headCovering;
         this.device = device;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Person() {
@@ -168,5 +172,13 @@ public class Person {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public LocalDate getDateOfBirth(){
+        return dateOfBirth;
+    }
+    public void setDateOfBirth(LocalDate dateOfBirth){
+        this.dateOfBirth = dateOfBirth;
+
     }
 }

@@ -3,6 +3,57 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedGender = null;
     let selectedRecordData = null;
 
+function convertToDateFormat(dateStr) {
+    if (!dateStr) {
+        console.error("תאריך לא מוגדר או לא תקין");
+        return "";
+    }
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) {
+        console.error("תאריך בפורמט שגוי");
+        return "";
+    }
+
+    const [year, month, day] = parts.map(Number);
+
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+        console.error("תאריך כולל ערכים לא תקינים");
+        return "";
+    }
+
+    // המרת לפורמט yyyy-MM-dd
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+}
+
+
+// פונקציה לחישוב גיל
+function calculateAge(dateOfBirthId, ageFieldId) {
+    const dateOfBirthStr = document.getElementById(dateOfBirthId).value.trim();
+    const dob = new Date(dateOfBirthStr);
+    const today = new Date();
+
+    // בדיקת אם התאריך שנכנס תקין
+    if (isNaN(dob.getTime())) {
+        document.getElementById(ageFieldId).value = 'Invalid date';
+        return;
+    }
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDifference = today.getMonth() - dob.getMonth();
+
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+
+    document.getElementById(ageFieldId).value = age;
+}
+
+
+// הקשבה לשינויים בתאריך הלידה של הגברים
+document.getElementById('UpDateOfBirth').addEventListener('change', function() {
+    calculateAge('UpDateOfBirth', 'UpAge');
+});
+
     function search() {
         const searchTerm = document.getElementById('searchInput').value;
         const gender = document.querySelector('input[name="gender"]:checked').value;
@@ -41,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td>${result.height}</td>
                             <td>${result.status}</td>
                             <td>${result.location}</td>
+                            <td>${result.dateOfBirth}</td>
                             <td>${result.age}</td>
                             <td>${result.lastName}</td>
                             <td>${result.firstName}</td>
@@ -60,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+
+
     function selectRecord(id, gender, row) {
         if (selectedRecordId === id) {
             alert("כבר נבחרה רשומה זו. אנא בחר רשומה אחרת.");
@@ -77,14 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
             height: cells[0].innerText,
             status: cells[1].innerText,
             location: cells[2].innerText,
-            age: cells[3].innerText,
-            lastName: cells[4].innerText,
-            firstName: cells[5].innerText,
-            style: cells[6].innerText,
-            community: cells[7].innerText,
-            headCovering: cells[8].innerText,
-            device: cells[9].innerText,
+            dateOfBirth: cells[3].innerText,
+            age: cells[4].innerText,
+            lastName: cells[5].innerText,
+            firstName: cells[6].innerText,
+            style: cells[7].innerText,
+            community: cells[8].innerText,
+            headCovering: cells[9].innerText,
+            device: cells[10].innerText,
         };
+
+
 
         // הוספת מחלקת "נבחר" לשורה שנבחרה
         row.classList.add('selected');
@@ -127,10 +184,16 @@ function deleteSelected() {
 
         const modal = document.getElementById("updateModal");
         modal.style.display = "block";
-        // מילוי השדות בטופס לפי הנתונים של הרשומה הנבחרת
-        document.getElementById('UpStatus').value = selectedRecordData.status;
-        document.getElementById('UpFirstName').value = selectedRecordData.firstName;
-        document.getElementById('UpLastName').value = selectedRecordData.lastName;
+
+         // המרת התאריך לפורמט yyyy-MM-dd
+            const originalDate = convertToDateFormat(selectedRecordData.dateOfBirth);
+
+            // מילוי השדות בטופס
+            document.getElementById('UpStatus').value = selectedRecordData.status;
+            document.getElementById('UpFirstName').value = selectedRecordData.firstName;
+            document.getElementById('UpLastName').value = selectedRecordData.lastName;
+            document.getElementById('UpDateOfBirth').value = originalDate;
+      console.log(document.getElementById('UpDateOfBirth').value = selectedRecordData.dateOfBirth);
         document.getElementById('UpAge').value = selectedRecordData.age;
         document.getElementById('UpHeight').value = selectedRecordData.height;
         document.getElementById('UpLocation').value = selectedRecordData.location;
@@ -141,27 +204,13 @@ function deleteSelected() {
 
     }
 
-//    function saveUpdateData() {
-//        const updatedData = {
-//        if(style){
-//        }
-//
-//            status: document.getElementById('UpStatus').value,
-//            firstName: document.getElementById('UpFirstName').value,
-//            lastName: document.getElementById('UpLastName').value,
-//            age: document.getElementById('UpAge').value,
-//            height: document.getElementById('UpHeight').value,
-//            location: document.getElementById('UpLocation').value,
-//            style: document.getElementById('UpStyle').value,
-//            community: document.getElementById('UpCommunity').value,
-//            headCovering: document.getElementById('UpHeadCovering').value,
-//            device: document.getElementById('UpDevice').value,
-//        };
 
 function saveUpdateData() {
+
     const status = document.getElementById('UpStatus').value.trim();
     const firstName = document.getElementById('UpFirstName').value.trim();
     const lastName = document.getElementById('UpLastName').value.trim();
+    const dateOfBirth = document.getElementById('UpDateOfBirth').value.trim();
     const age = document.getElementById('UpAge').value.trim();
     const height = document.getElementById('UpHeight').value.trim();
     const location = document.getElementById('UpLocation').value.trim();
@@ -185,6 +234,7 @@ function saveUpdateData() {
             status,
             firstName,
             lastName,
+            dateOfBirth,
             age,
             height,
             location,
@@ -241,9 +291,11 @@ function saveUpdateData() {
     }
 
     window.search = search;
+    window.convertToDateFormat = convertToDateFormat;
     window.selectRecord = selectRecord;
     window.deleteSelected = deleteSelected;
     window.updateSelected = updateSelected;
+    window.calculateAge = calculateAge;
     window.saveUpdateData = saveUpdateData;
     window.closeModal = closeModal;
     window.openMenModal = openMenModal;

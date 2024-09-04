@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.model.Men;
+import org.example.model.PreferencesMen;
 import org.example.model.PreferencesWomen;
 import org.example.model.Women;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 public interface PreferencesWomenRepository extends JpaRepository<PreferencesWomen, Integer> {
 
     Optional<PreferencesWomen> findByWomenId(int womenId);
+    Optional<PreferencesWomen> findByIdPreferencesWomen(int idPreferencesWomen);
 
     @Repository
     public interface WomenRepository extends JpaRepository<Women, Integer> {

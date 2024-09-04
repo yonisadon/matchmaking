@@ -6,6 +6,7 @@ import org.example.model.*;
 import org.example.model.Women;
 import org.example.repository.PreferencesWomenRepository;
 import org.example.repository.WomenRepository;
+import org.example.service.AgeCalculator;
 import org.example.service.WomenPreferencesServiceImpl;
 import org.example.service.WomenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,18 +57,8 @@ public class WomenController {
         List<Women> results = womenService.searchWomen(term, criteria);
         System.out.println("Results: " + results);
         return results;
-        //return womenService.searchWomen(term, criteria);
     }
 
-//    @DeleteMapping("/women/{id}")
-//    public ResponseEntity<?> deleteWomen(@PathVariable int id) {
-//        try {
-//            Women deletedWoman = womenService.deleteWomen(id);
-//            return ResponseEntity.ok(deletedWoman);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
-//    }
 @DeleteMapping("/women/delete/{id}")
 public ResponseEntity<?> deleteWomen(@PathVariable int id) {
     try {
@@ -96,19 +88,34 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
         }
     }
 
-//    @PostMapping("/saveWomenData")
-//    public ResponseEntity<Women> addWomen(@RequestBody Women women) {
-//        System.out.println("Received POST request with data: " + women);
-//        womenService.addWomen(women);
-//        return new ResponseEntity<>(women, HttpStatus.CREATED);
-//    }
+    @PutMapping("preferences_women/savePreferences/update/{womenId}")
+    public ResponseEntity<?> updatePreferredWomen(@PathVariable int womenId, @RequestBody PreferencesWomen updatePreferencesWomen) {
+        try {
+            System.out.println("/{womenId}");
+            PreferencesWomen updated = womenPreferencesService.updatePreferredWomen(womenId, updatePreferencesWomen);
+            return ResponseEntity.ok(updated);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     @PostMapping("/women/saveWomen")
     public ResponseEntity<Map<String, Object>> saveWomenData(@RequestBody Women women) {
         try {
             System.out.println("Received POST request with data: " + women);
             System.out.println(women.getId());
+            // קבל את התאריך הנוכחי
+            LocalDate today = LocalDate.now();
 
+            // בדוק אם תאריך הלידה לא NULL
+            if (women.getDateOfBirth() != null) {
+                // חישוב גיל בעזרת פונקציה
+                int age = AgeCalculator.calculateAge(women.getDateOfBirth(), today);
+                women.setAge(age); // עדכן את גיל האדם בטבלה
+            } else {
+                // טיפול במצב שבו תאריך הלידה אינו מוגדר
+                System.out.println("Date of birth is null for man ID: " + women.getId());
+            }
             Women savedWoman = womenService.addWomen(women);
 
             Map<String, Object> response = new HashMap<>();
@@ -148,10 +155,21 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
+// שמירת ערך הid של טבלת אישה לביצוע שליפה ולשת, אותה בטבלה במסך בצד שמאל לצורך התאמה
     @GetMapping("preferences_women/byWomenId/{womenId}")
     public ResponseEntity<PreferencesWomenDTO> getPreferencesById(@PathVariable int womenId) {
         PreferencesWomen preferences = womenPreferencesService.getPreferencesWomenByWomenId(womenId);
+        if (preferences != null) {
+            PreferencesWomenDTO dto = convertToDTO(preferences);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    // שמירת הid של טבלת העדפות לצורך שליפת הנתונים למסך עדכון ואחכ לצורך עדכון הפרטים בצורה תקינה
+    @GetMapping("preferences_women/byWomenIdPreferences/{idPreferencesWomen}")
+    public ResponseEntity<PreferencesWomenDTO> getPreferencesByIdPreferences(@PathVariable int idPreferencesWomen) {
+        PreferencesWomen preferences = womenPreferencesService.getPreferencesWomenByPreferencesId(idPreferencesWomen);
         if (preferences != null) {
             PreferencesWomenDTO dto = convertToDTO(preferences);
             return ResponseEntity.ok(dto);

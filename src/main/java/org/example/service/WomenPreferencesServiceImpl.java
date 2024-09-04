@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.model.PreferencesMen;
 import org.example.model.PreferencesWomen;
 import org.example.repository.PreferencesWomenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,31 @@ public class WomenPreferencesServiceImpl {
                     .orElseThrow(() -> new EntityNotFoundException("Preferences for womenId " + womenId + " not found"));
         }
 
+    public PreferencesWomen getPreferencesWomenByPreferencesId(int idPreferencesWomen) {
+        System.out.println(idPreferencesWomen);
+        return preferencesWomenRepository.findByIdPreferencesWomen(idPreferencesWomen)
+                .orElseThrow(() -> new EntityNotFoundException("Preferences for womenId " + idPreferencesWomen + " not found"));
+    }
+
+    public PreferencesWomen updatePreferredWomen(int womenId, PreferencesWomen updatePreferencesWomen) {
+        System.out.println(womenId);
+        System.out.println(updatePreferencesWomen);
+        PreferencesWomen existingUpWomen = preferencesWomenRepository.findByIdPreferencesWomen(womenId).orElseThrow(() -> new EntityNotFoundException("preferences women not found "+ womenId));
+
+        // עדכון השדות
+        existingUpWomen.setPreferredRegion(updatePreferencesWomen.getPreferredRegion());
+        existingUpWomen.setPreferredCommunity(updatePreferencesWomen.getPreferredCommunity());
+        existingUpWomen.setHandkerchiefOrWig(updatePreferencesWomen.getHandkerchiefOrWig());
+        existingUpWomen.setPreferredStyle(updatePreferencesWomen.getPreferredStyle());
+        existingUpWomen.setKosherOrNonKosherDevice(updatePreferencesWomen.getKosherOrNonKosherDevice());
+        existingUpWomen.setPreferredStatus(updatePreferencesWomen.getPreferredStatus());
+        existingUpWomen.setPreferredAgeFrom(updatePreferencesWomen.getPreferredAgeFrom());
+        existingUpWomen.setPreferredAgeTo(updatePreferencesWomen.getPreferredAgeTo());
+        existingUpWomen.setPreferredHeightFrom(updatePreferencesWomen.getPreferredHeightFrom());
+        existingUpWomen.setPreferredHeightTo(updatePreferencesWomen.getPreferredHeightTo());
+        return preferencesWomenRepository.save(existingUpWomen);
+    }
+}
 //        public List<PreferencesWomen> getAllPreferencesWomen() {
 //            return preferencesWomenRepository.findAll();
 //        }
@@ -46,6 +72,6 @@ public class WomenPreferencesServiceImpl {
 //        public void deletePreferencesWomenById(int id) {
 //            preferencesWomenRepository.deleteById(id);
 //        }
-}
+
 
 

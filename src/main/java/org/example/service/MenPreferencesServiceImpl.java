@@ -34,12 +34,42 @@ public class MenPreferencesServiceImpl {
         return preferencesMenRepository.save(preferencesMen);
 
     }
-
+    //הצגת נתונים ובלחיצה על עדכן העדפות שליפה לפי menId
     public PreferencesMen getPreferencesMenByMenId(int menId) {
         System.out.println(menId);
         System.out.println(preferencesMenRepository);
         return preferencesMenRepository.findByMenId(menId)
                 .orElseThrow(() -> new EntityNotFoundException("Preferences for menId " + menId + " not found"));
+    }
+    // update preferences from women and save
+    public PreferencesMen getPreferencesMenByPreferencesId(int idPreferencesMen) {
+        System.out.println(idPreferencesMen);
+        System.out.println(preferencesMenRepository);
+        return preferencesMenRepository.findByIdPreferencesMen(idPreferencesMen)
+                .orElseThrow(() -> new EntityNotFoundException("Preferences for menId " + idPreferencesMen + " not found"));
+    }
+
+    public PreferencesMen updatePreferredMen(int menId, PreferencesMen updatePreferences) {
+        System.out.println(menId);
+        System.out.println(updatePreferences);
+        PreferencesMen existingUpMen = preferencesMenRepository.findByIdPreferencesMen(menId).orElseThrow(() -> new EntityNotFoundException("preferences men not found "+ menId));
+
+//        if (updateMen.getAge() <= 0 || updateMen.getAge() > 120) {
+//            throw new IllegalArgumentException("Age must be between 1 and 120");
+//        }
+        // עדכון השדות
+        existingUpMen.setPreferredRegion(updatePreferences.getPreferredRegion());
+        existingUpMen.setPreferredCommunity(updatePreferences.getPreferredCommunity());
+        existingUpMen.setHandkerchiefOrWig(updatePreferences.getHandkerchiefOrWig());
+        existingUpMen.setPreferredStyle(updatePreferences.getPreferredStyle());
+        existingUpMen.setKosherOrNonKosherDevice(updatePreferences.getKosherOrNonKosherDevice());
+        existingUpMen.setPreferredStatus(updatePreferences.getPreferredStatus());
+        existingUpMen.setPreferredAgeFrom(updatePreferences.getPreferredAgeFrom());
+        existingUpMen.setPreferredAgeTo(updatePreferences.getPreferredAgeTo());
+
+        existingUpMen.setPreferredHeightFrom(updatePreferences.getPreferredHeightFrom());
+        existingUpMen.setPreferredHeightTo(updatePreferences.getPreferredHeightTo());
+        return preferencesMenRepository.save(existingUpMen);
     }
 }
 //    public PreferencesMen deletePreferencesMen(int menId) {

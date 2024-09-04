@@ -2,6 +2,8 @@ package org.example.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.DTO.PreferencesMenDTO;
+import org.example.job.AgeUpdateService;
+import org.example.service.AgeCalculator;
 import org.example.model.Men;
 import org.example.model.PreferencesMen;
 import org.example.model.Women;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +38,36 @@ public class MenController {
     private final PreferencesMenRepository preferencesMenRepository;
     private static final Logger logger = LoggerFactory.getLogger(MenController.class);
 
+    private final AgeUpdateService<Men> ageUpdateService;
+
 
     @Autowired
-    public MenController(MenServiceImpl menService, MenPreferencesServiceImpl menPreferencesService, ObjectMapper objectMapper, PreferencesMenRepository preferencesMenRepository) {
+    public MenController(MenServiceImpl menService, MenPreferencesServiceImpl menPreferencesService, PreferencesMenRepository preferencesMenRepository,
+                         AgeUpdateService<Men> ageUpdateService){
         this.menService = menService;
         this.menPreferencesService = menPreferencesService;
         this.preferencesMenRepository = preferencesMenRepository;
+        this.ageUpdateService = ageUpdateService;
+
     }
 
+    //לריצה ידנית של הג'וב כדי לבצע עדכון בגיל לשימוש טסט כרגע
+    @GetMapping("/run-job")
+    public String runJob() {
+        logger.info("Running job manually");
+        List<Men> menList = menRepository.findAll(); // שליפת כל הרשומות של הגברים
+        ageUpdateService.runJobManually(menList);   // עדכון הגילאים באופן ידני
+        menRepository.saveAll(menList);  // שמירת כל הרשומות המעודכנות
+        return "Job ran for men"; // דף או הודעה שתינתן למשתמש לאחר הריצה
+    }
+
+    //    @GetMapping("/run-job")
+//    public String runJob() {
+//        logger.info("Running job manually");
+//        List<Men> menList = menRepository.findAll();
+//        ageUpdateService.runJobManually(menList);
+//        return "job-ran for men"; // דף או הודעה שתינתן למשתמש לאחר הריצה
+//    }
     //    @GetMapping("/searchAll")
 //    public List<Men> getAllMen() {
 //        List<Men> menList = menService.getAllMen();
@@ -100,6 +125,19 @@ public class MenController {
         try {
             System.out.println("Received POST request with data: " + men);
             System.out.println(men.getId());
+            //men.setAge(AgeCalculator.calculateAge(men.getDateOfBirth(), men.));
+            // קבל את התאריך הנוכחי
+            LocalDate today = LocalDate.now();
+
+            // בדוק אם תאריך הלידה לא NULL
+            if (men.getDateOfBirth() != null) {
+                // חישוב גיל בעזרת פונקציה
+                int age = AgeCalculator.calculateAge(men.getDateOfBirth(), today);
+                men.setAge(age); // עדכן את גיל האדם בטבלה
+            } else {
+                // טיפול במצב שבו תאריך הלידה אינו מוגדר
+                System.out.println("Date of birth is null for man ID: " + men.getId());
+            }
 
             Men savedMen = menService.addMen(men);
             Map<String, Object> response = new HashMap<>();
@@ -118,14 +156,6 @@ public class MenController {
     public ResponseEntity<Map<String, Object>> savePreferences(@RequestBody PreferencesMen preferencesMen) {
 
         try {
-            System.out.println("1: " + preferencesMen.getPreferredRegion());
-            System.out.println("2: " + preferencesMen.getPreferredCommunity());
-            System.out.println("3: " + preferencesMen.getPreferredStatus());
-            System.out.println("4: " + preferencesMen.getHandkerchiefOrWig());
-            System.out.println("5: " + preferencesMen.getKosherOrNonKosherDevice());
-            System.out.println("6: " + preferencesMen.getPreferredStyle());
-
-            // לוודא ש-idMen מועבר ונשמר בצורה נכונה
             Men men = preferencesMen.getMen();
             if (men == null || men.getId() == 0) {
                 throw new IllegalArgumentException("Men object or idMen is missing");
@@ -182,6 +212,7 @@ public class MenController {
     @PutMapping("/men/update/{id}")
     public ResponseEntity<?> updateMen(@PathVariable int id, @RequestBody Men updateMen) {
         try {
+            System.out.println(menService.updateMen(id, updateMen));
             Men updated = menService.updateMen(id, updateMen);
             return ResponseEntity.ok(updated);
         } catch (EntityNotFoundException e) {
@@ -189,6 +220,18 @@ public class MenController {
         }
     }
 
+    @PutMapping("preferences_men/savePreferences/update/{menId}")
+    public ResponseEntity<?> updatePreferredMen(@PathVariable int menId, @RequestBody PreferencesMen updatePreferences) {
+        try {
+            System.out.println(menId);
+            System.out.println(updatePreferences);
+            PreferencesMen updated = menPreferencesService.updatePreferredMen(menId, updatePreferences);
+            return ResponseEntity.ok(updated);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+// and הצגת הנתונים של ההתאמות דרך menId
     @GetMapping("preferences_men/byMenId/{menId}")
         public ResponseEntity<PreferencesMenDTO> getPreferencesById(@PathVariable int menId) {
             PreferencesMen preferences = menPreferencesService.getPreferencesMenByMenId(menId);
@@ -199,6 +242,18 @@ public class MenController {
                 return ResponseEntity.notFound().build();
             }
         }
+
+        // update preferences and save
+    @GetMapping("preferences_men/byMenIdPreferences/{idPreferencesMen}")
+    public ResponseEntity<PreferencesMenDTO> getPreferencesByIdPreferences(@PathVariable int idPreferencesMen) {
+        PreferencesMen preferences = menPreferencesService.getPreferencesMenByPreferencesId(idPreferencesMen);
+        if (preferences != null) {
+            PreferencesMenDTO dto = convertToDTO(preferences);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
         private PreferencesMenDTO convertToDTO(PreferencesMen preferences) {
             PreferencesMenDTO dto = new PreferencesMenDTO();

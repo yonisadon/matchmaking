@@ -88,6 +88,11 @@ public class WomenServiceImpl implements WomenService {
         Women existingWoman = womenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Woman not found"));
 
         // עדכון השדות
+        existingWoman.setDevice(updatedWoman.getDevice());
+        existingWoman.setCommunity(updatedWoman.getCommunity());
+        existingWoman.setHeadCovering(updatedWoman.getHeadCovering());
+        existingWoman.setStyle(updatedWoman.getStyle());
+        existingWoman.setDateOfBirth(updatedWoman.getDateOfBirth());
         existingWoman.setAge(updatedWoman.getAge());
         existingWoman.setFirstName(updatedWoman.getFirstName());
         existingWoman.setLastName(updatedWoman.getLastName());
@@ -109,6 +114,7 @@ public class WomenServiceImpl implements WomenService {
     }
 
     private boolean matchesPreferences(PreferencesWomen preferences, Men men) {
+        //return true;
         return  isRegionMatch(preferences, men) &&
                 isCommunityMatch(preferences, men) &&
                 isStatusMatch(preferences, men) &&
@@ -162,7 +168,7 @@ public class WomenServiceImpl implements WomenService {
         if (heightRange[0] == 0 || heightRange[1] == 0 || heightRange[0] > heightRange[1]) {
             return true;
         }
-        return men.getAge() >= heightRange[0] && men.getAge() <= heightRange[1];
+        return men.getHeight() >= heightRange[0] && men.getHeight() <= heightRange[1];
     }
 
     private boolean isDeviceMatch(PreferencesWomen preferences, Men men) {

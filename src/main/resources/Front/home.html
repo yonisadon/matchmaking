@@ -43,6 +43,7 @@
         <th>גובה</th>
         <th>סטטוס</th>
         <th>מיקום</th>
+        <th>תאריך</th>
         <th>גיל</th>
         <th>שם משפחה</th>
         <th>שם פרטי</th>
@@ -92,9 +93,14 @@
                   <label for="menLastName">:שם משפחה</label>
                   <input type="text" id="menLastName" placeholder="Last Name">
               </div>
+            <div class="form-group">
+                <label for="dateOfBirthMen">:תאריך לידה</label>
+                <input type="date" id="dateOfBirthMen" name="dateOfBirthMen">
+            </div>
               <div class="form-group">
                   <label for="menAge">:גיל</label>
-                  <input type="number" id="menAge" placeholder="Age">
+                  <input type="text" id="menAge" name="menAge" readonly>
+<!--                  <input type="number" id="menAge" placeholder="Age">-->
               </div>
               <div class="form-group">
                   <label for="menHeight">:גובה</label>
@@ -167,8 +173,12 @@
                 <input type="text" id="womenLastName" placeholder="Last Name">
             </div>
             <div class="form-group">
+                <label for="dateOfBirthWomen">:תאריך לידה</label>
+                <input type="date" id="dateOfBirthWomen" name="dateOfBirthWomen">
+            </div>
+            <div class="form-group">
                 <label for="womenAge">:גיל</label>
-                <input type="number" id="womenAge" placeholder="Age">
+                <input type="text" id="womenAge" name="womenAge" readonly>
             </div>
             <div class="form-group">
                 <label for="womenHeight">:גובה</label>
@@ -209,7 +219,7 @@
     </div>
 </div>
 
-<!-- מודל העדפות אישיות לגבר -->
+<!-- מודל העדפות אישיות  -->
 <div id="preferencesModal" class="modal">
     <div class="modal-content">
         <form id="preferencesForm">
@@ -297,8 +307,13 @@
                 <input type="text" id="UpLastName" placeholder="Last Name">
             </div>
             <div class="form-group">
+                <label for="UpDateOfBirth">:תאריך לידה</label>
+                <input type="date" id="UpDateOfBirth" name="UpDateOfBirth">
+
+            </div>
+            <div class="form-group">
                 <label for="UpAge">:גיל</label>
-                <input type="number" id="UpAge" placeholder="Age">
+                <input type="text" id="UpAge" name="UpAge" readonly>
             </div>
             <div class="form-group">
                 <label for="UpHeight">:גובה</label>

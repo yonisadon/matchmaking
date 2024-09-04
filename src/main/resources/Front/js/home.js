@@ -2,11 +2,17 @@ var modal = document.getElementById("menModal");
 
 var btn = document.getElementById("openModalButton");
 
+fetch('http://localhost:8080/api/run-job')
+  .then(response => response.text())
+  .then(data => {
+    console.log(data); // בדוק את התגובה מה-API
+  })
+  .catch(error => console.error('Error:', error));
+
 function closeModal(modalId) {
 var modal = document.getElementById(modalId);
 modal.style.display = "none";
 }
-
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -17,11 +23,55 @@ window.onclick = function(event) {
 let idMen;
 let idWomen;
 var currentGender;
+
+// פונקציה לחישוב גיל
+function calculateAge(dateOfBirthId, ageFieldId) {
+    const dob = new Date(document.getElementById(dateOfBirthId).value);
+    const today = new Date();
+
+    // בדיקת אם התאריך שנכנס תקין
+    if (isNaN(dob.getTime())) {
+        document.getElementById(ageFieldId).value = 'Invalid date';
+        return;
+    }
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDifference = today.getMonth() - dob.getMonth();
+
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    document.getElementById(ageFieldId).value = age;
+}
+
+// הקשבה לשינויים בתאריך הלידה של הגברים
+document.getElementById('dateOfBirthMen').addEventListener('change', function() {
+    calculateAge('dateOfBirthMen', 'menAge');
+});
+
+// הקשבה לשינויים בתאריך הלידה של הנשים
+document.getElementById('dateOfBirthWomen').addEventListener('change', function() {
+    calculateAge('dateOfBirthWomen', 'womenAge');
+});
+
+// חישוב גיל כאשר הדף נטען מחדש אם יש ערך בתאריך הלידה של הגברים
+window.addEventListener('load', function() {
+    if (document.getElementById('dateOfBirthMen').value) {
+        calculateAge('dateOfBirthMen', 'menAge');
+    }
+
+    if (document.getElementById('dateOfBirthWomen').value) {
+        calculateAge('dateOfBirthWomen', 'womenAge');
+    }
+});
+
 // פונקציה לשמירת נתוני MEN
 function saveMenData() {
+
     var status = document.getElementById("menStatus").value;
     var firstName = document.getElementById("menFirstName").value;
     var lastName = document.getElementById("menLastName").value;
+    var dateOfBirth = document.getElementById("dateOfBirthMen").value;
     var age = document.getElementById("menAge").value;
     var height = document.getElementById("menHeight").value;
     var location = document.getElementById("menLocation").value;
@@ -45,6 +95,7 @@ function saveMenData() {
         status: status,
         firstName: firstName,
         lastName: lastName,
+        dateOfBirth: dateOfBirth,
         age: age,
         height: height,
         location: location,
@@ -88,6 +139,7 @@ function saveWomenData() {
     var status = document.getElementById("womenStatus").value;
     var firstName = document.getElementById("womenFirstName").value;
     var lastName = document.getElementById("womenLastName").value;
+    var dateOfBirth = document.getElementById("dateOfBirthWomen").value;
     var age = document.getElementById("womenAge").value;
     var height = document.getElementById("womenHeight").value;
     var location = document.getElementById("womenLocation").value;
@@ -111,6 +163,7 @@ function saveWomenData() {
         status: status,
         firstName: firstName,
         lastName: lastName,
+        dateOfBirth: dateOfBirth,
         age: age,
         height: height,
         location: location,
@@ -159,15 +212,18 @@ function savePreferencesData() {
     var preferredAgeRange = document.getElementById('preferredAgeRange').value.trim();
     var preferredHeightRange = document.getElementById('preferredHeightRange').value.trim();
 
-     if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
-        alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
-        return;
-    }
-
-    if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
-        alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
-        return;
-    }
+    //if(preferredAgeRange){
+         if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
+             alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
+             return;
+         }
+    //}
+    //if(preferredHeightRange){
+         if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
+             alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
+                return;
+        }
+    //}
 
     var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => parseInt(age.trim()));
     var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => parseInt(height.trim()));
@@ -253,6 +309,7 @@ function resetFormFields() {
     document.getElementById("menStatus").value = "";
     document.getElementById("menFirstName").value = "";
     document.getElementById("menLastName").value = "";
+    document.getElementById("dateOfBirthMen").value = "";
     document.getElementById("menAge").value = "";
     document.getElementById("menHeight").value = "";
     document.getElementById("menLocation").value = "";

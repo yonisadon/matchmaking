@@ -41,7 +41,7 @@
         <div id="searchResults"></div>
         <table id="resultsTable" class="right-table">
             <thead>
-            <tr>
+            <tr data-side="right">
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -55,13 +55,14 @@
                 <th>מס"ד</th>
             </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="rightA">
+            </tbody>
         </table>
 
         <div id="findingOtherSideCriteriaResults"></div>
         <table id="tableFromFindingOtherSide" class="right-table">
             <thead>
-            <tr>
+            <tr data-side="left">
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -75,18 +76,18 @@
                 <th>מס"ד</th>
             </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="rightB">
+            </tbody>
         </table>
     </div>
 
     <!-- צד שמאל - העדפות -->
-    <div class="preferences-section left-side">
+    <div class="preferences-section">
         <div class="findingMatch-container">
             <div id="findingMatchCriteriaResults"></div>
             <table id="resultsTableFromFindingMatch" class="left-table">
                 <thead>
                 <tr>
-
                     <th>טווח גילאים</th>
                     <th>טווח גובה</th>
                     <th>עדה</th>
@@ -99,7 +100,7 @@
                     <th>מס"ד</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="leftA"></tbody>
             </table>
         </div>
 
@@ -120,12 +121,72 @@
                     <th>מס"ד</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="leftB"></tbody>
             </table>
         </div>
     </div>
 </div>
 
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <form id="UpForm">
+            <h2 class="modal-title">עדכון רשומה</h2>
+            <div class="form-group">
+                <label for="preferredRegion">:אזור מגורים</label>
+                <input type="text" id="preferredRegion">
+            </div>
+            <div class="form-group">
+                <label for="preferredCommunity">:עדה</label>
+                <input type="text" id="preferredCommunity">
+            </div>
+            <div class="form-group">
+                <label for="preferredAgeRange">טווח גילאים:</label>
+                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            </div>
+            <div class="form-group">
+                <label for="preferredHeightRange">טווח גובה:</label>
+                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            </div>
+            <div class="form-group">
+                <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
+                <select id="handkerchiefOrWig">
+                    <option></option>
+                    <option value="מטפחת">מטפחת</option>
+                    <option value="פאה">פאה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredStyle">סגנון</label>
+                <select id="preferredStyle">
+                    <option></option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
+                <select id="kosherOrNonKosherDevice">
+                    <option></option>
+                    <option value="מכשיר כשר">מכשיר כשר</option>
+                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>
+                    <option value="מכשיר מסונן">מכשיר מסונן</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredStatus">סטטוס</label>
+                <select id="preferredStatus">
+                    <option></option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                </select>
+            </div>
+            <button type="button" onclick="closeModal('updateModal')">סגור</button>
+            <button type="button" onclick="saveUpdateData()">שמור</button>
+        </form>
+    </div>
+</div>
 <!--<div class="ButtonFromSearch-container">-->
 <!--    <button id="searchMatches" onclick="updateSelected()">חפש התאמה</button>-->
 <!--    <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>-->

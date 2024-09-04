@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface PreferencesMenRepository extends JpaRepository<PreferencesMen, Integer> {
 
     Optional<PreferencesMen> findByMenId(int menId);
+    Optional<PreferencesMen> findByIdPreferencesMen(int idPreferencesMen);
 
 
     @Repository
