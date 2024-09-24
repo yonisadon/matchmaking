@@ -1,26 +1,78 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOMContentLoaded event triggered");
+    document.getElementById('searchCriteria').addEventListener('change', handleCriteriaChange);
+    const searchCriteria = document.getElementById('searchCriteria');
+    if (searchCriteria) {
+        console.log("searchCriteria element found");
+        searchCriteria.addEventListener('change', handleCriteriaChange);
+    } else {
+        console.error("searchCriteria element not found");
+    }
+
+    let gender = null;
     let selectedRecordId = null;
     let selectedGender = null;
     let selectedRecordData = null;
     let sideElement;
 
-    // פונקציה כללית לטיפול בקריאות fetch
-    function fetchData(url) {
-        return fetch(url, { method: 'GET' })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            });
+const criteriaOptions = {
+    status: [
+        { value: '', text: '' },
+        { value: 'רווק/ה', text: 'רווק/ה' },
+        { value: 'גרוש/ה', text: 'גרוש/ה' },
+        { value: 'אלמן/ה', text: 'אלמן/ה' },
+        { value: 'נשוי/ה', text: 'נשוי/ה' }
+    ],
+    style: [
+        { value: '', text: '' },
+        { value: 'חרדי/ת', text: 'חרדי/ת' },
+        { value: 'חרדי/ת-מודרני', text: 'חרדי/ת-מודרני' },
+        { value: 'דתי/יה', text: 'דתי/יה' }
+    ]
+};
+
+function handleCriteriaChange() {
+    console.log('handleCriteriaChange called', criteriaOptions);
+    const criteria = document.getElementById("searchCriteria").value; // שינוי מ-searchCriteria ל-criteria
+    const inputContainer = document.getElementById("inputContainer");
+    console.log(`Selected criteria: ${criteria}`);
+
+    // נקה את התוכן הקודם של ה-inputContainer
+    inputContainer.innerHTML = '';
+
+    if (criteriaOptions[criteria]) { // שימוש ב-criteria במקום searchCriteria
+        const select = document.createElement('select');
+        select.id = `${criteria}Select`; // שימוש ב-criteria במקום searchCriteria
+
+        criteriaOptions[criteria].forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            select.appendChild(opt);
+        });
+
+        inputContainer.appendChild(select);
+    } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'searchInput';
+        input.placeholder = 'הערך לחיפוש';
+        inputContainer.appendChild(input);
     }
-
+}
     function search() {
-        deleteParamsInTable();
 
-        const searchTerm = document.getElementById('searchInput').value;
-        const gender = document.querySelector('input[name="gender"]:checked').value;
+    console.log("test");
+//        const searchTerm = document.getElementById('searchInput').value;
+        let searchTerm;
+        gender = document.querySelector('input[name="gender"]:checked').value;
         const criteria = document.getElementById('searchCriteria').value;
+
+    if (criteriaOptions[criteria]) {
+        searchTerm = document.getElementById(`${criteria}Select`).value;
+    } else {
+        searchTerm = document.getElementById('searchInput').value;
+    }
 
         console.log(gender);
         console.log(criteria);
@@ -32,59 +84,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         console.log(`Fetching: ${url}`);
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const tableBody = document.querySelector('#resultsTable tbody');
-                tableBody.innerHTML = '';
-
-                // איפוס הבחירה של השורה הנוכחית
-                selectedRecordId = null;
-                selectedGender = null;
-                selectedRecordData = null;
-//                selectedRecordData = null;
-                if (data.length > 0) {
-                    data.forEach(result => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${result.height}</td>
-                            <td>${result.status}</td>
-                            <td>${result.location}</td>
-                            <td>${result.age}</td>
-                            <td>${result.lastName}</td>
-                            <td>${result.firstName}</td>
-                            <td>${result.style}</td>
-                            <td>${result.community}</td>
-                            <td>${result.headCovering}</td>
-                            <td>${result.device}</td>
-                            <td>${result.id}</td>
-                        `;
-                        row.onclick = () => selectRecord(result.id, gender, row);
-                        tableBody.appendChild(row);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching search results:', error);
-            });
+        const columns =  ['height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
+        FetchService.fetchData(url, 'GET')
+         .then(data => {
+                    if (data.length === 0) {
+                        deleteParamsInTable();
+                        alert('לא נמצאה רשומה לפי החיפוש.');
+                    } else {
+                        UIService.displayResults(data, 'resultsTable', columns, gender);
+                        selectedRecordId = null;
+                        selectedGender = null;
+                        selectedRecordData = null;
+                        console.log("Selected Gender:", gender);
+                    }
+                })
+        .catch(error => {
+            deleteParamsInTable();
+            alert(error.message);
+        });
     }
-
 
 
 function selectRecord(id, gender, row) {
-    if (!row) {
-        console.error('Row is null');
-        return;
-    }
+
     const allRows = row.closest('tbody').querySelectorAll('tr');
     allRows.forEach(row => row.classList.remove('selected'));
     selectedRecordId = id;
     selectedGender = gender;
+
+console.log("Selected Gender:", selectedGender); // בדוק את הערך בשלבים שונים
+    console.log(gender);
 
     console.log("Selected Record ID:", selectedRecordId);
     console.log("Selected Gender:", selectedGender);
@@ -156,14 +185,9 @@ function selectRecord(id, gender, row) {
             console.log('Invalid sideElement value');
             return;
         }
+        console.log(url);
+    FetchService.fetchData(url, 'GET')
 
-        fetch(url, { method: 'GET' })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
             .then(data => {
                 console.log("Data received from backend:", data);
                 row.classList.add('selected');
@@ -261,16 +285,7 @@ function selectRecord(id, gender, row) {
            const modal = document.getElementById("updateModal");
            modal.style.display = "block";
         console.log(url);
-        fetch(url, {
-           method: 'GET'
-        })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-
-    })
+        FetchService.fetchData(url, 'GET')
 
     .then(data => {
     console.log(data);
@@ -334,7 +349,6 @@ function saveUpdateData() {
     var kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
     var preferredStatus = document.getElementById('preferredStatus').value;
 
- // יצירת אובייקט מעודכן רק אם כל השדות מלאים
         const updatedData = {
              preferredAgeFrom: preferredAgeFrom,
                             preferredAgeTo: preferredAgeTo,
@@ -356,19 +370,7 @@ function saveUpdateData() {
              url = selectedGender === 'men' ? `http://localhost:8080/api/preferences_women/savePreferences/update/${selectedRecordId}` : `http://localhost:8080/api/preferences_men/savePreferences/update/${selectedRecordId}`;
         }
 
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
+        FetchService.fetchData(url, 'PUT', updatedData)
         .then(data => {
             console.log('Record updated:', data);
             alert("הרשומה עודכנה בהצלחה!");
@@ -383,8 +385,6 @@ function saveUpdateData() {
             resetFormFields();
             selectedRecordId = null;
             selectedRecordData = null;
-
-//            selectedGender = null;
         })
         .catch(error => {
             console.error('Error updating record:', error);
@@ -393,6 +393,7 @@ function saveUpdateData() {
     }
 
         function closeModal(modalId) {
+            //resetFormFields();
             const modal = document.getElementById(modalId);
             modal.style.display = "none";
         }
@@ -406,45 +407,18 @@ deleteParamsInTableMatch();
     }
     if(sideElement === 'rightA'){
     console.log("Selected Record ID from search mathe:", selectedRecordId);
-
        url = selectedGender === 'men' ? `http://localhost:8080/api/men/searchMatches?menId=${selectedRecordId}` : `http://localhost:8080/api/women/searchMatches?womenId=${selectedRecordId}`;
        }
        else {
-               // אם לא מתקיים התנאי הנכון, פשוט לצאת מהפונקציה
                console.log("חיפוש התאמה מאחת הרשומות מהטבלה הראשונה מצד ימין ");
                return;
            }
+    console.log("url", url);
+    const columns =  ['height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
+    FetchService.fetchData(url, 'GET')
 
-       console.log(url);
-        fetch(url, {
-            method: 'GET'
-        })
-    //fetch(`http://localhost:8080/api/men/searchMatches?menId=${selectedRecordId}`)
-        .then(response => response.json())
         .then(data => {
-            const tableBody = document.querySelector('#tableFromFindingOtherSide tbody');
-            tableBody.innerHTML = '';
-
-            if (data.length > 0) {
-                data.forEach(result => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${result.height}</td>
-                        <td>${result.status}</td>
-                        <td>${result.location}</td>
-                        <td>${result.age}</td>
-                        <td>${result.lastName}</td>
-                        <td>${result.firstName}</td>
-                        <td>${result.style}</td>
-                        <td>${result.community}</td>
-                        <td>${result.headCovering}</td>
-                        <td>${result.device}</td>
-                        <td>${result.id}</td>
-                    `;
-                    row.onclick = () => selectRecord(result.id, selectedGender, row); // עדכון פונקציית onclick
-                    tableBody.appendChild(row);
-                });
-            }
+        UIService.displayResults(data, 'tableFromFindingOtherSide', columns, selectedGender)
         })
 
         .catch(error => {
@@ -457,20 +431,22 @@ deleteParamsInTableMatch();
 
 
        function deleteParamsInTable(){
+            const rightATableBody = document.querySelector('#resultsTable tbody');
             const leftATableBody = document.querySelector('#resultsTableFromFindingMatch tbody');
             const rightBTableBody = document.querySelector('#tableFromFindingOtherSide tbody');
             const leftBTableBody = document.querySelector('#resultsTableFromFindingMatchOtherSide tbody');
-            leftATableBody.innerHTML = ''; // נקה את הטבלה הקיימת
+            rightATableBody.innerHTML = '';
+            leftATableBody.innerHTML = '';
             rightBTableBody.innerHTML = '';
             leftBTableBody.innerHTML = '';
 
        }
-              function deleteParamsInTableMatch(){
-                   const rightBTableBody = document.querySelector('#tableFromFindingOtherSide tbody');
-                   const leftBTableBody = document.querySelector('#resultsTableFromFindingMatchOtherSide tbody');
-                   rightBTableBody.innerHTML = '';
-                   leftBTableBody.innerHTML = '';
-              }
+       function deleteParamsInTableMatch(){
+            const rightBTableBody = document.querySelector('#tableFromFindingOtherSide tbody');
+            const leftBTableBody = document.querySelector('#resultsTableFromFindingMatchOtherSide tbody');
+            rightBTableBody.innerHTML = '';
+            leftBTableBody.innerHTML = '';
+       }
 function resetFormFields() {
 
     document.getElementById("preferredRegion").value = "";

@@ -36,11 +36,11 @@ public class MenController {
     private final MenServiceImpl menService;
     private final MenPreferencesServiceImpl menPreferencesService;
     private final PreferencesMenRepository preferencesMenRepository;
+    private final AgeUpdateService<Men> ageUpdateService;
     private static final Logger logger = LoggerFactory.getLogger(MenController.class);
 
-    private final AgeUpdateService<Men> ageUpdateService;
 
-
+//constructor.
     @Autowired
     public MenController(MenServiceImpl menService, MenPreferencesServiceImpl menPreferencesService, PreferencesMenRepository preferencesMenRepository,
                          AgeUpdateService<Men> ageUpdateService){
@@ -61,28 +61,14 @@ public class MenController {
         return "Job ran for men"; // דף או הודעה שתינתן למשתמש לאחר הריצה
     }
 
-    //    @GetMapping("/run-job")
-//    public String runJob() {
-//        logger.info("Running job manually");
-//        List<Men> menList = menRepository.findAll();
-//        ageUpdateService.runJobManually(menList);
-//        return "job-ran for men"; // דף או הודעה שתינתן למשתמש לאחר הריצה
-//    }
-    //    @GetMapping("/searchAll")
-//    public List<Men> getAllMen() {
-//        List<Men> menList = menService.getAllMen();
-//        System.out.println("Returning number of records: " + menList.size());
-//        List<Men> menRepositoryList = menRepository.findAll();
-//        System.out.println(menRepositoryList);
-//
-//        return menList;
-//    }
+    // general search in the table of men, after clicking in search button.
+    // continue in function getAllMen in class MenServiceImpl.
     @GetMapping("/men/searchAll")
     public ResponseEntity<List<Men>> getAllMen() {
         try {
             List<Men> menList = menRepository.findAll();
-        System.out.println(menList);
-        System.out.println(menRepository.findAll());
+            System.out.println(menList);
+            System.out.println(menRepository.findAll());
             return ResponseEntity.ok(menList);
         } catch (Exception e) {
             // טיפול בשגיאות
@@ -90,7 +76,8 @@ public class MenController {
         }
     }
 
-
+    // Retrieving a record by ID from the table of men, if you click on the update record button.
+    // continue in function getMenById in class MenServiceImpl.
     @GetMapping("/men/{id}")
     public ResponseEntity<Men> getMenById(@PathVariable("id") int id) {
         Men men = menService.getMenById(id);
@@ -101,6 +88,8 @@ public class MenController {
         }
     }
 
+    //Search by any condition (first name or age...) from the table of men, after clicking in search button.
+    // continue in function searchMen in class MenServiceImpl.
     @GetMapping("/men/search")
     public List<Men> searchMen(@RequestParam String term, @RequestParam String criteria) {
         List<Men> results = menService.searchMen(term, criteria);
@@ -110,16 +99,8 @@ public class MenController {
         return results;
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Men> getMenById(@PathVariable("id") int id) {
-//        Men men = menService.getMenById(id);
-//        if (men != null) {
-//            return new ResponseEntity<>(men, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
+    //Saving data by creating a new record in the table of men.
+    // continue in function addMen in class MenServiceImpl.
     @PostMapping("/men/saveMen")
     public ResponseEntity<Map<String, Object>> saveMenData(@RequestBody Men men) {
         try {
@@ -152,6 +133,7 @@ public class MenController {
         }
     }
 
+    //Saving data by creating a new record in the table of preferencesMen(This table is linked to men table).
     @PostMapping("/men/savePreferences")
     public ResponseEntity<Map<String, Object>> savePreferences(@RequestBody PreferencesMen preferencesMen) {
 
@@ -177,7 +159,8 @@ public class MenController {
         }
     }
 
-
+    //deleting row in the table of men and table of preferencesMen by id from the men table.
+    //continue in function deleteMen in class MenServiceImpl.
     @DeleteMapping("/men/delete/{id}")
     public ResponseEntity<?> deleteMen(@PathVariable int id) {
         try {
@@ -194,21 +177,9 @@ public class MenController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-//    public ResponseEntity<?> deleteMen(@PathVariable int id, @PathVariable int menId) {
-//        try {
-//            Men deleteMen = menService.deleteMen(id);
-//            PreferencesMen preferencesMen = menPreferencesService.deletePreferencesMen(menId);
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("deletedMen", deleteMen);
-//            response.put("deletedPreferencesMen", preferencesMen);
-//            return ResponseEntity.ok(response);
-//
-//            //return ResponseEntity.ok(deleteMen);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
     }
-
+    //update row in the table of men, by id.
+    //continue in function updateMen in class MenServiceImpl.
     @PutMapping("/men/update/{id}")
     public ResponseEntity<?> updateMen(@PathVariable int id, @RequestBody Men updateMen) {
         try {
@@ -220,6 +191,7 @@ public class MenController {
         }
     }
 
+    //update row in the table of preferencesMen, by id of the men table.
     @PutMapping("preferences_men/savePreferences/update/{menId}")
     public ResponseEntity<?> updatePreferredMen(@PathVariable int menId, @RequestBody PreferencesMen updatePreferences) {
         try {
@@ -231,7 +203,9 @@ public class MenController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-// and הצגת הנתונים של ההתאמות דרך menId
+    //Displaying data according to an ID search in the men's table,
+    // but the data on the website screen for finding the match and displaying the data,
+    // will be taken from the preferencesMen table
     @GetMapping("preferences_men/byMenId/{menId}")
         public ResponseEntity<PreferencesMenDTO> getPreferencesById(@PathVariable int menId) {
             PreferencesMen preferences = menPreferencesService.getPreferencesMenByMenId(menId);
@@ -243,7 +217,7 @@ public class MenController {
             }
         }
 
-        // update preferences and save
+    //Continue the process of displaying or updating data by using the DTO class, and the identifier is idPreferencesMen in preferencesMen table.
     @GetMapping("preferences_men/byMenIdPreferences/{idPreferencesMen}")
     public ResponseEntity<PreferencesMenDTO> getPreferencesByIdPreferences(@PathVariable int idPreferencesMen) {
         PreferencesMen preferences = menPreferencesService.getPreferencesMenByPreferencesId(idPreferencesMen);
@@ -254,7 +228,6 @@ public class MenController {
             return ResponseEntity.notFound().build();
         }
     }
-
         private PreferencesMenDTO convertToDTO(PreferencesMen preferences) {
             PreferencesMenDTO dto = new PreferencesMenDTO();
             dto.setIdPreferencesMen(preferences.getIdPreferencesMen());
@@ -276,7 +249,8 @@ public class MenController {
             return dto;
         }
 
-
+    // search matches by id in the table of men.
+    //continue in function findMatchesByMenPreferences in MenServiceImpl class.
     @GetMapping("/men/searchMatches")
     public List<Women> searchMatches(@RequestParam int menId) {
         return menService.findMatchesByMenPreferences(menId);

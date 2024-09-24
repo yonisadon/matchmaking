@@ -99,6 +99,7 @@ public class WomenServiceImpl implements WomenService {
         existingWoman.setHeight(updatedWoman.getHeight());
         existingWoman.setStatus(updatedWoman.getStatus());
         existingWoman.setLocation(updatedWoman.getLocation());
+        existingWoman.setSeeking(updatedWoman.getSeeking());
 
         return womenRepository.save(existingWoman);
     }

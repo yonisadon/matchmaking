@@ -15,10 +15,13 @@ public class MenPreferencesServiceImpl {
     @Autowired
     private final PreferencesMenRepository preferencesMenRepository;
 
+    //constructor
     public MenPreferencesServiceImpl(PreferencesMenRepository preferencesMenRepository) {
         this.preferencesMenRepository = preferencesMenRepository;
     }
 
+    //Saving a new record in the table of preferenceMen
+    //This table is connected to table of men.
     public PreferencesMen addPreferencesMen(PreferencesMen preferencesMen) {
         if (preferencesMen.getPreferredAgeFrom() > preferencesMen.getPreferredAgeTo() ||
                 preferencesMen.getPreferredAgeFrom() == 0 && preferencesMen.getPreferredAgeTo() != 0 ||
@@ -34,14 +37,18 @@ public class MenPreferencesServiceImpl {
         return preferencesMenRepository.save(preferencesMen);
 
     }
-    //הצגת נתונים ובלחיצה על עדכן העדפות שליפה לפי menId
+
+    //service, Retrieving a record by ID from table of men.
+
     public PreferencesMen getPreferencesMenByMenId(int menId) {
         System.out.println(menId);
         System.out.println(preferencesMenRepository);
         return preferencesMenRepository.findByMenId(menId)
                 .orElseThrow(() -> new EntityNotFoundException("Preferences for menId " + menId + " not found"));
     }
-    // update preferences from women and save
+
+    //service, Retrieving a record by ID from table of preferenceMen.
+    //and updating preferences from women and save
     public PreferencesMen getPreferencesMenByPreferencesId(int idPreferencesMen) {
         System.out.println(idPreferencesMen);
         System.out.println(preferencesMenRepository);
@@ -49,6 +56,7 @@ public class MenPreferencesServiceImpl {
                 .orElseThrow(() -> new EntityNotFoundException("Preferences for menId " + idPreferencesMen + " not found"));
     }
 
+    //update row in the table of preferencesMen, by preferencesMenId.
     public PreferencesMen updatePreferredMen(int menId, PreferencesMen updatePreferences) {
         System.out.println(menId);
         System.out.println(updatePreferences);

@@ -72,7 +72,7 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                     throw new Error("לא נמצאה רשומה לפי החיפוש.");
                 }
                 return response.json();
             })
@@ -89,6 +89,9 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
                     data.forEach(result => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
+                            <td>${result.seeking}</td>
+                            <td>${result.createdAt}</td>
+                            <td>${result.updatedAt}</td>
                             <td>${result.height}</td>
                             <td>${result.status}</td>
                             <td>${result.location}</td>
@@ -105,11 +108,13 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
                         row.onclick = () => selectRecord(result.id, gender, row);
                         tableBody.appendChild(row);
                     });
+
                 }
+
             })
-            .catch(error => {
-                console.error('Error fetching search results:', error);
-            });
+        .catch(error => {
+            alert(error.message); // הצגת הודעה על כך שלא נמצאו תוצאות
+        });
     }
 
 
@@ -127,21 +132,32 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
         rows.forEach(r => r.classList.remove('selected'));
 
         const cells = row.getElementsByTagName("td");
-        selectedRecordData = {
-            height: cells[0].innerText,
-            status: cells[1].innerText,
-            location: cells[2].innerText,
-            dateOfBirth: cells[3].innerText,
-            age: cells[4].innerText,
-            lastName: cells[5].innerText,
-            firstName: cells[6].innerText,
-            style: cells[7].innerText,
-            community: cells[8].innerText,
-            headCovering: cells[9].innerText,
-            device: cells[10].innerText,
-        };
 
-
+        const recordId = cells[cells.length -1].innerText;
+        console.log(recordId);
+        if(selectedGender === 'men'){
+            selectedRecordData = {
+                    byWomenId: recordId,
+                };
+        }else if(selectedGender === 'women'){
+             selectedRecordData = {
+                    byMenId: recordId,
+                };
+        }
+//        selectedRecordData = {
+//
+//            height: cells[0].innerText,
+//            status: cells[1].innerText,
+//            location: cells[2].innerText,
+//            dateOfBirth: cells[3].innerText,
+//            age: cells[4].innerText,
+//            lastName: cells[5].innerText,
+//            firstName: cells[6].innerText,
+//            style: cells[7].innerText,
+//            community: cells[8].innerText,
+//            headCovering: cells[9].innerText,
+//            device: cells[10].innerText,
+//        };
 
         // הוספת מחלקת "נבחר" לשורה שנבחרה
         row.classList.add('selected');
@@ -181,29 +197,49 @@ function deleteSelected() {
             alert("אנא בחר רשומה לעדכון.");
             return;
         }
+    console.log("Selected Record ID:", selectedRecordId);
+    console.log("Selected Gender:", selectedGender);
+       let url;
+       if (selectedGender === 'men') {
+             url = `http://localhost:8080/api/men/${selectedRecordId}`;
+       }else{
+             url = `http://localhost:8080/api/women/${selectedRecordId}`;
+       }
 
         const modal = document.getElementById("updateModal");
         modal.style.display = "block";
+        console.log(url);
+        fetch(url, {
+           method: 'GET'
+        })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
 
-         // המרת התאריך לפורמט yyyy-MM-dd
-            const originalDate = convertToDateFormat(selectedRecordData.dateOfBirth);
+    })
+    .then(data => {
+    console.log(data);
 
-            // מילוי השדות בטופס
-            document.getElementById('UpStatus').value = selectedRecordData.status;
-            document.getElementById('UpFirstName').value = selectedRecordData.firstName;
-            document.getElementById('UpLastName').value = selectedRecordData.lastName;
-            document.getElementById('UpDateOfBirth').value = originalDate;
-      console.log(document.getElementById('UpDateOfBirth').value = selectedRecordData.dateOfBirth);
-        document.getElementById('UpAge').value = selectedRecordData.age;
-        document.getElementById('UpHeight').value = selectedRecordData.height;
-        document.getElementById('UpLocation').value = selectedRecordData.location;
-        document.getElementById('UpStyle').value = selectedRecordData.style;
-        document.getElementById('UpCommunity').value = selectedRecordData.community;
-        document.getElementById('UpHeadCovering').value = selectedRecordData.headCovering;
-        document.getElementById('UpDevice').value = selectedRecordData.device;
+    document.getElementById('UpHeight').value = data.height || '';
+    document.getElementById('UpStatus').value = data.status || '';
+    document.getElementById('UpLocation').value = data.location || '';
+    document.getElementById('UpDateOfBirth').value = data.dateOfBirth || '';
+    document.getElementById('UpAge').value = data.age || '';
+    document.getElementById('UpLastName').value = data.lastName || '';
+    document.getElementById('UpFirstName').value = data.firstName || '';
+    document.getElementById('UpStyle').value = data.style || '';
+    document.getElementById('UpCommunity').value = data.community || '';
+    document.getElementById('UpHeadCovering').value = data.headCovering || '';
+    document.getElementById('UpDevice').value = data.device || '';
+    document.getElementById('UpSeeking').value = data.seeking || '';
+})
 
-    }
-
+    .catch(error => {
+        console.error('Error fetching record for update:', error);
+    });
+}
 
 function saveUpdateData() {
 
@@ -218,6 +254,7 @@ function saveUpdateData() {
     const community = document.getElementById('UpCommunity').value.trim();
     const headCovering = document.getElementById('UpHeadCovering').value.trim();
     const device = document.getElementById('UpDevice').value.trim();
+    const seeking = document.getElementById('UpSeeking').value.trim();
 
     // בדיקת שדות ריקים
     if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
@@ -242,6 +279,7 @@ function saveUpdateData() {
             community,
             headCovering,
             device,
+            seeking,
         };
 
         const url = selectedGender === 'men' ? `http://localhost:8080/api/men/update/${selectedRecordId}` : `http://localhost:8080/api/women/update/${selectedRecordId}`;
@@ -262,6 +300,7 @@ function saveUpdateData() {
         .then(data => {
             console.log('Record updated:', data);
             alert("הרשומה עודכנה בהצלחה!");
+            search();
             closeModal('updateModal');
             selectedRecordId = null;
             selectedRecordData = null;

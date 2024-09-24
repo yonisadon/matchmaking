@@ -18,19 +18,24 @@
         <div class="search-container">
                 <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
                 <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
-            <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+            <div id="inputContainer">
+                <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+            </div>
+
+            <!--            <input type="text" id="searchInput" placeholder="הערך לחיפוש">-->
             <label>
                 <input type="radio" name="gender" value="men" checked> Men
             </label>
             <label>
                 <input type="radio" name="gender" value="women"> Women
             </label>
-            <select id="searchCriteria">
+<!--            onchange="handleCriteriaChange()"-->
+            <select id="searchCriteria" >
                 <option value="all"></option>
                 <option value="firstName">שם פרטי</option>
+                <option value="lastName">שם משפחה</option>
                 <option value="age">גיל</option>
                 <option value="location">מיקום</option>
-                <option value="lastName">שם משפחה</option>
                 <option value="status">סטטוס</option>
                 <option value="style">סגנון</option>
                 <option value="height">גובה</option>
@@ -156,7 +161,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStyle">סגנון</label>
+                <label for="preferredStyle">סטטוס</label>
                 <select id="preferredStyle">
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
@@ -174,7 +179,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStatus">סטטוס</label>
+                <label for="preferredStatus">סגנון</label>
                 <select id="preferredStatus">
                     <option></option>
                     <option value="חרדי/ת">חרדי/ת</option>
@@ -191,7 +196,8 @@
 <!--    <button id="searchMatches" onclick="updateSelected()">חפש התאמה</button>-->
 <!--    <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>-->
 <!--</div>-->
-
+<script src="js/fetchService.js"></script>
+<script src="js/UiService.js"></script>
 <script src="js/matches.js"></script>
 </body>
 </html>

@@ -24,6 +24,7 @@ public class MenServiceImpl implements MenService {
     private final PreferencesMenRepository preferencesMenRepository;
     private final WomenRepository womenRepository;
 
+    //constructor
     @Autowired
     public MenServiceImpl(MenRepository menRepository, PreferencesMenRepository preferencesMenRepository, WomenRepository womenRepository) {
         this.menRepository = menRepository;
@@ -31,22 +32,24 @@ public class MenServiceImpl implements MenService {
         this.womenRepository = womenRepository;
     }
 
-    //@Override
+    //service, Displays all existing rows from the men table.
     public List<Men> getAllMen() {
         List<Men> menList = menRepository.findAll();
         System.out.println("Number of records found: " + menList.size());
         return menList;
     }
 
+    //service, Retrieving a record by ID card from the men's register, and presenting the details in an update form
     public Men getMenById(int id) {
         return menRepository.findById(id).orElse(null);
     }
 
+    //Saving a new record in the table of men.
     public Men addMen(Men men) {
-
         return menRepository.save(men);
     }
 
+    //deleting row in the table of men and table of preferencesMen by id from the men table.
     public Men deleteMen(int id) {
         Optional<Men> men = menRepository.findById(id);
         if (men.isPresent()) {
@@ -57,37 +60,46 @@ public class MenServiceImpl implements MenService {
         }
     }
 
+    //Search by any condition (first name or age...) from the table of men, after clicking in search button.
     @Override
     public List<Men> searchMen(String term, String criteria) {
+        List<Men> results = new ArrayList<>();
         switch (criteria) {
             case "firstName":
                 if (term != null && !term.trim().isEmpty()) {
-                    return menRepository.findByFirstNameContainingIgnoreCase(term);
-                } else {
-                   // return new ArrayList<>(); // או תוצאה ריקה אחרת במקרה שה-term ריק או null
-                    return menRepository.findByFirstName(term);
+                    results = menRepository.findByFirstNameContainingIgnoreCase(term);
                 }
-                //System.out.println(term);
-                //return menRepository.findByFirstName(term);
+                break;
             case "age":
-                return menRepository.findByAge(Integer.parseInt(term));
+                results = menRepository.findByAge(Integer.parseInt(term));
+                break;
             case "location":
-                return menRepository.findByLocation(term);
+                results = menRepository.findByLocation(term);
+                break;
             case "lastName":
-                return menRepository.findByLastName(term);
+                results = menRepository.findByLastNameContainingIgnoreCase(term);
+                break;
             case "status":
-                return menRepository.findByStatus(term);
+                results = menRepository.findByStatus(term);
+                break;
             case "style":
-                return menRepository.findByStyle(term);
+                results = menRepository.findByStyle(term);
+                break;
             case "height":
-                return menRepository.findByHeight(Float.parseFloat(term));
+                results = menRepository.findByHeight(Float.parseFloat(term));
+                break;
             default:
-                return new ArrayList<>();
+                break;
         }
+        if (results.isEmpty()) {
+            throw new ResourceNotFoundException("לא נמצאה רשומה לפי החיפוש.");
+        }
+        return results;
     }
 
+    //update row in the table of men, by id.
     public Men updateMen(int id, Men updateMen) {
-        Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Men not found"));
+        Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("לא נמצא"));
 
 //        if (updateMen.getAge() <= 0 || updateMen.getAge() > 120) {
 //            throw new IllegalArgumentException("Age must be between 1 and 120");
@@ -104,11 +116,13 @@ public class MenServiceImpl implements MenService {
         existingMen.setHeight(updateMen.getHeight());
         existingMen.setStatus(updateMen.getStatus());
         existingMen.setLocation(updateMen.getLocation());
+        existingMen.setSeeking(updateMen.getSeeking());
         return menRepository.save(existingMen);
     }
 
+    //search matches by id in the table of men.
     public List<Women> findMatchesByMenPreferences(int menId) {
-        Men men = menRepository.findById(menId).orElseThrow(() -> new ResourceNotFoundException("Men not found"));
+        Men men = menRepository.findById(menId).orElseThrow(() -> new ResourceNotFoundException("לא נמצא"));
         PreferencesMen preferences = preferencesMenRepository.findByMenId(menId).orElseThrow(() -> new ResourceNotFoundException("Preferences not found"));
         System.out.println("menId: " + menId);
         List<Women> allWomen = womenRepository.findAll();
@@ -116,7 +130,9 @@ public class MenServiceImpl implements MenService {
                 .filter(woman -> matchesPreferences(preferences, woman))
                 .collect(Collectors.toList());
     }
-
+    //checks all the parameters, if everything is correct,
+    // then the corresponding record will be displayed in the table on the front screen (table on the lower right side),
+    //note: There can be several matching records.
     private boolean matchesPreferences(PreferencesMen preferences, Women women) {
         return  isRegionMatch(preferences, women) &&
                 isCommunityMatch(preferences, women) &&
@@ -128,6 +144,9 @@ public class MenServiceImpl implements MenService {
                 isHeadCoveringMatch(preferences, women);
     }
 
+    //Checks the region parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isRegionMatch(PreferencesMen preferences, Women women) {
         if (preferences.getPreferredRegion().isEmpty() || women.getLocation().isEmpty()) {
             return true; // Ignore if either is empty
@@ -144,6 +163,9 @@ public class MenServiceImpl implements MenService {
                 preferredRegion.contains(womanCity) || preferredRegion.contains(womanRegion);
     }
 
+    //Checks the community parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isCommunityMatch(PreferencesMen preferences, Women women) {
         if (preferences.getPreferredCommunity().isEmpty() || women.getCommunity().isEmpty()) {
             return true; // Ignore if either is empty
@@ -151,6 +173,9 @@ public class MenServiceImpl implements MenService {
         return preferences.getPreferredCommunity().contains(women.getCommunity());
     }
 
+    //Checks the status parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isStatusMatch(PreferencesMen preferences, Women women) {
         if (preferences.getPreferredStatus().isEmpty() || women.getStatus().isEmpty()) {
             return true; // Ignore if either is empty
@@ -158,10 +183,10 @@ public class MenServiceImpl implements MenService {
         return preferences.getPreferredStatus().equals(women.getStatus());
     }
 
+    //Checks the age parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isAgeMatch(PreferencesMen preferences, Women women) {
-//        if (preferences.getPreferredAgeFrom() == 0 || preferences.getPreferredAgeTo() == 0) {
-//            return true; // Ignore if either is empty
-//        }
         int[] ageRange = {preferences.getPreferredAgeFrom(), preferences.getPreferredAgeTo()};
         if (ageRange[0] == 0 || ageRange[1] == 0 || ageRange[0] > ageRange[1]) {
             return true;
@@ -170,6 +195,9 @@ public class MenServiceImpl implements MenService {
         return women.getAge() >= ageRange[0] && women.getAge() <= ageRange[1];
     }
 
+    //Checks the height parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isHeightMatch(PreferencesMen preferences, Women women) {
         float[] heightRange = {preferences.getPreferredHeightFrom(), preferences.getPreferredHeightTo()};
         if (heightRange[0] == 0 || heightRange[1] == 0 || heightRange[0] > heightRange[1]) {
@@ -178,6 +206,9 @@ public class MenServiceImpl implements MenService {
         return women.getHeight() >= heightRange[0] && women.getHeight() <= heightRange[1];
     }
 
+    //Checks the device parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isDeviceMatch(PreferencesMen preferences, Women women) {
         if (preferences.getKosherOrNonKosherDevice().isEmpty() || women.getDevice().isEmpty()) {
             return true; // Ignore if either is empty
@@ -185,6 +216,9 @@ public class MenServiceImpl implements MenService {
         return preferences.getKosherOrNonKosherDevice().equals(women.getDevice());
     }
 
+    //Checks the style parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isStyleMatch(PreferencesMen preferences, Women women) {
         if (preferences.getPreferredStyle() == null || preferences.getPreferredStyle().isEmpty() || women.getStyle().isEmpty()) {
             return true; // Ignore if either is empty
@@ -192,6 +226,9 @@ public class MenServiceImpl implements MenService {
         return preferences.getPreferredStyle().equals(women.getStyle());
     }
 
+    //Checks the head covering parameter, between the man's preferences and the records that exist in the woman's table,
+    // if a match is found returns a match found, if no match is found returns no match found,
+    //If one/both of the fields have no data, will be return true , and there will be no check on this parameter.
     private boolean isHeadCoveringMatch(PreferencesMen preferences, Women women) {
         if (preferences.getHandkerchiefOrWig().isEmpty() || women.getHeadCovering().isEmpty()) {
             return true; // Ignore if either is empty

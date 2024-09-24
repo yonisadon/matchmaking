@@ -11,6 +11,7 @@ import java.util.List;
 public interface MenRepository extends JpaRepository<Men, Integer> {
 
     List<Men> findByFirstNameContainingIgnoreCase(String term);
+    List<Men> findByLastNameContainingIgnoreCase(String term);
     List<Men> findByFirstName(String firstName);
     List<Men> findByAge(Integer age);
     List<Men> findByLocation(String location);

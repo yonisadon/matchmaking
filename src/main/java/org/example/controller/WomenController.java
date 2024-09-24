@@ -88,6 +88,7 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
         }
     }
 
+    //update row in the table of preferencesMen, by id of the men table.
     @PutMapping("preferences_women/savePreferences/update/{womenId}")
     public ResponseEntity<?> updatePreferredWomen(@PathVariable int womenId, @RequestBody PreferencesWomen updatePreferencesWomen) {
         try {

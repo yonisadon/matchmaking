@@ -18,14 +18,19 @@
         <div class="search-container">
                 <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
                 <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
-            <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+            <div id="inputContainer">
+                <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+            </div>
+
+            <!--            <input type="text" id="searchInput" placeholder="הערך לחיפוש">-->
             <label>
                 <input type="radio" name="gender" value="men" checked> Men
             </label>
             <label>
                 <input type="radio" name="gender" value="women"> Women
             </label>
-            <select id="searchCriteria">
+<!--            onchange="handleCriteriaChange()"-->
+            <select id="searchCriteria" >
                 <option value="all"></option>
                 <option value="firstName">שם פרטי</option>
                 <option value="age">גיל</option>
@@ -191,7 +196,8 @@
 <!--    <button id="searchMatches" onclick="updateSelected()">חפש התאמה</button>-->
 <!--    <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>-->
 <!--</div>-->
-
+<script src="js/fetchService.js"></script>
+<script src="js/UiService.js"></script>
 <script src="js/matches.js"></script>
 </body>
 </html>
