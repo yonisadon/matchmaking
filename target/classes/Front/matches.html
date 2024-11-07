@@ -16,26 +16,25 @@
     <div class="search-section right-side">
         <!-- שדה חפש -->
         <div class="search-container">
-                <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
-                <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
+            <button id="displayPictures" onclick="showSelectedImages()">הצג תמונות</button>
+            <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
+            <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
             <div id="inputContainer">
                 <input type="text" id="searchInput" placeholder="הערך לחיפוש">
             </div>
-
-            <!--            <input type="text" id="searchInput" placeholder="הערך לחיפוש">-->
             <label>
                 <input type="radio" name="gender" value="men" checked> Men
             </label>
             <label>
                 <input type="radio" name="gender" value="women"> Women
             </label>
-<!--            onchange="handleCriteriaChange()"-->
+
             <select id="searchCriteria" >
                 <option value="all"></option>
                 <option value="firstName">שם פרטי</option>
+                <option value="lastName">שם משפחה</option>
                 <option value="age">גיל</option>
                 <option value="location">מיקום</option>
-                <option value="lastName">שם משפחה</option>
                 <option value="status">סטטוס</option>
                 <option value="style">סגנון</option>
                 <option value="height">גובה</option>
@@ -43,6 +42,21 @@
             <button onclick="search()">חפש</button>
         </div>
 
+        <!-- Modal להצגת תמונות -->
+        <div id="imageModal" class="modal">
+            <div class="modal-content">
+                <img id="profileImageContainer" src="" alt="תמונה ראשית">
+                <span id="noProfileImage">אין תמונה</span>
+                <img id="additionalImageContainer" src="" alt="תמונה נוספת">
+                <span id="noCurrentAdditionalImage">אין תמונה</span>
+                <br>
+                <button type="button" onclick="closeModal('imageModal')">סגור</button>
+
+            </div>
+        </div>
+
+        <div class="scrollable-container">
+<!--        <div style="max-height: 800px; max-width: 1900px; margin: auto; overflow-y: scroll; height: 400px;">-->
         <div id="searchResults"></div>
         <table id="resultsTable" class="right-table">
             <thead>
@@ -63,7 +77,10 @@
             <tbody id="rightA">
             </tbody>
         </table>
+        </div>
 
+        <div class="scrollable-container">
+<!--        <div style="max-height: 800px; max-width: 1900px; margin: auto; overflow-y: scroll; height: 400px;">-->
         <div id="findingOtherSideCriteriaResults"></div>
         <table id="tableFromFindingOtherSide" class="right-table">
             <thead>
@@ -85,8 +102,9 @@
             </tbody>
         </table>
     </div>
-
+    </div>
     <!-- צד שמאל - העדפות -->
+<!--    <div class="scrollable-container">-->
     <div class="preferences-section">
         <div class="findingMatch-container">
             <div id="findingMatchCriteriaResults"></div>
@@ -108,7 +126,8 @@
                 <tbody id="leftA"></tbody>
             </table>
         </div>
-
+<!--    </div>-->
+<!--        <div class="scrollable-container">-->
         <div class="findingMatch-container">
             <div id="findingMatchOtherSideCriteriaResults"></div>
             <table id="resultsTableFromFindingMatchOtherSide" class="left-table">
@@ -131,6 +150,7 @@
         </div>
     </div>
 </div>
+<!--</div>-->
 
 <div id="updateModal" class="modal">
     <div class="modal-content">
@@ -161,12 +181,14 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStyle">סגנון</label>
+                <label for="preferredStyle">סטטוס</label>
                 <select id="preferredStyle">
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
                     <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
             <div class="form-group">
@@ -179,12 +201,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStatus">סטטוס</label>
+                <label for="preferredStatus">סגנון</label>
                 <select id="preferredStatus">
                     <option></option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
                     <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <button type="button" onclick="closeModal('updateModal')">סגור</button>

@@ -4,18 +4,24 @@ import org.example.exception.ResourceNotFoundException;
 import org.example.model.Men;
 import org.example.model.PreferencesMen;
 import org.example.model.Women;
-import org.example.model.Women;
 import org.example.repository.MenRepository;
 import org.example.repository.PreferencesMenRepository;
 import org.example.repository.WomenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.example.controller.MenController.saveFile;
 
 @Service
 public class MenServiceImpl implements MenService {
@@ -46,6 +52,7 @@ public class MenServiceImpl implements MenService {
 
     //Saving a new record in the table of men.
     public Men addMen(Men men) {
+        System.out.println(men.getProfilePictureUrl());
         return menRepository.save(men);
     }
 
@@ -98,13 +105,34 @@ public class MenServiceImpl implements MenService {
     }
 
     //update row in the table of men, by id.
-    public Men updateMen(int id, Men updateMen) {
+//    public Men updateMen(int id, Men updateMen) {
+//        Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("לא נמצא"));
+//
+////        if (updateMen.getAge() <= 0 || updateMen.getAge() > 120) {
+////            throw new IllegalArgumentException("Age must be between 1 and 120");
+////        }
+//        // עדכון השדות
+//        existingMen.setDevice(updateMen.getDevice());
+//        existingMen.setCommunity(updateMen.getCommunity());
+//        existingMen.setHeadCovering(updateMen.getHeadCovering());
+//        existingMen.setStyle(updateMen.getStyle());
+//        existingMen.setDateOfBirth(updateMen.getDateOfBirth());
+//        existingMen.setAge(updateMen.getAge());
+//        existingMen.setFirstName(updateMen.getFirstName());
+//        existingMen.setLastName(updateMen.getLastName());
+//        existingMen.setHeight(updateMen.getHeight());
+//        existingMen.setStatus(updateMen.getStatus());
+//        existingMen.setLocation(updateMen.getLocation());
+//        existingMen.setPhone(updateMen.getPhone());
+//        existingMen.setSeeking(updateMen.getSeeking());
+//
+//        return menRepository.save(existingMen);
+//    }
+    public Men updateMen(int id, Men updateMen)  {
         Men existingMen = menRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("לא נמצא"));
 
-//        if (updateMen.getAge() <= 0 || updateMen.getAge() > 120) {
-//            throw new IllegalArgumentException("Age must be between 1 and 120");
-//        }
         // עדכון השדות
+        //existingMen.setId(updateMen.getId());
         existingMen.setDevice(updateMen.getDevice());
         existingMen.setCommunity(updateMen.getCommunity());
         existingMen.setHeadCovering(updateMen.getHeadCovering());
@@ -116,9 +144,70 @@ public class MenServiceImpl implements MenService {
         existingMen.setHeight(updateMen.getHeight());
         existingMen.setStatus(updateMen.getStatus());
         existingMen.setLocation(updateMen.getLocation());
+        existingMen.setPhone(updateMen.getPhone());
         existingMen.setSeeking(updateMen.getSeeking());
+
         return menRepository.save(existingMen);
     }
+
+    public Men updateMenImages(int id, MultipartFile profilePictureUrl, MultipartFile additionalPictureUrl, String deleteProfile, String deleteAdditionalPicture) throws IOException {
+        Men existingMen = menRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Record not found"));
+
+        // עדכון URLים של התמונות
+        if ("true".equals(deleteProfile) && existingMen.getProfilePictureUrl() != null) {
+            deletePicture(existingMen.getProfilePictureUrl()); // מחיקת הקובץ מהשרת
+            System.out.println(existingMen.getProfilePictureUrl());
+            existingMen.setProfilePictureUrl("");  // הסרת הנתיב ממסד הנתונים
+        }
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            System.out.println(existingMen.getProfilePictureUrl());
+            deletePicture(existingMen.getProfilePictureUrl());
+            System.out.println(existingMen.getProfilePictureUrl());
+
+            String newProfilePicturePath = saveFile(profilePictureUrl);
+            existingMen.setProfilePictureUrl(newProfilePicturePath);
+            System.out.println(newProfilePicturePath);
+
+        }
+        if ("true".equals(deleteAdditionalPicture) && existingMen.getAdditionalPictureUrl() != null) {
+            deletePicture(existingMen.getAdditionalPictureUrl()); // מחיקת הקובץ מהשרת
+            existingMen.setAdditionalPictureUrl("");  // הסרת הנתיב ממסד הנתונים
+        }
+        if (additionalPictureUrl != null && !additionalPictureUrl.isEmpty()) {
+            deletePicture(existingMen.getAdditionalPictureUrl());
+            String additionalPicturePath = saveFile(additionalPictureUrl);
+            existingMen.setAdditionalPictureUrl(additionalPicturePath);
+        }
+
+        // שמירת השינויים במסד הנתונים
+        return menRepository.save(existingMen);
+    }
+
+    public static void deletePicture(String fileName) {
+        String directoryPath = "D:\\matchmaking\\src\\main\\resources\\static\\images\\"; // נתיב לתיקיית הקבצים
+        File file = new File(directoryPath + fileName);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("הקובץ נמחק בהצלחה: " + file.getAbsolutePath());
+            } else {
+                System.out.println("לא הצלחנו למחוק את הקובץ: " + file.getAbsolutePath());
+            }
+        } else {
+            System.out.println("הקובץ לא קיים: " + file.getAbsolutePath());
+        }
+
+    }
+
+
+    // פונקציה לחילוץ שם בסיסי של קובץ לאחר קו תחתון
+//    private String extractBaseFileName(String filePath) {
+//        if (filePath == null || filePath.isEmpty()) {
+//            return "";
+//        }
+//        int underscoreIndex = filePath.indexOf("_");
+//        return underscoreIndex != -1 ? filePath.substring(underscoreIndex + 1) : filePath;
+//    }
 
     //search matches by id in the table of men.
     public List<Women> findMatchesByMenPreferences(int menId) {
@@ -130,6 +219,7 @@ public class MenServiceImpl implements MenService {
                 .filter(woman -> matchesPreferences(preferences, woman))
                 .collect(Collectors.toList());
     }
+
     //checks all the parameters, if everything is correct,
     // then the corresponding record will be displayed in the table on the front screen (table on the lower right side),
     //note: There can be several matching records.
@@ -235,5 +325,11 @@ public class MenServiceImpl implements MenService {
         }
         return preferences.getHandkerchiefOrWig().equals(women.getHeadCovering());
     }
+
+    public Men findShowSelectedImages(int id) {
+        return menRepository.findById(id).orElse(null);
+    }
+
+
 }
 

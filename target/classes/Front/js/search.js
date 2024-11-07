@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    console.log("DOMContentLoaded event triggered");
+    document.getElementById('searchCriteria').addEventListener('change', handleCriteriaChange);
+    const searchCriteria = document.getElementById('searchCriteria');
+    if (searchCriteria) {
+        console.log("searchCriteria element found");
+        searchCriteria.addEventListener('change', handleCriteriaChange);
+    } else {
+        console.error("searchCriteria element not found");
+    }
+
     let selectedRecordId = null;
     let selectedGender = null;
     let selectedRecordData = null;
@@ -48,11 +59,63 @@ function calculateAge(dateOfBirthId, ageFieldId) {
     document.getElementById(ageFieldId).value = age;
 }
 
-
 // הקשבה לשינויים בתאריך הלידה של הגברים
 document.getElementById('UpDateOfBirth').addEventListener('change', function() {
     calculateAge('UpDateOfBirth', 'UpAge');
 });
+
+
+const criteriaOptions = {
+    status: [
+        { value: '', text: '' },
+        { value: 'רווק/ה', text: 'רווק/ה' },
+        { value: 'גרוש/ה', text: 'גרוש/ה' },
+        { value: 'אלמן/ה', text: 'אלמן/ה' },
+        { value: 'נשוי/ה', text: 'נשוי/ה' },
+        { value: 'לא רלוונטי', text: 'לא רלוונטי' }
+    ],
+    style: [
+        { value: '', text: '' },
+        { value: 'חרדי/ת ספרדי/ת', text: 'חרדי/ת ספרדי/ת' },
+        { value: 'חרדי/ת אשכנזי/ת', text: 'חרדי/ת אשכנזי/ת' },
+        { value: 'חרדי/ת', text: 'חרדי/ת' },
+        { value: 'חרדי/ת-מודרני', text: 'חרדי/ת-מודרני' },
+        { value: 'דתי/יה', text: 'דתי/יה' },
+        { value: 'דתי/יה לאומי/ת', text: 'דתי/יה לאומי/ת' },
+        { value: 'חבדניק/ית', text: 'חבדניק/ית' },
+        { value: 'ברסלב/ית', text: 'ברסלב/ית' }
+    ]
+};
+
+function handleCriteriaChange() {
+    console.log('handleCriteriaChange called', criteriaOptions);
+    const criteria = document.getElementById("searchCriteria").value; // שינוי מ-searchCriteria ל-criteria
+    const inputContainer = document.getElementById("inputContainer");
+    console.log(`Selected criteria: ${criteria}`);
+
+    // נקה את התוכן הקודם של ה-inputContainer
+    inputContainer.innerHTML = '';
+
+    if (criteriaOptions[criteria]) { // שימוש ב-criteria במקום searchCriteria
+        const select = document.createElement('select');
+        select.id = `${criteria}Select`; // שימוש ב-criteria במקום searchCriteria
+
+        criteriaOptions[criteria].forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            select.appendChild(opt);
+        });
+
+        inputContainer.appendChild(select);
+    } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'searchInput';
+        input.placeholder = 'הערך לחיפוש';
+        inputContainer.appendChild(input);
+    }
+}
 
     function search() {
         const searchTerm = document.getElementById('searchInput').value;
@@ -90,6 +153,7 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${result.seeking}</td>
+                            <td>${result.phone}</td>
                             <td>${result.createdAt}</td>
                             <td>${result.updatedAt}</td>
                             <td>${result.height}</td>
@@ -163,6 +227,21 @@ document.getElementById('UpDateOfBirth').addEventListener('change', function() {
         row.classList.add('selected');
     }
 
+function runJobFromDate(){
+ const genderFromDate = document.querySelector('input[name="gender"]:checked').value;
+console.log(genderFromDate);
+    let url = genderFromDate === 'men' ? `http://localhost:8080/api/men/run-job` : `http://localhost:8080/api/women/run-job`;
+    console.log(url);
+    fetch(url)
+//fetch('http://localhost:8080/api/men/run-job')
+  .then(response => response.text())
+  .then(data => {
+    console.log(data); // בדוק את התגובה מה-API
+    //genderFromDate = null;
+  })
+  .catch(error => console.error('Error:', error));
+}
+
 function deleteSelected() {
     if (!selectedRecordId) {
         alert("אנא בחר רשומה למחיקה.");
@@ -221,7 +300,7 @@ function deleteSelected() {
     })
     .then(data => {
     console.log(data);
-
+    document.getElementById('UpId').value = data.id || '';
     document.getElementById('UpHeight').value = data.height || '';
     document.getElementById('UpStatus').value = data.status || '';
     document.getElementById('UpLocation').value = data.location || '';
@@ -233,7 +312,34 @@ function deleteSelected() {
     document.getElementById('UpCommunity').value = data.community || '';
     document.getElementById('UpHeadCovering').value = data.headCovering || '';
     document.getElementById('UpDevice').value = data.device || '';
-    document.getElementById('UpSeeking').value = data.seeking || '';
+    document.getElementById('UpPhone').value = data.phone || '';
+    document.getElementById('UpSeeking').value = data.phone || '';
+
+            const currentProfileImage = document.getElementById('currentProfileImage');
+            const noProfileImageText = document.getElementById('noProfileImageText');
+            if (data.profilePictureUrl) {
+            //???תהליך לביצוע שהתמונה תוצג תקין מיד ולא אחרי הורדת השרת
+                currentProfileImage.src = `http://localhost:8080/images/${data.profilePictureUrl}?timestamp=${new Date().getTime()}`;
+
+                currentProfileImage.style.display = 'block';
+                noProfileImageText.style.display = 'none';
+            } else {
+                currentProfileImage.style.display = 'none';
+                noProfileImageText.style.display = 'block';
+            }
+
+            const currentAdditionalImage = document.getElementById('currentAdditionalImage');
+            const noCurrentAdditionalImageText = document.getElementById('noCurrentAdditionalImageText');
+            if (data.additionalPictureUrl) {
+            //???תהליך לביצוע שהתמונה תוצג תקין מיד ולא אחרי הורדת השרת
+                currentAdditionalImage.src = `http://localhost:8080/images/${data.additionalPictureUrl}?timestamp=${new Date().getTime()}`;
+
+                currentAdditionalImage.style.display = 'block';
+                noCurrentAdditionalImageText.style.display = 'none';
+            } else {
+                currentAdditionalImage.style.display = 'none';
+                noCurrentAdditionalImageText.style.display = 'block';
+            }
 })
 
     .catch(error => {
@@ -241,8 +347,7 @@ function deleteSelected() {
     });
 }
 
-function saveUpdateData() {
-
+async function saveUpdateData() {
     const status = document.getElementById('UpStatus').value.trim();
     const firstName = document.getElementById('UpFirstName').value.trim();
     const lastName = document.getElementById('UpLastName').value.trim();
@@ -254,68 +359,150 @@ function saveUpdateData() {
     const community = document.getElementById('UpCommunity').value.trim();
     const headCovering = document.getElementById('UpHeadCovering').value.trim();
     const device = document.getElementById('UpDevice').value.trim();
+    const phone = document.getElementById('UpPhone').value.trim();
     const seeking = document.getElementById('UpSeeking').value.trim();
 
-    // בדיקת שדות ריקים
-    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
-        alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
-        return; // עצור את הפעולה אם אחד השדות ריק
+    const profilePictureUrl = document.getElementById("UpProfilePicture").files[0];
+    const additionalPictureUrl = document.getElementById("UpAdditionalPicture").files[0];
+    const deleteProfilePicture = document.getElementById("deleteProfilePicture").checked;
+    const deleteAdditionalPicture = document.getElementById("deleteAdditionalPicture").checked;
+
+
+    if (!status || !firstName || !lastName || !age || !height || !location || !style) {
+        alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה, שם ומשפחה.');
+        return;
     }
-  if (!/^\d+$/.test(height)) {
+
+    if (!/^\d+$/.test(height)) {
         alert(' הכנס גובה בפורמט תקין, לדוגמה: 156');
         return;
     }
 
-    // יצירת אובייקט מעודכן רק אם כל השדות מלאים
-        const updatedData = {
-            status,
-            firstName,
-            lastName,
-            dateOfBirth,
-            age,
-            height,
-            location,
-            style,
-            community,
-            headCovering,
-            device,
-            seeking,
-        };
+    const updatedData = {
+        status,
+        firstName,
+        lastName,
+        dateOfBirth,
+        age,
+        height,
+        location,
+        style,
+        community,
+        headCovering,
+        device,
+        phone,
+        seeking,
+    };
 
-        const url = selectedGender === 'men' ? `http://localhost:8080/api/men/update/${selectedRecordId}` : `http://localhost:8080/api/women/update/${selectedRecordId}`;
+    const url = selectedGender === 'men' ? `http://localhost:8080/api/men/update/${selectedRecordId}` : `http://localhost:8080/api/women/update/${selectedRecordId}`;
 
-        fetch(url, {
+    try {
+        const response = await fetch(url, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(updatedData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Record updated:', data);
-            alert("הרשומה עודכנה בהצלחה!");
-            search();
-            closeModal('updateModal');
-            selectedRecordId = null;
-            selectedRecordData = null;
-            selectedGender = null;
-        })
-        .catch(error => {
-            console.error('Error updating record:', error);
         });
+
+    if (!response.ok) {
+        const errorMessage = await response.text(); // קבלת ההודעה מהשרת
+        throw new Error(errorMessage); // זריקת שגיאה עם ההודעה
     }
+        const data = await response.json();
+         await sendImages(profilePictureUrl, additionalPictureUrl, deleteProfilePicture, deleteAdditionalPicture);
+
+        console.log('Record updated:', data);
+        alert("הרשומה עודכנה בהצלחה!");
+        search();
+        resetFormFields();
+        closeModal('updateModal');
+        selectedRecordId = null;
+        selectedRecordData = null;
+        selectedGender = null;
+
+    }catch (error) {
+    console.log('response');
+    console.log('Error message:', error.message);
+}
+}
+// פונקציה לשליחת התמונות
+async function sendImages(profilePictureUrl, additionalPictureUrl, deleteProfilePicture, deleteAdditionalPicture) {
+    const formData = new FormData();
+
+//    if (deleteProfilePicture) {
+//        formData.append('deleteProfilePicture', "true");
+//    } else if (profilePictureUrl) {
+//        formData.append('profilePictureUrl', profilePictureUrl);
+//    }
+ if (profilePictureUrl) {
+        formData.append('profilePictureUrl', profilePictureUrl);
+    } else if (deleteProfilePicture) {
+         formData.append('deleteProfilePicture', "true");
+    }
+    if (additionalPictureUrl) {
+         formData.append('additionalPictureUrl', additionalPictureUrl);
+    }else if (deleteAdditionalPicture) {
+         formData.append('deleteAdditionalPicture', "true");
+    }
+
+       // const response = await fetch(`http://localhost:8080/api/women/update/images/${selectedRecordId}`, {
+    let response = null;
+    if(selectedGender === 'men' ){
+          response = await fetch(`http://localhost:8080/api/men/update/images/${selectedRecordId}`,
+          {
+                 method: 'PUT',
+                 body: formData,
+             });
+    }else{
+         response = await fetch(`http://localhost:8080/api/women/update/images/${selectedRecordId}`,
+        {
+                  method: 'PUT',
+                  body: formData,
+             });
+    }
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log(response);
+    return response.json();
+}
+
 
     function closeModal(modalId) {
+        console.log('test');
         const modal = document.getElementById(modalId);
         modal.style.display = "none";
-    }
+        resetFormFields();
 
+    }
+    function resetFormFields() {
+                document.getElementById("UpId").value = "";
+                document.getElementById("UpHeight").value = "";
+                document.getElementById("UpStatus").value = "";
+                document.getElementById("UpLocation").value = "";
+                document.getElementById("UpDateOfBirth").value = "";
+                document.getElementById("UpAge").value = "";
+                document.getElementById("UpLastName").value = "";
+                document.getElementById("UpFirstName").value = "";
+                document.getElementById("UpStyle").value = "";
+                document.getElementById("UpCommunity").value = "";
+                document.getElementById("UpHeadCovering").value = "";
+                document.getElementById("UpDevice").value = "";
+                document.getElementById("UpPhone").value = "";
+                document.getElementById("UpHeadCovering").value = "";
+                document.getElementById("UpDevice").value = "";
+                document.getElementById("UpSeeking").value = "";
+                document.getElementById("currentProfileImage").value = "";
+                document.getElementById("noProfileImageText").value = "";
+                document.getElementById("currentAdditionalImage").value = "";
+                document.getElementById("noCurrentAdditionalImageText").value = "";
+                document.getElementById("UpProfilePicture").value = "";
+                document.getElementById("UpAdditionalPicture").value = "";
+                document.getElementById("deleteProfilePicture").checked = "";
+                document.getElementById("deleteAdditionalPicture").checked = "";
+
+}
     function openMenModal() {
         document.getElementById('menModal').style.display = 'block';
     }
@@ -340,4 +527,6 @@ function saveUpdateData() {
     window.openMenModal = openMenModal;
     window.openWomenModal = openWomenModal;
     window.openMatchModal = openMatchModal;
+    window.resetFormFields = resetFormFields;
+    window.runJobFromDate = runJobFromDate;
 });

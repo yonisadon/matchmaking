@@ -62,11 +62,13 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 200px;
+    font-size: 20px;
 }
 
 /* עיצוב תוויות */
 .search-container label {
     margin: 0 10px;
+    font-size: 20px;
 }
 
 /* עיצוב תפריטים וכפתורים */
@@ -77,6 +79,7 @@ textarea {
     background-color: #007BFF;
     color: #fff;
     cursor: pointer;
+    font-size: 20px;
 }
 
 /* צבע רקע בעת ריחוף מעל הכפתור */
@@ -89,10 +92,76 @@ textarea {
     background-color: #fff;
     color: #000;
 }
+.selected {
+    background-color: #d1e7fd;
+    color: #100;
+}
+/*טובלאות */
+/* סגנון לקונטיינר הראשי */
+.main-container {
+    display: flex;
+    justify-content: flex-start; /* ממקם את כל האלמנטים בצד שמאל */
+    align-items: flex-start; /* ממקם את הטבלאות כלפי למעלה */
+    gap: 20px; /* רווח בין הטבלאות */
+    width: 100%; /* שמירה על הגודל המלא של הקונטיינר */
+    position: relative; /* נדרש עבור מיקום מוחלט של הטבלאות */
+}
 
+/* טבלאות צד שמאל */
+.left-side {
+    display: flex;
+    flex-direction: column;
+    position: relative; /* מאפשר למקם את הטבלאות בצד שמאל באופן יחסי */
+    left: 0%; /* ממקם את הקונטיינר בצד שמאל */
+    gap: 20px;
+    width: 50%; /* אתחום את רוחב הקונטיינר על מנת שיתאים לשאר העיצוב */
+    margin-top: 50px; /* שדה זה יגדיל את המרחק מלמעלה ויוריד את הטבלאות למטה */
+}
+
+/* קונטיינר ימני */
+.right-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50%; /* 50% מהאורך */
+    position: relative;
+}
+
+.left-table {
+    position: relative;  /* חשוב לשימוש ב-top */
+    top: 100px;  /* הוסף את זה כדי להזיז את הטבלה למטה ב-50px */
+}
+
+/* טבלאות ימין */
+.right-table {
+    width: 100%;
+}
+
+/* כותרת טבלה בצד שמאל */
+.left-table thead {
+    background-color: #d3d3d3;
+    color: #333;
+}
+
+/* כותרת טבלה בצד ימין */
+.right-table thead {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+.scrollable-container {
+    max-height: 800px;
+    max-width: 1900px;
+    margin: auto;
+    overflow-y: scroll;
+    height: 400px;
+}
+
+
+/* הגדרת המראה הכללי של הטבלאות */
 table {
     width: 100%;
-    max-width: 800px;
+    max-width: 800px; /* הגבלת רוחב הטבלה */
     border-collapse: collapse;
     margin: 20px 0;
     background-color: #fff;
@@ -100,16 +169,10 @@ table {
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 table th, table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-}
-
-.selected {
-    background-color: #d1e7fd;
-    color: #100;
 }
 
 table tbody tr:hover {
@@ -117,37 +180,28 @@ table tbody tr:hover {
     cursor: pointer;
 }
 
-/* צבע רקע לכותרות של הטבלאות בצד שמאל */
-.left-table thead {
-    background-color: #d3d3d3; /* צבע אפור בהיר */
-    color: #333; /* צבע טקסט כהה להבהרה */
-}
 
-/* צבע רקע לכותרות של הטבלאות בצד ימין */
-.right-table thead {
-    background-color: #007BFF; /* צבע כחול */
-    color: #fff; /* צבע טקסט לבן */
-}
-
-/* תיקון עיצוב טבלאות */
-.left-table, .right-table {
-    width: 100%;
-    box-sizing: border-box;
-}
-
+/* הגדרת אזור העדפות */
 .preferences-section {
     margin-top: 50px; /* רווח עליון לקונטיינר */
-}
-
-/* שימוש ב-Flexbox עבור יישור הטבלאות */
-.preferences-section {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* מסדר את הטבלאות אחת מעל השנייה */
+    align-items: center; /* יישור הטבלאות למרכז */
 }
 
-.findingMatch-container {
-    margin-bottom: 10px; /* רווח אחיד בין הטבלאות */
+/* סגנון עבור טבלאות מצד שמאל */
+#resultsTableFromFindingMatch {
+    margin-top: 17px; /* רווח למעלה */
+    margin-bottom: 100px; /* המרחק בין הטבלה העליונה לטבלה התחתונה */
+    height: 300px; /* גובה קבוע */
+    overflow-y: auto; /* אם התוכן חורג, תוכל לגלול */
+
 }
+
+#resultsTableFromFindingMatchOtherSide {
+    margin-top: 20px; /* רווח למעלה */
+}
+
 
 .modal-title {
    text-align: center; /* יישור למרכז */
@@ -223,4 +277,14 @@ table tbody tr:hover {
     border-radius: 4px;
     box-sizing: border-box;
     text-align: right;
+
+}
+
+/* עיצוב התמונות */
+.modal img {
+    max-width: 300%;
+    max-height: 500px; /* גובה מקסימלי של התמונות */
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

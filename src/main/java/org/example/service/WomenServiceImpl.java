@@ -9,12 +9,17 @@ import org.example.repository.PreferencesWomenRepository;
 import org.example.repository.WomenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.example.controller.MenController.saveFile;
+import static org.example.service.MenServiceImpl.deletePicture;
 
 @Service
 public class WomenServiceImpl implements WomenService {
@@ -84,6 +89,11 @@ public class WomenServiceImpl implements WomenService {
         }
     }
 
+    //service, Retrieving a record by ID card from the men's register, and presenting the details in an update form
+    public Women getWomenById(int id) {
+        return womenRepository.findById(id).orElse(null);
+    }
+
     public Women updateWoman(int id, Women updatedWoman) {
         Women existingWoman = womenRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Woman not found"));
 
@@ -99,10 +109,47 @@ public class WomenServiceImpl implements WomenService {
         existingWoman.setHeight(updatedWoman.getHeight());
         existingWoman.setStatus(updatedWoman.getStatus());
         existingWoman.setLocation(updatedWoman.getLocation());
+        existingWoman.setPhone(updatedWoman.getPhone());
         existingWoman.setSeeking(updatedWoman.getSeeking());
 
         return womenRepository.save(existingWoman);
     }
+
+    public Women updateWomenImages(int id, MultipartFile profilePictureUrl, MultipartFile additionalPictureUrl, String deleteProfile, String deleteAdditionalPicture) throws IOException {
+        Women existingWoman = womenRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Record not found"));
+
+        // עדכון URLים של התמונות
+        if ("true".equals(deleteProfile) && existingWoman.getProfilePictureUrl() != null) {
+            deletePicture(existingWoman.getProfilePictureUrl()); // מחיקת הקובץ מהשרת
+            System.out.println(existingWoman.getProfilePictureUrl());
+            existingWoman.setProfilePictureUrl("");  // הסרת הנתיב ממסד הנתונים
+        }
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            System.out.println(existingWoman.getProfilePictureUrl());
+            deletePicture(existingWoman.getProfilePictureUrl());
+            System.out.println(existingWoman.getProfilePictureUrl());
+
+            String newProfilePicturePath = saveFile(profilePictureUrl);
+            existingWoman.setProfilePictureUrl(newProfilePicturePath);
+            System.out.println(newProfilePicturePath);
+
+        }
+        if ("true".equals(deleteAdditionalPicture) && existingWoman.getAdditionalPictureUrl() != null) {
+            deletePicture(existingWoman.getAdditionalPictureUrl()); // מחיקת הקובץ מהשרת
+            existingWoman.setAdditionalPictureUrl("");  // הסרת הנתיב ממסד הנתונים
+        }
+        if (additionalPictureUrl != null && !additionalPictureUrl.isEmpty()) {
+            deletePicture(existingWoman.getAdditionalPictureUrl());
+            String additionalPicturePath = saveFile(additionalPictureUrl);
+            existingWoman.setAdditionalPictureUrl(additionalPicturePath);
+        }
+
+        // שמירת השינויים במסד הנתונים
+        return womenRepository.save(existingWoman);
+    }
+
+
 
     public List<Men> findMatchesByWomenPreferences(int womenId) {
         Women women = womenRepository.findById(womenId).orElseThrow(() -> new ResourceNotFoundException("Women not found"));
@@ -192,4 +239,9 @@ public class WomenServiceImpl implements WomenService {
         }
         return preferences.getHandkerchiefOrWig().equals(men.getHeadCovering());
     }
+
+    public Women findShowSelectedImages(int id) {
+        return womenRepository.findById(id).orElse(null);
+    }
+
 }

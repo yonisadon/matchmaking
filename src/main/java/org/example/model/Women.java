@@ -25,8 +25,9 @@ public class Women extends Person {
 
     // קונסטרוקטור של האישה
     public Women(String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
-                 String community, String headCovering, String device,  LocalDate dateOfBirth) {
-        super(0, status, firstName, lastName, age, height, location, style, seeking, community, headCovering, device, dateOfBirth);
+                 String community, String headCovering, String device,  LocalDate dateOfBirth, String profilePictureUrl, String additionalPictureUrl, String phone) {
+        super(0, status, firstName, lastName, age, height, location, style, seeking, community, headCovering, device, dateOfBirth ,
+                profilePictureUrl, additionalPictureUrl, phone);
     }
 
     public Set<PreferencesWomen> getPreferencesWomen() {

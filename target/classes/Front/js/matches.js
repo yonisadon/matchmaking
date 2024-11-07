@@ -1,4 +1,10 @@
+
+function openHomeModal() {
+    // פותח את העמוד החדש
+    window.location.href = "home.html";
+}
 document.addEventListener('DOMContentLoaded', function() {
+
     console.log("DOMContentLoaded event triggered");
     document.getElementById('searchCriteria').addEventListener('change', handleCriteriaChange);
     const searchCriteria = document.getElementById('searchCriteria');
@@ -17,14 +23,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const criteriaOptions = {
     status: [
+        { value: '', text: '' },
         { value: 'רווק/ה', text: 'רווק/ה' },
         { value: 'גרוש/ה', text: 'גרוש/ה' },
         { value: 'אלמן/ה', text: 'אלמן/ה' },
-        { value: 'נשוי/ה', text: 'נשוי/ה' }
+        { value: 'נשוי/ה', text: 'נשוי/ה' },
+        { value: 'לא רלוונטי', text: 'לא רלוונטי' }
     ],
     style: [
-        { value: 'modern', text: 'מודרני' },
-        { value: 'traditional', text: 'מסורתי' }
+        { value: '', text: '' },
+        { value: 'חרדי/ת ספרדי/ת', text: 'חרדי/ת ספרדי/ת' },
+        { value: 'חרדי/ת אשכנזי/ת', text: 'חרדי/ת אשכנזי/ת' },
+        { value: 'חרדי/ת', text: 'חרדי/ת' },
+        { value: 'חרדי/ת-מודרני', text: 'חרדי/ת-מודרני' },
+        { value: 'דתי/יה', text: 'דתי/יה' },
+        { value: 'דתי/יה לאומי/ת', text: 'דתי/יה לאומי/ת' },
+        { value: 'חבדניק/ית', text: 'חבדניק/ית' },
+        { value: 'ברסלב/ית', text: 'ברסלב/ית' }
     ]
 };
 
@@ -58,7 +73,7 @@ function handleCriteriaChange() {
     }
 }
     function search() {
-        deleteParamsInTable();
+
     console.log("test");
 //        const searchTerm = document.getElementById('searchInput').value;
         let searchTerm;
@@ -83,27 +98,23 @@ function handleCriteriaChange() {
         console.log(`Fetching: ${url}`);
         const columns =  ['height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
         FetchService.fetchData(url, 'GET')
-        .then(data => {
-                console.log("No results found");
-
-            if (data.length === 0) {
-                console.log("No results found");
-                ResourceNotFoundException();
-            } else {
-            UIService.displayResults(data, 'resultsTable', columns, gender)
-                // איפוס הבחירה של השורה הנוכחית
-                selectedRecordId = null;
-                selectedGender = null;
-                selectedRecordData = null;
-
-console.log("Selected Gender:", gender); // בדוק את הערך בשלבים שונים
-}
-            })
-            .catch(error => {
-                console.error('Error fetching search results:', error);
-            });
+         .then(data => {
+                    if (data.length === 0) {
+                        deleteParamsInTable();
+                        alert('לא נמצאה רשומה לפי החיפוש.');
+                    } else {
+                        UIService.displayResults(data, 'resultsTable', columns, gender);
+                        selectedRecordId = null;
+                        selectedGender = null;
+                        selectedRecordData = null;
+                        console.log("Selected Gender:", gender);
+                    }
+                })
+        .catch(error => {
+            deleteParamsInTable();
+            alert(error.message);
+        });
     }
-
 
 
 function selectRecord(id, gender, row) {
@@ -393,11 +404,7 @@ function saveUpdateData() {
 
     }
 
-        function closeModal(modalId) {
-            //resetFormFields();
-            const modal = document.getElementById(modalId);
-            modal.style.display = "none";
-        }
+
 
 function searchMatchesSelected() {
 deleteParamsInTableMatch();
@@ -430,12 +437,76 @@ deleteParamsInTableMatch();
         console.log(selectedRecordId);
 }
 
+function showSelectedImages() {
+    if (!selectedRecordId) {
+        alert("אנא בחר רשומה קודם.");
+        return;
+    }
+
+    let url = selectedGender === 'men' ? `http://localhost:8080/api/men/getImages/${selectedRecordId}` : `http://localhost:8080/api/women/getImages/${selectedRecordId}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            //var profileImageContainer = document.getElementById("profileImageContainer");
+            //var additionalImageContainer = document.getElementById("additionalImageContainer");
+            const profileImageContainer = document.getElementById("profileImageContainer");
+            const additionalImageContainer = document.getElementById("additionalImageContainer");
+            const noCurrentAdditionalImage = document.getElementById("noCurrentAdditionalImage");
+            const noProfileImage = document.getElementById("noProfileImage");
+
+
+console.log(profileImageContainer);
+console.log(data.profilePictureUrl);
+console.log("test");
+console.log(additionalImageContainer);
+console.log(data.additionalPictureUrl);
+//            profileImageContainer.src = data.profilePictureUrl
+//                ? `http://localhost:8080/images/${data.profilePictureUrl}`
+               // : '';  // אם אין תמונה, השאר ריק
+            if (data.profilePictureUrl) {
+                profileImageContainer.src = `http://localhost:8080/images/${data.profilePictureUrl}?timestamp=${new Date().getTime()}`;
+                profileImageContainer.style.display = 'block';  // להציג את התמונה
+                noProfileImage.style.display = 'none';  // להסתיר את ההודעה שאין תמונה
+            } else {
+                profileImageContainer.style.display = 'none';  // להסתיר את התמונה
+                noProfileImage.style.display = 'block';  // להציג את ההודעה שאין תמונה
+            }
+
+            if (data.additionalPictureUrl) {
+                additionalImageContainer.src = `http://localhost:8080/images/${data.additionalPictureUrl}?timestamp=${new Date().getTime()}`;
+                additionalImageContainer.style.display = 'block';  // להציג את התמונה
+                noCurrentAdditionalImage.style.display = 'none';  // להסתיר את ההודעה שאין תמונה
+            } else {
+                additionalImageContainer.style.display = 'none';  // להסתיר את התמונה
+                noCurrentAdditionalImage.style.display = 'block';  // להציג את ההודעה שאין תמונה
+            }
+
+            // הצגת ה-modal אם יש תמונות להציג
+            document.getElementById("imageModal").style.display = "block";
+        })
+        .catch(error => {
+            console.error('Error fetching men data:', error);
+        });
+}
+        function closeModal(modalId) {
+            //resetFormFields();
+            const modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+        function closeModalImageModal() {
+            //resetFormFields();
+            const modal = document.getElementById(closeModalImageModal);
+            modal.style.display = "none";
+        }
 
        function deleteParamsInTable(){
+            const rightATableBody = document.querySelector('#resultsTable tbody');
             const leftATableBody = document.querySelector('#resultsTableFromFindingMatch tbody');
             const rightBTableBody = document.querySelector('#tableFromFindingOtherSide tbody');
             const leftBTableBody = document.querySelector('#resultsTableFromFindingMatchOtherSide tbody');
-            leftATableBody.innerHTML = ''; // נקה את הטבלה הקיימת
+            rightATableBody.innerHTML = '';
+            leftATableBody.innerHTML = '';
             rightBTableBody.innerHTML = '';
             leftBTableBody.innerHTML = '';
 
@@ -463,14 +534,12 @@ function resetFormFields() {
     window.updateSelected = updateSelected;
     window.saveUpdateData = saveUpdateData;
     window.searchMatchesSelected = searchMatchesSelected;
+    window.showSelectedImages = showSelectedImages;
     window.closeModal = closeModal;
+    window.closeModalImageModal = closeModalImageModal;
 
 });
 
-function openHomeModal() {
-    // פותח את העמוד החדש
-    window.location.href = "home.html";
-}
 
 
 

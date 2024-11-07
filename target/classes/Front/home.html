@@ -9,13 +9,17 @@
 
 <!-- סרגל הלחצנים -->
 <div class="navbar">
+    <button id="runJob" onclick="runJobFromDate()">עדכון גיל-רשומות</button>
     <button id="openMenModalButton" onclick="openMenModal()">הוסף איש</button>
     <button id="openWomenModalButton" onclick="openWomenModal()">הוסף אישה</button>
+
     <button onclick="openMatchModal()">התאמות</button>
 </div>
 <!-- שדה חפש -->
 <div class="search-container">
+    <div id="inputContainer">
     <input type="text" id="searchInput" placeholder="הערך לחיפוש">
+    </div>
     <label>
         <input type="radio" name="gender" value="men" checked> Men
     </label>
@@ -34,31 +38,36 @@
     </select>
     <button onclick="search()">חפש</button>
 </div>
-<div id="searchResults"></div>
 
+<div id="searchResults"></div>
 <br>
-<table id="resultsTable">
-    <thead>
-    <tr>
-        <th>פרטים נוספים</th>
-        <th>תאריך עדכון רשומה</th>
-        <th>תאריך הקמת רשומה</th>
-        <th>גובה</th>
-        <th>סטטוס</th>
-        <th>מיקום</th>
-        <th>תאריך-גיל</th>
-        <th>גיל</th>
-        <th>שם משפחה</th>
-        <th>שם פרטי</th>
-        <th>סגנון</th>
-        <th>עדה</th>
-        <th>כיסוי ראש/מטפחת</th>
-        <th>מכשיר</th>
-        <th>מס"ד</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div id="searchResultsContainer">
+
+    <table id="resultsTable">
+        <thead>
+        <tr>
+            <th>פרטים נוספים</th>
+            <th>טלפון</th>
+            <th>תאריך עדכון רשומה</th>
+            <th>תאריך הקמת רשומה</th>
+            <th>גובה</th>
+            <th>סטטוס</th>
+            <th>מיקום</th>
+            <th>תאריך-גיל</th>
+            <th>גיל</th>
+            <th>שם משפחה</th>
+            <th>שם פרטי</th>
+            <th>סגנון</th>
+            <th>עדה</th>
+            <th>כיסוי ראש/מטפחת</th>
+            <th>מכשיר</th>
+            <th>מס"ד</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
 <br>
 <div class="deleteButton-container">
 <button id="deleteButton" onclick="deleteSelected()">מחיקה</button>
@@ -77,15 +86,22 @@
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
                     <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
               </div>
             <div class="form-group">
                 <label for="menStyle">:סגנון</label>
                 <select id="menStyle">
                     <option></option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
                     <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
               <div class="form-group">
@@ -134,10 +150,22 @@
                     <option value="מכשיר מסונן">מכשיר מסונן</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="menPhone">טלפון</label>
+                <input type="text" id="menPhone" placeholder="טלפון">
+            </div>
               <div class="form-group">
                   <label for="menSeeking">:מלל חופשי</label>
                   <input type="text" id="menSeeking" placeholder="Seeking">
               </div>
+            <div class="form-group">
+                <label for="profilePictureMen">תמונה ראשית:</label>
+                <input type="file" id="profilePictureMen" name="profilePicture" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="additionalPictureMen">תמונה נוספת:</label>
+                <input type="file" id="additionalPictureMen" name="additionalPicture" accept="image/*">
+            </div>
             <button type="button" onclick="closeModal('menModal')">סגור</button>
             <button type="button" onclick="saveMenData()">שמור</button>
           </form>
@@ -156,15 +184,22 @@
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
                     <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="womenStyle">:סגנון</label>
                 <select id="womenStyle">
                     <option></option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
                     <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <div class="form-group">
@@ -213,8 +248,20 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="womenPhone">טלפון</label>
+                <input type="text" id="womenPhone" placeholder="טלפון">
+            </div>
+            <div class="form-group">
                 <label for="womenSeeking">:מלל חופשי</label>
                 <input type="text" id="womenSeeking" placeholder="Seeking">
+            </div>
+            <div class="form-group">
+                <label for="profilePictureWomen">תמונה ראשית:</label>
+                <input type="file" id="profilePictureWomen" name="profilePicture" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="additionalPictureWomen">תמונה נוספת:</label>
+                <input type="file" id="additionalPictureWomen" name="additionalPicture" accept="image/*">
             </div>
             <button type="button" onclick="closeModal('womenModal')">סגור</button>
             <button type="button" onclick="saveWomenData()">שמור</button>
@@ -262,6 +309,8 @@
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
                     <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
             <div class="form-group">
@@ -277,9 +326,14 @@
                 <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
                     <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <button type="button" onclick="savePreferencesData()">שמור</button>
@@ -288,58 +342,68 @@
 </div>
 
 <!-- עדכון -->
-<div id="updateModal" class="modal">
-    <div class="modal-content">
+<div id="updateModal" class="update-modal">
+    <div class="update-modal-content">
         <form id="UpForm">
-            <h2 class="modal-title">עדכון רשומה</h2>
-            <div class="form-group">
+            <h2 class="update-modal-title">עדכון רשומה</h2>
+            <div class="update-form-group">
+                <label for="UpId">:מסד</label>
+                <input type="text" id="UpId" name="UpId" readonly>
+            </div>
+            <div class="update-form-group">
                 <label for="UpStatus">:סטטוס</label>
                 <select id="UpStatus">
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
                     <option value="גרוש/ה">גרוש/ה</option>
                     <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpFirstName">:שם פרטי</label>
                 <input type="text" id="UpFirstName" placeholder="First Name">
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpLastName">:שם משפחה</label>
                 <input type="text" id="UpLastName" placeholder="Last Name">
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpDateOfBirth">:תאריך לידה</label>
                 <input type="date" id="UpDateOfBirth" name="UpDateOfBirth">
-
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpAge">:גיל</label>
                 <input type="text" id="UpAge" name="UpAge" readonly>
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpHeight">:גובה</label>
                 <input type="number" id="UpHeight" placeholder="Height">
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpLocation">:מיקום</label>
                 <input type="text" id="UpLocation"  placeholder="לדוגמה: אשקלון, דרום">
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpStyle">:סגנון</label>
                 <select id="UpStyle">
                     <option></option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
                     <option value="חרדי/ת">חרדי/ת</option>
                     <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
                     <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpCommunity">:עדה</label>
                 <input type="text" id="UpCommunity">
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpHeadCovering">:כיסוי ראש/מטפחת</label>
                 <select id="UpHeadCovering">
                     <option></option>
@@ -347,7 +411,7 @@
                     <option value="פאה">פאה</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="update-form-group">
                 <label for="UpDevice">:מכשיר</label>
                 <select id="UpDevice">
                     <option></option>
@@ -356,15 +420,157 @@
                     <option value="מכשיר מסונן">מכשיר מסונן</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="UpSeeking">:מלל חופשי</label>
-                <input type="text" id="UpSeeking">
+            <div class="update-form-group">
+                <label for="UpPhone">:טלפון</label>
+                <input type="text" id="UpPhone">
             </div>
-        <button type="button" onclick="closeModal('updateModal')">סגור</button>
-        <button type="button" onclick="saveUpdateData()">שמור</button>
+
+            <div class="update-form-group">
+                <label for="UpProfilePicture">תמונה ראשית:</label>
+                <div id="currentProfileContainer">
+                    <img id="currentProfileImage" src="" alt="תמונה קיימת" >
+<!--                    <button class="delete-button">X</button>-->
+                    <span id="noProfileImageText">אין תמונה</span>
+                </div>
+                <label>
+                    <input type="checkbox" id="deleteProfilePicture"> מחק תמונה
+                </label>
+                <input type="file" id="UpProfilePicture" name="UpProfilePicture" accept="image/*" >
+            </div>
+
+            <div class="update-form-group">
+                <label for="UpAdditionalPicture">תמונה נוספת:</label>
+                <div id="currentAdditionalContainer">
+                    <img id="currentAdditionalImage" src="" alt="תמונה קיימת" >
+                    <span id="noCurrentAdditionalImageText">אין תמונה</span>
+                </div>
+                <label>
+                    <input type="checkbox" id="deleteAdditionalPicture"> מחק תמונה
+                </label>
+                <input type="file" id="UpAdditionalPicture" name="UpAdditionalPicture" accept="image/*" >
+            </div>
+            <div class="update-form-group">
+                <label for="UpSeeking">:מלל חופשי</label>
+                <textarea id="UpSeeking" placeholder="Seeking"></textarea>
+
+                <!--                <input type="text" id="UpSeeking">-->
+            </div>
+            <button type="button" onclick="closeModal('updateModal')">סגור</button>
+            <button type="button" onclick="saveUpdateData()">שמור</button>
         </form>
     </div>
 </div>
+
+<!--<div id="updateModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <form id="UpForm">-->
+<!--            <h2 class="modal-title">עדכון רשומה</h2>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpId">:מסד</label>-->
+<!--                <input type="text" id="UpId" name="UpId" readonly>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpStatus">:סטטוס</label>-->
+<!--                <select id="UpStatus">-->
+<!--                    <option></option>-->
+<!--                    <option value="רווק/ה">רווק/ה</option>-->
+<!--                    <option value="גרוש/ה">גרוש/ה</option>-->
+<!--                    <option value="אלמן/ה">אלמן/ה</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpFirstName">:שם פרטי</label>-->
+<!--                <input type="text" id="UpFirstName" placeholder="First Name">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpLastName">:שם משפחה</label>-->
+<!--                <input type="text" id="UpLastName" placeholder="Last Name">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpDateOfBirth">:תאריך לידה</label>-->
+<!--                <input type="date" id="UpDateOfBirth" name="UpDateOfBirth">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpAge">:גיל</label>-->
+<!--                <input type="text" id="UpAge" name="UpAge" readonly>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpHeight">:גובה</label>-->
+<!--                <input type="number" id="UpHeight" placeholder="Height">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpLocation">:מיקום</label>-->
+<!--                <input type="text" id="UpLocation"  placeholder="לדוגמה: אשקלון, דרום">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpStyle">:סגנון</label>-->
+<!--                <select id="UpStyle">-->
+<!--                    <option></option>-->
+<!--                    <option value="חרדי/ת">חרדי/ת</option>-->
+<!--                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>-->
+<!--                    <option value="דתי/יה">דתי/יה</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpCommunity">:עדה</label>-->
+<!--                <input type="text" id="UpCommunity">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpHeadCovering">:כיסוי ראש/מטפחת</label>-->
+<!--                <select id="UpHeadCovering">-->
+<!--                    <option></option>-->
+<!--                    <option value="מטפחת">מטפחת</option>-->
+<!--                    <option value="פאה">פאה</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpDevice">:מכשיר</label>-->
+<!--                <select id="UpDevice">-->
+<!--                    <option></option>-->
+<!--                    <option value="מכשיר כשר">מכשיר כשר</option>-->
+<!--                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>-->
+<!--                    <option value="מכשיר מסונן">מכשיר מסונן</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpPhone">:טלפון</label>-->
+<!--                <input type="text" id="UpPhone">-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="UpProfilePicture">תמונה ראשית:</label>-->
+<!--                <div id="currentProfileContainer">-->
+
+<!--                    <img id="currentProfileImage" src="" alt="תמונה קיימת" >-->
+<!--&lt;!&ndash;                    style="display: none; max-width: 100px;"&ndash;&gt;-->
+<!--                    <span id="noProfileImageText">אין תמונה</span> &lt;!&ndash; תואם ל-ID בקוד JavaScript &ndash;&gt;-->
+<!--                </div>-->
+<!--                <label>-->
+<!--                    <input type="checkbox" id="deleteProfilePicture"> מחק תמונה-->
+<!--                </label>-->
+<!--                <input type="file" id="UpProfilePicture" name="UpProfilePicture" accept="image/*" >-->
+<!--            </div>-->
+
+<!--                <div class="form-group">-->
+<!--                    <label for="UpAdditionalPicture">תמונה נוספת:</label>-->
+<!--                    <div id="currentAdditionalContainer">-->
+<!--                        <img id="currentAdditionalImage" src="" alt="תמונה קיימת" >-->
+<!--                        <span id="noCurrentAdditionalImageText">אין תמונה</span>-->
+<!--                    </div>-->
+<!--                    <label>-->
+<!--                        <input type="checkbox" id="deleteAdditionalPicture"> מחק תמונה-->
+<!--                    </label>-->
+<!--                    <input type="file" id="UpAdditionalPicture" name="UpAdditionalPicture" accept="image/*" >-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="UpSeeking">:מלל חופשי</label>-->
+<!--                <input type="text" id="UpSeeking">-->
+<!--            </div>-->
+<!--        <button type="button" onclick="closeModal('updateModal')">סגור</button>-->
+<!--        <button type="button" onclick="saveUpdateData()">שמור</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 
 <script src="js/home.js"></script>
 <script src="js/search.js"></script>

@@ -37,6 +37,15 @@ public class Person {
 
     private LocalDate dateOfBirth;
 
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(name = "additional_picture_url")
+    private String additionalPictureUrl;
+    private String phone;
+
+
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -49,7 +58,7 @@ public class Person {
     }
 
     public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
-                  String community, String headCovering, String device, LocalDate dateOfBirth) {
+                  String community, String headCovering, String device, LocalDate dateOfBirth, String profilePictureUrl, String additionalPictureUrl, String phone) {
         this.id = id;
         this.status = status;
         this.firstName = firstName;
@@ -63,6 +72,9 @@ public class Person {
         this.headCovering = headCovering;
         this.device = device;
         this.dateOfBirth = dateOfBirth;
+        this.profilePictureUrl = profilePictureUrl;
+        this.additionalPictureUrl = additionalPictureUrl;
+        this.phone = phone;
     }
 
     public Person() {
@@ -179,6 +191,29 @@ public class Person {
     }
     public void setDateOfBirth(LocalDate dateOfBirth){
         this.dateOfBirth = dateOfBirth;
-
     }
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getAdditionalPictureUrl() {
+        return additionalPictureUrl;
+    }
+
+    public void setAdditionalPictureUrl(String additionalPictureUrl) {
+        this.additionalPictureUrl = additionalPictureUrl;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
 }

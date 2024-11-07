@@ -1,14 +1,13 @@
 package org.example.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.DTO.PreferencesMenDTO;
 import org.example.job.AgeUpdateService;
-import org.example.service.AgeCalculator;
 import org.example.model.Men;
 import org.example.model.PreferencesMen;
 import org.example.model.Women;
 import org.example.repository.MenRepository;
 import org.example.repository.PreferencesMenRepository;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.example.service.MenServiceImpl;
@@ -19,13 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:63342")
 @RestController
@@ -52,7 +53,7 @@ public class MenController {
     }
 
     //לריצה ידנית של הג'וב כדי לבצע עדכון בגיל לשימוש טסט כרגע
-    @GetMapping("/run-job")
+    @GetMapping("/men/run-job")
     public String runJob() {
         logger.info("Running job manually");
         List<Men> menList = menRepository.findAll(); // שליפת כל הרשומות של הגברים
@@ -88,6 +89,7 @@ public class MenController {
         }
     }
 
+
     //Search by any condition (first name or age...) from the table of men, after clicking in search button.
     // continue in function searchMen in class MenServiceImpl.
     @GetMapping("/men/search")
@@ -102,25 +104,54 @@ public class MenController {
     //Saving data by creating a new record in the table of men.
     // continue in function addMen in class MenServiceImpl.
     @PostMapping("/men/saveMen")
-    public ResponseEntity<Map<String, Object>> saveMenData(@RequestBody Men men) {
+    public ResponseEntity<Map<String, Object>> saveMenData(
+            @RequestParam("status") String status,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("dateOfBirth") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfBirth,
+            @RequestParam("age") int age,
+            @RequestParam("height") float height,
+            @RequestParam("location") String location,
+            @RequestParam("style") String style,
+            @RequestParam("community") String community,
+            @RequestParam("headCovering") String headCovering,
+            @RequestParam("device") String device,
+            @RequestParam("phone") String phone,
+            @RequestParam("seeking") String seeking,
+            @RequestParam(value = "profilePictureUrl", required = false) MultipartFile profilePictureUrl,
+            @RequestParam(value = "additionalPictureUrl", required = false) MultipartFile additionalPictureUrl
+    ) {
         try {
-            System.out.println("Received POST request with data: " + men);
-            System.out.println(men.getId());
-            //men.setAge(AgeCalculator.calculateAge(men.getDateOfBirth(), men.));
-            // קבל את התאריך הנוכחי
-            LocalDate today = LocalDate.now();
-
-            // בדוק אם תאריך הלידה לא NULL
-            if (men.getDateOfBirth() != null) {
-                // חישוב גיל בעזרת פונקציה
-                int age = AgeCalculator.calculateAge(men.getDateOfBirth(), today);
-                men.setAge(age); // עדכן את גיל האדם בטבלה
+            Men men = new Men();
+            men.setStatus(status);
+            men.setFirstName(firstName);
+            men.setLastName(lastName);
+            men.setDateOfBirth(dateOfBirth);
+            men.setAge(age);
+            men.setHeight(height);
+            men.setLocation(location);
+            men.setStyle(style);
+            men.setCommunity(community);
+            men.setHeadCovering(headCovering);
+            men.setDevice(device);
+            men.setPhone(phone);
+            men.setSeeking(seeking);
+            if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                String profilePicturePath = saveFile(profilePictureUrl); // פונקציה לשמירת קובץ
+                men.setProfilePictureUrl(profilePicturePath);
             } else {
-                // טיפול במצב שבו תאריך הלידה אינו מוגדר
-                System.out.println("Date of birth is null for man ID: " + men.getId());
+                men.setProfilePictureUrl(""); // או להשאיר ריק
+            }
+            if (additionalPictureUrl != null && !additionalPictureUrl.isEmpty()) {
+                String additionalPicturePath = saveFile(additionalPictureUrl); // פונקציה לשמירת קובץ
+                men.setAdditionalPictureUrl(additionalPicturePath);
+            } else {
+                men.setAdditionalPictureUrl(""); // או להשאיר ריק
+
             }
 
             Men savedMen = menService.addMen(men);
+
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("id", savedMen.getId());
@@ -132,6 +163,62 @@ public class MenController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    public static String saveFile(MultipartFile file) throws IOException {
+        // יצירת שם קובץ ייחודי
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path path = Paths.get("D:\\matchmaking\\src\\main\\resources\\static\\images\\" + fileName);
+        System.out.println(path);
+        Files.copy(file.getInputStream(), path);
+        return fileName; // החזר רק את שם הקובץ
+
+    }
+    
+//    private String saveFile(MultipartFile file) throws IOException {
+//        // כאן תממש את לוגיקת שמירת הקובץ במערכת שלך
+//        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+//
+//        // ודא שיש לך backslash בסוף הנתיב
+//        Path path = Paths.get("D:\\PIC\\" + fileName);
+//
+//        // שמירת הקובץ בתיקייה שציינת
+//        Files.copy(file.getInputStream(), path);
+//
+//        return path.toString();
+//    }
+
+
+//    @PostMapping("/men/saveMen")
+//    public ResponseEntity<Map<String, Object>> saveMenData(@RequestBody Men men) {
+//        try {
+//            System.out.println("Received POST request with data: " + men);
+//            System.out.println(men.getId());
+//            //men.setAge(AgeCalculator.calculateAge(men.getDateOfBirth(), men.));
+//            // קבל את התאריך הנוכחי
+//            LocalDate today = LocalDate.now();
+//
+//            // בדוק אם תאריך הלידה לא NULL
+//            if (men.getDateOfBirth() != null) {
+//                // חישוב גיל בעזרת פונקציה
+//                int age = AgeCalculator.calculateAge(men.getDateOfBirth(), today);
+//                men.setAge(age); // עדכן את גיל האדם בטבלה
+//            } else {
+//                // טיפול במצב שבו תאריך הלידה אינו מוגדר
+//                System.out.println("Date of birth is null for man ID: " + men.getId());
+//            }
+//            System.out.println(men.getProfilePictureUrl());
+//            Men savedMen = menService.addMen(men);
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("success", true);
+//            response.put("id", savedMen.getId());
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("success", false);
+//            response.put("message", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//    }
 
     //Saving data by creating a new record in the table of preferencesMen(This table is linked to men table).
     @PostMapping("/men/savePreferences")
@@ -190,6 +277,20 @@ public class MenController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @PutMapping("/men/update/images/{id}")
+    public ResponseEntity<Men> updateMenImages(
+            @PathVariable int id,
+            @RequestParam(value = "profilePictureUrl", required = false) MultipartFile profilePictureUrl,
+            @RequestParam(value = "additionalPictureUrl", required = false) MultipartFile additionalPictureUrl,
+            @RequestParam(value = "deleteProfilePicture", required = false) String deleteProfile,
+            @RequestParam(value = "deleteAdditionalPicture", required = false) String deleteAdditionalPicture) throws IOException {
+
+        Men updatedMen = menService.updateMenImages(id, profilePictureUrl, additionalPictureUrl, deleteProfile, deleteAdditionalPicture);
+        return ResponseEntity.ok(updatedMen);
+    }
+
+
 
     //update row in the table of preferencesMen, by id of the men table.
     @PutMapping("preferences_men/savePreferences/update/{menId}")
@@ -255,6 +356,40 @@ public class MenController {
     public List<Women> searchMatches(@RequestParam int menId) {
         return menService.findMatchesByMenPreferences(menId);
     }
+
+    @GetMapping("/men/getImages/{id}")
+    public ResponseEntity<Map<String, Object>> showSelectedImages(@PathVariable("id") int id) {
+        Men men = menService.findShowSelectedImages(id);
+
+        if (men != null) {
+            Map<String, Object> response = new HashMap<>();
+            if (men.getProfilePictureUrl() != null) {
+                response.put("profilePictureUrl", men.getProfilePictureUrl());
+            } else {
+                response.put("profilePictureUrl", "No profile image");
+            }
+
+            if (men.getAdditionalPictureUrl() != null) {
+                response.put("additionalPictureUrl", men.getAdditionalPictureUrl());
+            } else {
+                response.put("additionalPictureUrl", "No additional image");
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+//    @GetMapping("/men/getImages/{id}")
+//    public ResponseEntity<Men> showSelectedImages(@PathVariable("id") int id) {
+//        Men men = menService.findShowSelectedImages(id);
+//        if (men != null) {
+//            return new ResponseEntity<>(men, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
     }
 
 

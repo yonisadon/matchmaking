@@ -19,7 +19,8 @@ public interface MenRepository extends JpaRepository<Men, Integer> {
     List<Men> findByStatus(String status);
     List<Men> findByStyle(String style);
     List<Men> findByHeight(Float height);
-   // List<Men> findAll();
+
+    // List<Men> findAll();
 
 
 
