@@ -146,6 +146,8 @@ public class MenServiceImpl implements MenService {
         existingMen.setLocation(updateMen.getLocation());
         existingMen.setPhone(updateMen.getPhone());
         existingMen.setSeeking(updateMen.getSeeking());
+        existingMen.setWork(updateMen.getWork());
+        existingMen.setStudies(updateMen.getStudies());
 
         return menRepository.save(existingMen);
     }

@@ -43,7 +43,8 @@ public class Person {
     @Column(name = "additional_picture_url")
     private String additionalPictureUrl;
     private String phone;
-
+    private String work;
+    private String studies;
 
 
     @PrePersist
@@ -58,7 +59,8 @@ public class Person {
     }
 
     public Person(int id, String status, String firstName, String lastName, int age, float height, String location, String style, String seeking,
-                  String community, String headCovering, String device, LocalDate dateOfBirth, String profilePictureUrl, String additionalPictureUrl, String phone) {
+                  String community, String headCovering, String device, LocalDate dateOfBirth, String profilePictureUrl, String additionalPictureUrl, String phone,
+                  String work, String studies) {
         this.id = id;
         this.status = status;
         this.firstName = firstName;
@@ -75,6 +77,8 @@ public class Person {
         this.profilePictureUrl = profilePictureUrl;
         this.additionalPictureUrl = additionalPictureUrl;
         this.phone = phone;
+        this.work = work;
+        this.studies = studies;
     }
 
     public Person() {
@@ -216,4 +220,19 @@ public class Person {
         this.phone = phone;
     }
 
+    public String getWork() {
+        return work;
+    }
+
+    public void setWork(String work) {
+        this.work = work;
+    }
+
+    public String getStudies() {
+        return studies;
+    }
+
+    public void setStudies(String studies) {
+        this.studies = studies;
+    }
 }

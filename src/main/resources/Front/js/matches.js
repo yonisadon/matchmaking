@@ -73,7 +73,6 @@ function handleCriteriaChange() {
     }
 }
     function search() {
-
     console.log("test");
 //        const searchTerm = document.getElementById('searchInput').value;
         let searchTerm;

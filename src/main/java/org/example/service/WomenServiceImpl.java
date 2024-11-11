@@ -111,6 +111,8 @@ public class WomenServiceImpl implements WomenService {
         existingWoman.setLocation(updatedWoman.getLocation());
         existingWoman.setPhone(updatedWoman.getPhone());
         existingWoman.setSeeking(updatedWoman.getSeeking());
+        existingWoman.setWork(updatedWoman.getWork());
+        existingWoman.setStudies(updatedWoman.getStudies());
 
         return womenRepository.save(existingWoman);
     }

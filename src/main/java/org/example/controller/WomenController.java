@@ -165,6 +165,8 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
             @RequestParam("device") String device,
             @RequestParam("phone") String phone,
             @RequestParam("seeking") String seeking,
+            @RequestParam("work") String work,
+            @RequestParam("studies") String studies,
             @RequestParam(value = "profilePictureUrl", required = false) MultipartFile profilePictureUrl,
             @RequestParam(value = "additionalPictureUrl", required = false) MultipartFile additionalPictureUrl
     ) {
@@ -183,6 +185,8 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
             women.setDevice(device);
             women.setPhone(phone);
             women.setSeeking(seeking);
+            women.setWork(work);
+            women.setStudies(studies);
 
             if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                 String profilePicturePath = saveFile(profilePictureUrl); // פונקציה לשמירת קובץ
