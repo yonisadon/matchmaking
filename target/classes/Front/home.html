@@ -46,10 +46,12 @@
     <table id="resultsTable">
         <thead>
         <tr>
+            <th>לימודים</th>
+            <th>עבודה</th>
             <th>פרטים נוספים</th>
             <th>טלפון</th>
-            <th>תאריך עדכון רשומה</th>
-            <th>תאריך הקמת רשומה</th>
+<!--            <th>תאריך עדכון רשומה</th>-->
+<!--            <th>תאריך הקמת רשומה</th>-->
             <th>גובה</th>
             <th>סטטוס</th>
             <th>מיקום</th>
@@ -154,6 +156,14 @@
                 <label for="menPhone">טלפון</label>
                 <input type="text" id="menPhone" placeholder="טלפון">
             </div>
+            <div class="form-group">
+                <label for="menWork">:עבודה</label>
+                <input type="text" id="menWork">
+            </div>
+            <div class="form-group">
+                <label for="menStudies">:לימודים</label>
+                <input type="text" id="menStudies">
+            </div>
               <div class="form-group">
                   <label for="menSeeking">:מלל חופשי</label>
                   <input type="text" id="menSeeking" placeholder="Seeking">
@@ -166,7 +176,7 @@
                 <label for="additionalPictureMen">תמונה נוספת:</label>
                 <input type="file" id="additionalPictureMen" name="additionalPicture" accept="image/*">
             </div>
-            <button type="button" onclick="closeModal('menModal')">סגור</button>
+            <button type="button" onclick="closeModalA('menModal')">סגור</button>
             <button type="button" onclick="saveMenData()">שמור</button>
           </form>
       </div>
@@ -252,6 +262,14 @@
                 <input type="text" id="womenPhone" placeholder="טלפון">
             </div>
             <div class="form-group">
+                <label for="womenWork">:עבודה</label>
+                <input type="text" id="womenWork">
+            </div>
+            <div class="form-group">
+                <label for="womenStudies">:לימודים</label>
+                <input type="text" id="womenStudies">
+            </div>
+            <div class="form-group">
                 <label for="womenSeeking">:מלל חופשי</label>
                 <input type="text" id="womenSeeking" placeholder="Seeking">
             </div>
@@ -263,7 +281,7 @@
                 <label for="additionalPictureWomen">תמונה נוספת:</label>
                 <input type="file" id="additionalPictureWomen" name="additionalPicture" accept="image/*">
             </div>
-            <button type="button" onclick="closeModal('womenModal')">סגור</button>
+            <button type="button" onclick="closeModalA('womenModal')">סגור</button>
             <button type="button" onclick="saveWomenData()">שמור</button>
         </form>
     </div>
@@ -306,11 +324,14 @@
                 <label for="preferredStyle">סגנון</label>
                 <select id="preferredStyle">
                     <option></option>
-                    <option value="רווק/ה">רווק/ה</option>
-                    <option value="גרוש/ה">גרוש/ה</option>
-                    <option value="אלמן/ה">אלמן/ה</option>
-                    <option value="נשוי/אה">נשוי/אה</option>
-                    <option value="לא רלוונטי">לא רלוונטי</option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <div class="form-group">
@@ -326,14 +347,11 @@
                 <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
-                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
-                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
-                    <option value="חרדי/ת">חרדי/ת</option>
-                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
-                    <option value="דתי/יה">דתי/יה</option>
-                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
-                    <option value="חבדניק/ית">חבדניק/ית</option>
-                    <option value="ברסלב/ית">ברסלב/ית</option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
             <button type="button" onclick="savePreferencesData()">שמור</button>
@@ -424,7 +442,14 @@
                 <label for="UpPhone">:טלפון</label>
                 <input type="text" id="UpPhone">
             </div>
-
+            <div class="update-form-group">
+                <label for="UpWork">:עבודה</label>
+                <input type="text" id="UpWork">
+            </div>
+            <div class="update-form-group">
+                <label for="UpStudies">:לימודים</label>
+                <input type="text" id="UpStudies">
+            </div>
             <div class="update-form-group">
                 <label for="UpProfilePicture">תמונה ראשית:</label>
                 <div id="currentProfileContainer">
@@ -451,11 +476,12 @@
             </div>
             <div class="update-form-group">
                 <label for="UpSeeking">:מלל חופשי</label>
-                <textarea id="UpSeeking" placeholder="Seeking"></textarea>
+<!--                <textarea id="UpSeeking" placeholder="Seeking"></textarea>-->
+                <input type="text" id="UpSeeking" placeholder="Seeking">
 
                 <!--                <input type="text" id="UpSeeking">-->
             </div>
-            <button type="button" onclick="closeModal('updateModal')">סגור</button>
+            <button type="button" onclick="closeModalA('updateModal')">סגור</button>
             <button type="button" onclick="saveUpdateData()">שמור</button>
         </form>
     </div>

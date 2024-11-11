@@ -428,6 +428,25 @@
     align-items: center;
     margin-bottom: 10px;
 }
+.form-group textarea#menSeeking {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+    height: 80px; /* גובה רב-שורות */
+    resize: vertical; /* לאפשר שינוי גובה */
+}
+.form-group  {
+    width: 100%; /* שדה המלל יתפוס את כל הרוחב */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right; /* טקסט מימין לשמאל */
+    height: 80px; /* גובה שדה המלל יותר גדול משאר השדות */
+}
 
 .form-group label {
     margin-left: 10px;
@@ -610,7 +629,7 @@
     text-align: right; /* טקסט בתוך שדה ה-`input` יהיה מימין לשמאל */
 }
 
-.update-form-group #UpSeeking {
+.update-form-group textarea#UpSeeking {
     width: 100%; /* שדה המלל יתפוס את כל הרוחב */
     padding: 10px;
     border: 1px solid #ccc;
@@ -618,7 +637,10 @@
     box-sizing: border-box;
     text-align: right; /* טקסט מימין לשמאל */
     height: 80px; /* גובה שדה המלל יותר גדול משאר השדות */
+    resize: vertical; /* לאפשר שינוי גובה */
+
 }
+
 .update-modal-content {
     background-color: #f9f9f9;
     color: #333;

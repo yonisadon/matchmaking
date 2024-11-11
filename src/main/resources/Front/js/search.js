@@ -118,9 +118,16 @@ function handleCriteriaChange() {
 }
 
     function search() {
-        const searchTerm = document.getElementById('searchInput').value;
+        //const searchTerm = document.getElementById('searchInput').value;
+        let searchTerm;
         const gender = document.querySelector('input[name="gender"]:checked').value;
         const criteria = document.getElementById('searchCriteria').value;
+
+    if (criteriaOptions[criteria]) {
+        searchTerm = document.getElementById(`${criteria}Select`).value;
+    } else {
+        searchTerm = document.getElementById('searchInput').value;
+    }
 
         console.log(gender);
         console.log(criteria);
@@ -152,10 +159,10 @@ function handleCriteriaChange() {
                     data.forEach(result => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
+                            <td>${result.studies}</td>
+                            <td>${result.work}</td>
                             <td>${result.seeking}</td>
                             <td>${result.phone}</td>
-                            <td>${result.createdAt}</td>
-                            <td>${result.updatedAt}</td>
                             <td>${result.height}</td>
                             <td>${result.status}</td>
                             <td>${result.location}</td>
@@ -313,7 +320,10 @@ function deleteSelected() {
     document.getElementById('UpHeadCovering').value = data.headCovering || '';
     document.getElementById('UpDevice').value = data.device || '';
     document.getElementById('UpPhone').value = data.phone || '';
-    document.getElementById('UpSeeking').value = data.phone || '';
+    document.getElementById('UpSeeking').value = data.seeking || '';
+    document.getElementById('UpWork').value = data.UpWork || '';
+    document.getElementById('UpStudies').value = data.UpStudies || '';
+
 
             const currentProfileImage = document.getElementById('currentProfileImage');
             const noProfileImageText = document.getElementById('noProfileImageText');
@@ -360,7 +370,9 @@ async function saveUpdateData() {
     const headCovering = document.getElementById('UpHeadCovering').value.trim();
     const device = document.getElementById('UpDevice').value.trim();
     const phone = document.getElementById('UpPhone').value.trim();
-    const seeking = document.getElementById('UpSeeking').value.trim();
+    const seeking = document.getElementById('UpSeeking').value;
+    const work = document.getElementById('UpWork').value;
+    const studies = document.getElementById('UpStudies').value;
 
     const profilePictureUrl = document.getElementById("UpProfilePicture").files[0];
     const additionalPictureUrl = document.getElementById("UpAdditionalPicture").files[0];
@@ -368,7 +380,7 @@ async function saveUpdateData() {
     const deleteAdditionalPicture = document.getElementById("deleteAdditionalPicture").checked;
 
 
-    if (!status || !firstName || !lastName || !age || !height || !location || !style) {
+    if (!status || !firstName || !age || !height || !location || !style) {
         alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה, שם ומשפחה.');
         return;
     }
@@ -392,6 +404,8 @@ async function saveUpdateData() {
         device,
         phone,
         seeking,
+        work,
+        studies,
     };
 
     const url = selectedGender === 'men' ? `http://localhost:8080/api/men/update/${selectedRecordId}` : `http://localhost:8080/api/women/update/${selectedRecordId}`;
@@ -470,7 +484,7 @@ async function sendImages(profilePictureUrl, additionalPictureUrl, deleteProfile
 
 
     function closeModal(modalId) {
-        console.log('test');
+        //console.log('test');
         const modal = document.getElementById(modalId);
         modal.style.display = "none";
         resetFormFields();
@@ -493,6 +507,8 @@ async function sendImages(profilePictureUrl, additionalPictureUrl, deleteProfile
                 document.getElementById("UpHeadCovering").value = "";
                 document.getElementById("UpDevice").value = "";
                 document.getElementById("UpSeeking").value = "";
+                document.getElementById("UpWork").value = "";
+                document.getElementById("UpStudies").value = "";
                 document.getElementById("currentProfileImage").value = "";
                 document.getElementById("noProfileImageText").value = "";
                 document.getElementById("currentAdditionalImage").value = "";

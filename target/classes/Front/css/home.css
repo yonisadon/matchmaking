@@ -429,6 +429,16 @@
     margin-bottom: 10px;
 }
 
+.form-group #menSeeking, womenSeeking {
+    width: 100%; /* שדה המלל יתפוס את כל הרוחב */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right; /* טקסט מימין לשמאל */
+    height: 80px; /* גובה שדה המלל יותר גדול משאר השדות */
+}
+
 .form-group label {
     margin-left: 10px;
     text-align: right;

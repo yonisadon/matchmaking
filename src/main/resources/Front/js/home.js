@@ -1,14 +1,22 @@
+//document.addEventListener("DOMContentLoaded", function() {
 var modal = document.getElementById("menModal");
 
 var btn = document.getElementById("openModalButton");
 
 
 
-
-function closeModal(modalId) {
-var modal = document.getElementById(modalId);
-modal.style.display = "none";
+function closeModalA(modalId) {
+    // סגירת המודל
+    document.getElementById(modalId).style.display = "none";
+    resetFormField();  // איפוס השדות כשסוגרים את המודל
 }
+
+//function closeModal(modalId) {
+//var modal = document.getElementById(modalId);
+//modal.style.display = "none";
+//
+//resetFormFields();
+//}
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -79,13 +87,15 @@ function saveMenData() {
     var device = document.getElementById('menDevice').value;
     var phone = document.getElementById('menPhone').value;
     var seeking = document.getElementById("menSeeking").value;
+    var work = document.getElementById("menWork").value;
+    var studies = document.getElementById("menStudies").value;
 
  // קבלת התמונות
     var profilePictureUrl = document.getElementById("profilePictureMen").files[0];
     var additionalPictureUrl = document.getElementById("additionalPictureMen").files[0];
 console.log(profilePictureUrl);
     // בדיקת שדות ריקים
-    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
+    if (!status || !firstName || !age || !height || !location || !style ) {
         alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
         return; // עצור את הפעולה אם אחד השדות ריק
     }
@@ -109,6 +119,8 @@ console.log(profilePictureUrl);
     menData.append('device', device);
     menData.append('phone', phone);
     menData.append('seeking', seeking);
+    menData.append('work', work);
+    menData.append('studies', studies);
 
  // הוספת התמונות אם הן קיימות
     if (profilePictureUrl) {
@@ -129,7 +141,7 @@ fetch('http://localhost:8080/api/men/saveMen', {
         idMen = data.id; // שמירת ה-ID שהתקבל מהשרת
         document.getElementById('idPerson').value = idMen; // עדכון השדה בחלונית העדפות
         console.log(idMen);
-        resetFormFields();
+        resetFormField();
 
         currentGender = "men";
         console.log(currentGender);
@@ -185,10 +197,12 @@ function saveWomenData() {
     var device = document.getElementById('womenDevice').value;
     var phone = document.getElementById('womenPhone').value;
     var seeking = document.getElementById("womenSeeking").value;
+    var work = document.getElementById("womenWork").value;
+    var studies = document.getElementById("womenStudies").value;
     var profilePictureUrl = document.getElementById("profilePictureWomen").files[0];
     var additionalPictureUrl = document.getElementById("additionalPictureWomen").files[0];
     // בדיקת שדות ריקים
-    if (!status || !firstName || !lastName || !age || !height || !location || !style ) {
+    if (!status || !firstName || !age || !height || !location || !style ) {
         alert(' אנא מלא את כל השדות הנדרשים: סטטוס, סגנון, מיקום, גיל, גובה שם ומשפחה.');
         return; // עצור את הפעולה אם אחד השדות ריק
     }
@@ -211,6 +225,8 @@ function saveWomenData() {
     womenData.append('device', device);
     womenData.append('phone', phone);
     womenData.append('seeking', seeking);
+    womenData.append('work', work);
+    womenData.append('studies', studies);
 
  // הוספת התמונות אם הן קיימות
     if (profilePictureUrl) {
@@ -230,7 +246,7 @@ function saveWomenData() {
      idWomen = data.id;
      document.getElementById('idPerson').value = idWomen;
      console.log(idWomen);
-     resetFormFields();
+     resetFormField();
 
      currentGender = "women";
      console.log(currentGender);
@@ -334,8 +350,8 @@ function savePreferencesData() {
     .then(data => {
         if (data.success) {
             console.log('Preferences data saved successfully:', preferencesData);
-            resetFormFields();
-            closeModal('preferencesModal'); // סגירת החלונית לאחר שמירת ההעדפות
+            resetFormField();
+            closeModalA('preferencesModal'); // סגירת החלונית לאחר שמירת ההעדפות
         } else {
             console.error('Error saving preferences data:', data.message, preferencesData);
         }
@@ -345,7 +361,9 @@ function savePreferencesData() {
     });
 }
 
-function resetFormFields() {
+function resetFormField() {
+    console.log("Resetting form fields...");
+
     document.getElementById("menStatus").value = "";
     document.getElementById("menFirstName").value = "";
     document.getElementById("menLastName").value = "";
@@ -359,6 +377,8 @@ function resetFormFields() {
     document.getElementById('menDevice').value = '';
     document.getElementById("menSeeking").value = "";
     document.getElementById("menPhone").value = "";
+    document.getElementById("menWork").value = "";
+    document.getElementById("menStudies").value = "";
     document.getElementById("profilePictureMen").value = "";
     document.getElementById("additionalPictureMen").value = "";
 
@@ -375,6 +395,7 @@ function resetFormFields() {
     document.getElementById("womenStatus").value = "";
     document.getElementById("womenFirstName").value = "";
     document.getElementById("womenLastName").value = "";
+    document.getElementById("dateOfBirthWomen").value = "";
     document.getElementById("womenAge").value = "";
     document.getElementById("womenHeight").value = "";
     document.getElementById("womenLocation").value = "";
@@ -384,6 +405,10 @@ function resetFormFields() {
     document.getElementById('womenHeadCovering').value = '';
     document.getElementById('womenDevice').value = '';
     document.getElementById("womenPhone").value = "";
+    document.getElementById('womenWork').value = '';
+    document.getElementById("womenStudies").value = "";
     document.getElementById("profilePictureWomen").value = "";
     document.getElementById("additionalPictureWomen").value = "";
 }
+
+//});

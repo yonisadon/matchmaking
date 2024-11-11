@@ -118,6 +118,8 @@ public class MenController {
             @RequestParam("device") String device,
             @RequestParam("phone") String phone,
             @RequestParam("seeking") String seeking,
+            @RequestParam("work") String work,
+            @RequestParam("studies") String studies,
             @RequestParam(value = "profilePictureUrl", required = false) MultipartFile profilePictureUrl,
             @RequestParam(value = "additionalPictureUrl", required = false) MultipartFile additionalPictureUrl
     ) {
@@ -136,6 +138,8 @@ public class MenController {
             men.setDevice(device);
             men.setPhone(phone);
             men.setSeeking(seeking);
+            men.setWork(work);
+            men.setStudies(studies);
             if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                 String profilePicturePath = saveFile(profilePictureUrl); // פונקציה לשמירת קובץ
                 men.setProfilePictureUrl(profilePicturePath);
