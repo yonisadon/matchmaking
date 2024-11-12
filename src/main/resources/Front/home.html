@@ -271,7 +271,8 @@
             </div>
             <div class="form-group">
                 <label for="womenSeeking">:מלל חופשי</label>
-                <input type="text" id="womenSeeking" placeholder="Seeking">
+                <textarea id="womenSeeking" placeholder="Seeking"></textarea>
+<!--                <input type="text" id="womenSeeking" placeholder="Seeking">-->
             </div>
             <div class="form-group">
                 <label for="profilePictureWomen">תמונה ראשית:</label>
@@ -292,27 +293,27 @@
     <div class="modal-content">
         <form id="preferencesForm">
             <h2 class="modal-title">העדפות אישיות</h2>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="idPerson">:מזהה</label>
-                <input type="text" id="idPerson" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה  -->
+                <input type="text" id="idPerson" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה -->
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredRegion">:אזור מגורים</label>
                 <input type="text" id="preferredRegion">
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredCommunity">:עדה</label>
                 <input type="text" id="preferredCommunity">
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredAgeRange">טווח גילאים:</label>
                 <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredHeightRange">טווח גובה:</label>
                 <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
                 <select id="handkerchiefOrWig">
                     <option></option>
@@ -320,7 +321,7 @@
                     <option value="פאה">פאה</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredStyle">סגנון</label>
                 <select id="preferredStyle">
                     <option></option>
@@ -334,7 +335,7 @@
                     <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
                 <select id="kosherOrNonKosherDevice">
                     <option></option>
@@ -343,7 +344,7 @@
                     <option value="מכשיר מסונן">מכשיר מסונן</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="preference-form-group">
                 <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
@@ -354,10 +355,97 @@
                     <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
             </div>
+            <div class="preference-form-group">
+                <label for="preferredWork">עבודה</label>
+                <input type="text" id="preferredWork">
+            </div>
+            <div class="preference-form-group">
+                <label for="preferredStudies">לימודים</label>
+                <input type="text" id="preferredStudies">
+            </div>
             <button type="button" onclick="savePreferencesData()">שמור</button>
         </form>
     </div>
 </div>
+
+<!--<div id="preferencesModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <form id="preferencesForm">-->
+<!--            <h2 class="modal-title">העדפות אישיות</h2>-->
+<!--            <div class="form-group">-->
+<!--                <label for="idPerson">:מזהה</label>-->
+<!--                <input type="text" id="idPerson" readonly> &lt;!&ndash; הוספת readonly כך שה-ID לא ישתנה  &ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredRegion">:אזור מגורים</label>-->
+<!--                <input type="text" id="preferredRegion">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredCommunity">:עדה</label>-->
+<!--                <input type="text" id="preferredCommunity">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredAgeRange">טווח גילאים:</label>-->
+<!--                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredHeightRange">טווח גובה:</label>-->
+<!--                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>-->
+<!--                <select id="handkerchiefOrWig">-->
+<!--                    <option></option>-->
+<!--                    <option value="מטפחת">מטפחת</option>-->
+<!--                    <option value="פאה">פאה</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredStyle">סגנון</label>-->
+<!--                <select id="preferredStyle">-->
+<!--                    <option></option>-->
+<!--                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>-->
+<!--                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>-->
+<!--                    <option value="חרדי/ת">חרדי/ת</option>-->
+<!--                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>-->
+<!--                    <option value="דתי/יה">דתי/יה</option>-->
+<!--                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>-->
+<!--                    <option value="חבדניק/ית">חבדניק/ית</option>-->
+<!--                    <option value="ברסלב/ית">ברסלב/ית</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>-->
+<!--                <select id="kosherOrNonKosherDevice">-->
+<!--                    <option></option>-->
+<!--                    <option value="מכשיר כשר">מכשיר כשר</option>-->
+<!--                    <option value="מכשיר לא כשר">מכשיר לא כשר</option>-->
+<!--                    <option value="מכשיר מסונן">מכשיר מסונן</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredStatus">סטטוס</label>-->
+<!--                <select id="preferredStatus">-->
+<!--                    <option></option>-->
+<!--                    <option value="רווק/ה">רווק/ה</option>-->
+<!--                    <option value="גרוש/ה">גרוש/ה</option>-->
+<!--                    <option value="אלמן/ה">אלמן/ה</option>-->
+<!--                    <option value="נשוי/אה">נשוי/אה</option>-->
+<!--                    <option value="לא רלוונטי">לא רלוונטי</option>-->
+<!--                </select>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="preferredWork">עבודה</label>-->
+<!--                    <input type="text" id="preferredWork">-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="preferredStudies">לימודים</label>-->
+<!--                    <input type="text" id="preferredStudies">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <button type="button" onclick="savePreferencesData()">שמור</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 
 <!-- עדכון -->
 <div id="updateModal" class="update-modal">

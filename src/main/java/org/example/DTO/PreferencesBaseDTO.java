@@ -12,6 +12,8 @@ public class PreferencesBaseDTO {
     private Integer preferredAgeTo;
     private float preferredHeightTo;
     private float preferredHeightFrom;
+    private String preferredWork;
+    private String preferredStudies;
 
     // Getters and Setters
     public String getPreferredRegion() {
@@ -92,5 +94,20 @@ public class PreferencesBaseDTO {
 
     public void setPreferredHeightTo(float preferredHeightTo) {
         this.preferredHeightTo = preferredHeightTo;
+    }
+    public String getPreferredWork() {
+        return preferredWork;
+    }
+
+    public void setPreferredWork(String preferredWork) {
+        this.preferredWork = preferredWork;
+    }
+
+    public String getPreferredStudies() {
+        return preferredStudies;
+    }
+
+    public void setPreferredStudies(String preferredStudies) {
+        this.preferredStudies = preferredStudies;
     }
 }

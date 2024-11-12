@@ -60,6 +60,8 @@ public class WomenPreferencesServiceImpl {
         existingUpWomen.setPreferredStatus(updatePreferencesWomen.getPreferredStatus());
         existingUpWomen.setPreferredAgeFrom(updatePreferencesWomen.getPreferredAgeFrom());
         existingUpWomen.setPreferredAgeTo(updatePreferencesWomen.getPreferredAgeTo());
+        existingUpWomen.setPreferredWork(updatePreferencesWomen.getPreferredWork());
+        existingUpWomen.setPreferredStudies(updatePreferencesWomen.getPreferredStudies());
         existingUpWomen.setPreferredHeightFrom(updatePreferencesWomen.getPreferredHeightFrom());
         existingUpWomen.setPreferredHeightTo(updatePreferencesWomen.getPreferredHeightTo());
         return preferencesWomenRepository.save(existingUpWomen);

@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.example.controller.MenController.saveFile;
@@ -172,7 +170,9 @@ public class WomenServiceImpl implements WomenService {
                 isHeightMatch(preferences, men) &&
                 isDeviceMatch(preferences, men) &&
                 isStyleMatch(preferences, men) &&
-                isHeadCoveringMatch(preferences, men);
+                isHeadCoveringMatch(preferences, men)
+                //&& isFlexibleMatch(preferences, men)
+                ;
     }
 
     private boolean isRegionMatch(PreferencesWomen preferencesWomen, Men men){
@@ -241,6 +241,56 @@ public class WomenServiceImpl implements WomenService {
         }
         return preferences.getHandkerchiefOrWig().equals(men.getHeadCovering());
     }
+
+    private boolean isFlexibleMatch(PreferencesWomen preferences, Men men) {
+        int matchCount = 0;
+
+        // בדיקה אם יש חפיפה בשדה "לימודים" בין העדפות הגבר לבין האישה
+        if (isWordMatch(preferences.getPreferredStudies(), men.getStudies())) {
+            matchCount++;
+        }
+
+        // בדיקה אם יש חפיפה בשדה "עבודה" בין העדפות הגבר לבין האישה
+        if (isWordMatch(preferences.getPreferredWork(), men.getWork())) {
+            matchCount++;
+        }
+
+        // בדיקה חוצה בין "לימודים" של הגבר ל"עבודה" של האישה
+        if (isWordMatch(preferences.getPreferredStudies(), men.getWork())) {
+            matchCount++;
+        }
+
+        // בדיקה חוצה בין "עבודה" של הגבר ל"לימודים" של האישה
+        if (isWordMatch(preferences.getPreferredWork(), men.getStudies())) {
+            matchCount++;
+        }
+
+        // החזרת התאמה אם נמצאו לפחות שתי חפיפות
+        return matchCount >= 2;
+    }
+
+    // פונקציה לבדיקת התאמה לפי מילות מפתח בשדה, תוך התעלמות משדות ריקים
+    private boolean isWordMatch(String preferenceField, String personField) {
+        // אם אחד השדות ריק או חסר, להתעלם ולהחזיר "התאמה"
+        if ((preferenceField == null || preferenceField.isEmpty()) ||
+                (personField == null || personField.isEmpty())) {
+            return true;
+        }
+
+        // פיצול הטקסט למילים נפרדות
+        Set<String> preferenceWords = new HashSet<>(Arrays.asList(preferenceField.split("\\s+")));
+        Set<String> personWords = new HashSet<>(Arrays.asList(personField.split("\\s+")));
+
+        // בדיקה אם יש לפחות מילה אחת משותפת
+        for (String word : preferenceWords) {
+            if (personWords.contains(word)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public Women findShowSelectedImages(int id) {
         return womenRepository.findById(id).orElse(null);

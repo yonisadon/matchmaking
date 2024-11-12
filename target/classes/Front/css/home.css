@@ -428,8 +428,27 @@
     align-items: center;
     margin-bottom: 10px;
 }
-
-.form-group #menSeeking, womenSeeking {
+.form-group textarea#menSeeking {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+    height: 80px; /* גובה רב-שורות */
+    resize: vertical; /* לאפשר שינוי גובה */
+}
+.form-group textarea#womenSeeking {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+    height: 80px; /* גובה רב-שורות */
+    resize: vertical; /* לאפשר שינוי גובה */
+}
+.form-group  {
     width: 100%; /* שדה המלל יתפוס את כל הרוחב */
     padding: 10px;
     border: 1px solid #ccc;
@@ -576,109 +595,7 @@
 }*/
 
 
-/* update */
-.update-modal-title {
-   text-align: center;
-   margin-bottom: 20px;
-}
-.update-modals-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-.update-modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding-top: 60px;
-}
-.update-form-group {
-    display: flex;
-    flex-direction: row-reverse; /* הכיתוב מצד ימין והשדה מצד שמאל */
-    align-items: center;
-    margin-bottom: 10px;
-}
 
-.update-form-group label {
-    margin-left: 10px; /* מרווח קטן בין ה-`label` ל-`input` */
-    text-align: right; /* הכיתוב יהיה מימין לשמאל */
-    width: 120px; /* רוחב קבוע לכיתוב */
-}
-
-.update-form-group input, .update-form-group select {
-    flex: 1; /* שדה ה-`input` יתפוס את כל הרוחב שנותר */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: right; /* טקסט בתוך שדה ה-`input` יהיה מימין לשמאל */
-}
-
-.update-form-group #UpSeeking {
-    width: 100%; /* שדה המלל יתפוס את כל הרוחב */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: right; /* טקסט מימין לשמאל */
-    height: 80px; /* גובה שדה המלל יותר גדול משאר השדות */
-}
-.update-modal-content {
-    background-color: #f9f9f9;
-    color: #333;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%;
-    max-width: 800px;
-    position: fixed;
-    top: 50%;
-    right: 5%;
-    transform: translate(0, -50%);
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-
-#currentProfileImage,
-#currentAdditionalImage {
-    width: 100px; /* רוחב תמונה מוגבל */
-    height: 100px; /* גובה מותאם */
-    object-fit: cover; /* שימור יחס הגובה-רוחב של התמונה */
-    border-radius: 8px; /* עיגול פינות */
-    margin-right: 10px; /* רווח בין התמונות אם יש יותר מתמונה אחת */
-}
-
-#currentProfileContainer,
-#currentAdditionalContainer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* תמונה בצד ימין */
-    margin-bottom: 10px;
-}
-
-.update-modal-content button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 20px;
-    cursor: pointer;
-    border-radius: 8px;
-}
-
-.update-modal-content button:hover {
-    background-color: #0056b3;
-}
 
 
 /*טבלת נתוני חיפוש*/
@@ -725,7 +642,32 @@
 #resultsTable tbody tr:nth-child(even) {
     background-color: #f9f9f9; /* צבע רקע לשורות זוגיות */
 }
+
+/* עיצוב כללי עבור השדות */
+.preference-form-group {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-bottom: 10px;
 }
+
+.preference-form-group label {
+    margin-left: 10px;
+    text-align: right;
+    width: 100px; /* התאם לפי הצורך */
+}
+
+.preference-form-group input, .preference-form-group select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+
+
 
 
 

@@ -163,8 +163,6 @@ function handleCriteriaChange() {
                             <td>${result.work}</td>
                             <td>${result.seeking}</td>
                             <td>${result.phone}</td>
-//                            <td>${result.createdAt}</td>
-//                            <td>${result.updatedAt}</td>
                             <td>${result.height}</td>
                             <td>${result.status}</td>
                             <td>${result.location}</td>
@@ -323,8 +321,8 @@ function deleteSelected() {
     document.getElementById('UpDevice').value = data.device || '';
     document.getElementById('UpPhone').value = data.phone || '';
     document.getElementById('UpSeeking').value = data.seeking || '';
-    document.getElementById('UpWork').value = data.UpWork || '';
-    document.getElementById('UpStudies').value = data.UpStudies || '';
+    document.getElementById('UpWork').value = data.work || '';
+    document.getElementById('UpStudies').value = data.studies || '';
 
 
             const currentProfileImage = document.getElementById('currentProfileImage');

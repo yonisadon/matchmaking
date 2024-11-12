@@ -16,11 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 import static org.example.controller.MenController.saveFile;
 
 @Service
@@ -233,7 +233,11 @@ public class MenServiceImpl implements MenService {
                 isHeightMatch(preferences, women) &&
                 isDeviceMatch(preferences, women) &&
                 isStyleMatch(preferences, women) &&
-                isHeadCoveringMatch(preferences, women);
+                isHeadCoveringMatch(preferences, women)
+                && isSimpleStudyMatch(preferences, women)
+                //&& isFlexibleMatch(preferences, women)
+                ;
+
     }
 
     //Checks the region parameter, between the man's preferences and the records that exist in the woman's table,
@@ -327,6 +331,103 @@ public class MenServiceImpl implements MenService {
         }
         return preferences.getHandkerchiefOrWig().equals(women.getHeadCovering());
     }
+
+
+
+    private boolean isSimpleStudyMatch(PreferencesMen preferences, Women women) {
+        String preferredStudies = preferences.getPreferredStudies();
+        String womanStudies = women.getStudies();
+
+        if (preferredStudies.isEmpty() || womanStudies.isEmpty()) {
+            return true;
+        }
+
+        // מילות המפתח של הלימודים שיכולים להתאים
+        List<String> validStudies = Arrays.asList("אברך", "לומד תורה", "תואר", "אקדמאי");
+
+        // המרת המילים בשני השדות לרשימות של מילים
+        List<String> preferredStudiesWords = Arrays.asList(preferredStudies.split("\\s+"));
+        List<String> womanStudiesWords = Arrays.asList(womanStudies.split("\\s+"));
+
+        // בדיקה אם יש מילה מתאימה בשני השדות
+        boolean preferredHasSpecialStudy = containsAny(preferredStudiesWords, validStudies);
+        boolean womanHasSpecialStudy = containsAny(womanStudiesWords, validStudies);
+
+        // אם המילה בהעדפות לא נמצאה בשדה לימודים של האישה, נחזיר false
+        if (preferredHasSpecialStudy && !womanHasSpecialStudy) {
+            return false;
+        }
+
+        // אם יש מילים מתאימות בשני השדות, מחזירים true
+        if (preferredHasSpecialStudy && womanHasSpecialStudy) {
+            return true;
+        }
+
+        // אם לא מצאנו התאמה, נחשב לתאמה (כמו שציינת)
+        return true;
+    }
+
+    // פונקציה לעזור לבדוק אם שדה מכיל אחד מהמונחים המיוחדים
+    private boolean containsAny(List<String> words, List<String> validStudies) {
+        for (String word : words) {
+            if (validStudies.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private boolean isFlexibleMatch(PreferencesMen preferences, Women women) {
+        int matchCount = 0;
+
+        // בדיקה אם יש חפיפה בשדה "לימודים" בין העדפות הגבר לבין האישה
+        if (isWordMatch(preferences.getPreferredStudies(), women.getStudies())) {
+            matchCount++;
+        }
+
+        // בדיקה אם יש חפיפה בשדה "עבודה" בין העדפות הגבר לבין האישה
+        if (isWordMatch(preferences.getPreferredWork(), women.getWork())) {
+            matchCount++;
+        }
+
+        // בדיקה חוצה בין "לימודים" של הגבר ל"עבודה" של האישה
+        if (isWordMatch(preferences.getPreferredStudies(), women.getWork())) {
+            matchCount++;
+        }
+
+        // בדיקה חוצה בין "עבודה" של הגבר ל"לימודים" של האישה
+        if (isWordMatch(preferences.getPreferredWork(), women.getStudies())) {
+            matchCount++;
+        }
+
+        // החזרת התאמה אם נמצאו לפחות שתי חפיפות
+        return matchCount >= 2;
+    }
+
+    // פונקציה לבדיקת התאמה לפי מילות מפתח בשדה, תוך התעלמות משדות ריקים
+    private boolean isWordMatch(String preferenceField, String personField) {
+        // אם אחד השדות ריק או חסר, להתעלם ולהחזיר "התאמה"
+        if ((preferenceField == null || preferenceField.isEmpty()) ||
+                (personField == null || personField.isEmpty())) {
+            return true;
+        }
+
+        // פיצול הטקסט למילים נפרדות
+        Set<String> preferenceWords = new HashSet<>(Arrays.asList(preferenceField.split("\\s+")));
+        Set<String> personWords = new HashSet<>(Arrays.asList(personField.split("\\s+")));
+
+        // בדיקה אם יש לפחות מילה אחת משותפת
+        for (String word : preferenceWords) {
+            if (personWords.contains(word)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
     public Men findShowSelectedImages(int id) {
         return menRepository.findById(id).orElse(null);

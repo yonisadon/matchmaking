@@ -300,9 +300,12 @@ function savePreferencesData() {
     var preferredRegion = document.getElementById('preferredRegion').value;
     var preferredCommunity = document.getElementById('preferredCommunity').value;
     var handkerchiefOrWig = document.getElementById('handkerchiefOrWig').value;
-    var preferredStyle = document.getElementById('preferredStyle').value;
+
     var kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
     var preferredStatus = document.getElementById('preferredStatus').value;
+    var preferredWork = document.getElementById('preferredWork').value;
+    var preferredStyle = document.getElementById('preferredStyle').value;
+    var preferredStudies = document.getElementById('preferredStudies').value;
 
     var preferencesData;
         if (currentGender === 'men') {
@@ -315,9 +318,11 @@ function savePreferencesData() {
                 preferredRegion: preferredRegion,
                 preferredCommunity: preferredCommunity,
                 handkerchiefOrWig: handkerchiefOrWig,
-                preferredStyle: preferredStyle,
                 kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-                preferredStatus: preferredStatus
+                preferredStatus: preferredStatus,
+                preferredStyle: preferredStyle,
+                preferredWork: preferredWork,
+                preferredStudies: preferredStudies
             };
         } else {
             preferencesData = {
@@ -329,9 +334,11 @@ function savePreferencesData() {
                 preferredRegion: preferredRegion,
                 preferredCommunity: preferredCommunity,
                 handkerchiefOrWig: handkerchiefOrWig,
-                preferredStyle: preferredStyle,
                 kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-                preferredStatus: preferredStatus
+                preferredStatus: preferredStatus,
+                preferredStyle: preferredStyle,
+                preferredWork: preferredWork,
+                preferredStudies: preferredStudies
             };
         }
     console.log('Preferences to be sent:', preferencesData);
@@ -390,6 +397,8 @@ function resetFormField() {
     document.getElementById("preferredStatus").value = "";
     document.getElementById("preferredAgeRange").value = "";
     document.getElementById("preferredHeightRange").value = "";
+    document.getElementById("preferredWork").value = "";
+    document.getElementById("preferredStudies").value = "";
 
 
     document.getElementById("womenStatus").value = "";

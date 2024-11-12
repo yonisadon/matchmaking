@@ -61,6 +61,8 @@
         <table id="resultsTable" class="right-table">
             <thead>
             <tr data-side="right">
+                <th>לימודים</th>
+                <th>עבודה</th>
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -85,6 +87,8 @@
         <table id="tableFromFindingOtherSide" class="right-table">
             <thead>
             <tr data-side="left">
+                <th>לימודים</th>
+                <th>עבודה</th>
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -113,11 +117,13 @@
                 <tr>
                     <th>טווח גילאים</th>
                     <th>טווח גובה</th>
+                    <th>עבודה</th>
+                    <th>לימודים</th>
                     <th>עדה</th>
                     <th>מכשיר</th>
-                    <th>סטטוס</th>
                     <th>מיקום</th>
                     <th>מטפחת</th>
+                    <th>סטטוס</th>
                     <th>סגנון</th>
                     <th>מסד-העדפות</th>
                     <th>מס"ד</th>
@@ -135,11 +141,13 @@
                 <tr>
                     <th>טווח גילאים</th>
                     <th>טווח גובה</th>
+                    <th>עבודה</th>
+                    <th>לימודים</th>
                     <th>עדה</th>
                     <th>מכשיר</th>
-                    <th>סטטוס</th>
                     <th>מיקום</th>
                     <th>מטפחת</th>
+                    <th>סטטוס</th>
                     <th>סגנון</th>
                     <th>מסד-העדפות</th>
                     <th>מס"ד</th>
@@ -181,14 +189,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStyle">סטטוס</label>
+                <label for="preferredStyle">סגנון</label>
                 <select id="preferredStyle">
                     <option></option>
-                    <option value="רווק/ה">רווק/ה</option>
-                    <option value="גרוש/ה">גרוש/ה</option>
-                    <option value="אלמן/ה">אלמן/ה</option>
-                    <option value="נשוי/אה">נשוי/אה</option>
-                    <option value="לא רלוונטי">לא רלוונטי</option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <div class="form-group">
@@ -201,18 +212,23 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStatus">סגנון</label>
+                <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
-                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
-                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
-                    <option value="חרדי/ת">חרדי/ת</option>
-                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
-                    <option value="דתי/יה">דתי/יה</option>
-                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
-                    <option value="חבדניק/ית">חבדניק/ית</option>
-                    <option value="ברסלב/ית">ברסלב/ית</option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredWork">עבודה</label>
+                <input type="text" id="preferredWork">
+            </div>
+            <div class="form-group">
+                <label for="preferredStudies">לימודים</label>
+                <input type="text" id="preferredStudies">
             </div>
             <button type="button" onclick="closeModal('updateModal')">סגור</button>
             <button type="button" onclick="saveUpdateData()">שמור</button>
