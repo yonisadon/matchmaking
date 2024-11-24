@@ -18,6 +18,7 @@
         <div class="search-container">
             <button id="displayPictures" onclick="showSelectedImages()">הצג תמונות</button>
             <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
+            <button id="reportMatches" onclick="reportMatches()">דוח התאמות</button>
             <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
             <div id="inputContainer">
                 <input type="text" id="searchInput" placeholder="הערך לחיפוש">
@@ -172,14 +173,26 @@
                 <label for="preferredCommunity">:עדה</label>
                 <input type="text" id="preferredCommunity">
             </div>
-            <div class="form-group">
-                <label for="preferredAgeRange">טווח גילאים:</label>
-                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            <div class="form-group-inline">
+                <label for="preferredAgeFrom">:מגיל</label>
+                <input type="number" id="preferredAgeFrom" required min="0">
+                <label for="preferredAgeTo">:עד גיל</label>
+                <input type="number" id="preferredAgeTo"  required min="0">
             </div>
-            <div class="form-group">
-                <label for="preferredHeightRange">טווח גובה:</label>
-                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            <div class="form-group-inline">
+                <label for="preferredHeightFrom">:מגובה</label>
+                <input type="number" id="preferredHeightFrom"  required min="0">
+                <label for="preferredHeightTo">:עד גובה</label>
+                <input type="number" id="preferredHeightTo"  required min="0">
             </div>
+<!--            <div class="form-group">-->
+<!--                <label for="preferredAgeRange">טווח גילאים:</label>-->
+<!--                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredHeightRange">טווח גובה:</label>-->
+<!--                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">-->
+<!--            </div>-->
             <div class="form-group">
                 <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
                 <select id="handkerchiefOrWig">

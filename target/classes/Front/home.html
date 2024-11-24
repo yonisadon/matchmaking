@@ -288,14 +288,15 @@
     </div>
 </div>
 
-<!-- מודל העדפות אישיות  -->
-<div id="preferencesModal" class="modal">
-    <div class="modal-content">
+
+<!-- מודל העדפות אישיות -->
+<div id="preferencesModal" class="preferences-modal">
+    <div class="preferences-modal-content">
         <form id="preferencesForm">
-            <h2 class="modal-title">העדפות אישיות</h2>
+            <h2 class="preferences-modal-title">העדפות אישיות</h2>
             <div class="preference-form-group">
                 <label for="idPerson">:מזהה</label>
-                <input type="text" id="idPerson" readonly> <!-- הוספת readonly כך שה-ID לא ישתנה -->
+                <input type="text" id="idPerson" readonly>
             </div>
             <div class="preference-form-group">
                 <label for="preferredRegion">:אזור מגורים</label>
@@ -305,13 +306,17 @@
                 <label for="preferredCommunity">:עדה</label>
                 <input type="text" id="preferredCommunity">
             </div>
-            <div class="preference-form-group">
-                <label for="preferredAgeRange">טווח גילאים:</label>
-                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            <div class="preference-form-group-inline">
+                <label for="preferredAgeFrom">:מגיל</label>
+                <input type="number" id="preferredAgeFrom" required min="0">
+                <label for="preferredAgeTo">:עד גיל</label>
+                <input type="number" id="preferredAgeTo"  required min="0">
             </div>
-            <div class="preference-form-group">
-                <label for="preferredHeightRange">טווח גובה:</label>
-                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            <div class="preference-form-group-inline">
+                <label for="preferredHeightFrom">:מגובה</label>
+                <input type="number" id="preferredHeightFrom"  required min="0">
+                <label for="preferredHeightTo">:עד גובה</label>
+                <input type="number" id="preferredHeightTo"  required min="0">
             </div>
             <div class="preference-form-group">
                 <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
@@ -322,7 +327,7 @@
                 </select>
             </div>
             <div class="preference-form-group">
-                <label for="preferredStyle">סגנון</label>
+                <label for="preferredStyle">:סגנון</label>
                 <select id="preferredStyle">
                     <option></option>
                     <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
@@ -336,7 +341,7 @@
                 </select>
             </div>
             <div class="preference-form-group">
-                <label for="kosherOrNonKosherDevice">טלפון כשר/לא</label>
+                <label for="kosherOrNonKosherDevice">:טלפון כשר/לא</label>
                 <select id="kosherOrNonKosherDevice">
                     <option></option>
                     <option value="מכשיר כשר">מכשיר כשר</option>
@@ -345,7 +350,7 @@
                 </select>
             </div>
             <div class="preference-form-group">
-                <label for="preferredStatus">סטטוס</label>
+                <label for="preferredStatus">:סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
                     <option value="רווק/ה">רווק/ה</option>
@@ -356,17 +361,18 @@
                 </select>
             </div>
             <div class="preference-form-group">
-                <label for="preferredWork">עבודה</label>
+                <label for="preferredWork">:עבודה</label>
                 <input type="text" id="preferredWork">
             </div>
             <div class="preference-form-group">
-                <label for="preferredStudies">לימודים</label>
+                <label for="preferredStudies">:לימודים</label>
                 <input type="text" id="preferredStudies">
             </div>
             <button type="button" onclick="savePreferencesData()">שמור</button>
         </form>
     </div>
 </div>
+
 
 <!--<div id="preferencesModal" class="modal">-->
 <!--    <div class="modal-content">-->

@@ -34,83 +34,6 @@
              background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
         }
 
-/* סגנון עבור החלון הקופץ */
-.modal-title {
-   text-align: center; /* יישור למרכז */
-   margin-bottom: 20px; /* מרווח תחתון */
-}
-.modals-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #f9f9f9;
-    color: #333;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 30%;
-    max-width: 500px;
-    position: fixed;
-    top: 50%;
-    right: 5%;
-    transform: translate(0, -50%);
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.form-group {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.form-group label {
-    margin-left: 10px;
-    text-align: right;
-    width: 100px; /* התאם לפי הצורך */
-}
-
-.form-group input, .form-group select {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: right;
-}
-
-.modal-content button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 8px;
-}
-
-.modal-content button:hover {
-    background-color: #0056b3;
-}
 
 
 /* // אזור חיפוש
@@ -309,7 +232,7 @@
 
 /*טבלת נתוני חיפוש*/
 #searchResultsContainer {
-    max-height: 400px; /* גובה קבוע לאזור התוצאות */
+    max-height: 600px; /* גובה קבוע לאזור התוצאות */
     overflow-y: auto; /* גלילה אנכית */
     overflow-x: auto; /* גלילה אופקית במידת הצורך */
     margin-top: 10px;
@@ -321,13 +244,41 @@
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    table-layout: fixed;
 }
 
+#resultsTable th, #resultsTable td {
+    border: 1px solid #ccc; /* גבול עדין */
+    padding: 8px; /* ריווח פנימי */
+    text-align: center; /* תוכן במרכז */
+}
+
+#resultsTable th {
+    background-color: #f2f2f2; /* צבע רקע לכותרת */
+    font-weight: bold;
+}
+
+
+#resultsTable tr:nth-child(even) {
+    background-color: #f9f9f9; /* צבע רקע שונה לשורות זוגיות */
+}
+
+#searchResultsContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#searchResultsContainer::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+#searchResultsContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
 #resultsTable thead {
     background-color: #007BFF; /* צבע רקע לכותרות */
     color: #fff;
 }
-
 #resultsTable thead th {
     position: sticky; /* מקבע את הכותרות */
     top: 0;
@@ -336,53 +287,8 @@
     z-index: 1;
 }
 
-#resultsTable th, #resultsTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    font-size: 25px; /* גודל כיתוב ברשומות */
-}
-
-#resultsTable thead th {
-    font-size: 25px; /* גודל כיתוב לכותרות הטבלה */
-}
 
 
-#resultsTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* צבע רקע לשורות זוגיות */
-}
-
-
-@media (max-width: 480px) {
- textarea {
-            direction: rtl;
-        }
-
-        /* סגנון לסרגל הלחצנים */
-        .navbar {
-            background-color: blue; /* רקע כחול */
-            padding: 15px; /* מרווח בין הלחצנים */
-            text-align: right; /* מיקום הלחצנים לימין */
-        }
-
-        /* סגנון לכפתורים בסרגל הלחצנים */
-        .navbar button {
-            background-color: #4CAF50; /* רקע ירוק */
-            color: white; /* צבע טקסט לבן */
-            border: none; /* אין גבול לכפתור */
-            padding: 10px 20px; /* גודל הכפתור */
-            text-align: center; /* מיקום הטקסט בתוך הכפתור */
-            text-decoration: none; /* אין קו תחתון לטקסט */
-            display: inline-block; /* טקסט באותו שורה כל עם הכפתור */
-            font-size: 16px; /* גודל הטקסט */
-            margin: 4px 2px; /* מרווח בין הכפתורים */
-            cursor: pointer; /* סמן העכבר כעטוף */
-            border-radius: 8px; /* עיגול קצוות */
-        }
-
-        .navbar button:hover {
-             background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
-        }
 
 /* סגנון עבור החלון הקופץ */
 .modal-title {
@@ -420,6 +326,8 @@
     transform: translate(0, -50%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 80vh; /* הגבלת גובה המודאל לגובה של 80% מהחלון */
+    overflow-y: auto; /* אם התוכן עובר את הגבול, יצא פס גלילה */
 }
 
 .form-group {
@@ -492,181 +400,107 @@
 }
 
 
-/* // אזור חיפוש
- */
-.search-container {
-    margin: 20px 0;
+
+
+/* עיצוב כללי עבור השדות */
+
+.preferences-modal-title {
+   text-align: center;
+   margin-bottom: 20px;
+}
+.preferences-modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.preference-form-group-inline {
+    display: flex !important;
+    flex-direction: row-reverse !important; /* הכיתוב מצד ימין והשדה מצד שמאל */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.preference-form-group-inline label {
+    margin-left: 20px !important; /* מרווח קטן בין ה-label ל-input */
+    text-align: right !important; /* הכיתוב יהיה מימין לשמאל */
+    width: 120px !important; /* רוחב קבוע לכיתוב */
+}
+
+.preference-form-group-inline input[type="number"] {
+    width: 120px;
+        margin-left: 10px !important; /* מרווח בין ה-input לכותרת */
+        margin-right: 20px !important; /* מרווח נוסף בצד ימין של ה-input */
+        text-align: right;
+}
+
+
+.preferences-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 60px;
+}
+
+.preference-form-group {
+    display: flex;
+    flex-direction: row-reverse; /* הכיתוב מצד ימין והשדה מצד שמאל */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.preference-form-group label {
+    margin-left: 10px; /* מרווח קטן בין ה-`label` ל-`input` */
+    text-align: right; /* הכיתוב יהיה מימין לשמאל */
+    width: 120px; /* רוחב קבוע לכיתוב */
+}
+
+.preference-form-group input, .preference-form-group select {
+    flex: 0 0 50%; /* השדה יתפוס 50% מהרחב הפנוי */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: right; /* טקסט בתוך שדה ה-`input` יהיה מימין לשמאל */
+}
+
+.preferences-modal-content {
+    background-color: #f9f9f9;
+    color: #333;
     padding: 20px;
-    background-color: #fff;
+    border: 1px solid #888;
+    width: 60%;
+    max-width: 800px;
+    position: fixed;
+    top: 50%;
+    right: 5%;
+    transform: translate(0, -50%);
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex; /* שימוש ב-flexbox */
-    align-items: center; /* יישור אנכי למרכז */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#inputContainer {
-    margin-right: 10px; /* ריווח בין שדה החיפוש לכפתור */
-}
-
-.search-container input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 200px;
-    font-size: 20px;
-}
-
-.search-container label {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-.search-container select, .search-container button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #007BFF;
-    color: #fff;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-.search-container button:hover {
-    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
-}
-
-.search-container select {
-    background-color: #fff;
-    color: #000;
-}
-
-
-
-      .selected {
-          background-color: #d1e7fd; /* צבע רקע כחול בהיר לשורה הנבחרת */
-          color: #100; /* צבע טקסט */
-      }
-
-      table tbody tr:hover {
-          background-color: #f1f1f1; /* צבע רקע בעת מעבר עם העכבר */
-          cursor: pointer; /* שינוי סמן העכבר לכף יד */
-      }
-
-/* //בחירה של שורה  למחיקה או עדכון//
- */
-.selected {
-    background-color: #f2f2f2; /* צבע רקע להדגשת השורה הנבחרת */
-}
-
-/* עיצוב לחצן מחיקה */
-.deleteButton-container {
-    display: inline-block;
-    margin-top: 10px;
-}
-.deleteButton-container button:hover {
-    background-color: #0056b3; /* צבע רקע כחול בהיר בעת לחיצה */
-}
-
-/* עיצוב לחצן מחיקה */
-.deleteButton-container button {
+.preferences-modal-content button {
     background-color: #007BFF;
     color: white;
     border: none;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
+    display: inline-block;
     font-size: 16px;
+    margin-top: 20px;
     cursor: pointer;
     border-radius: 8px;
-    transition: background-color 0.3s ease;
-}
-/*
-.file-path {
-    border: none;
-    color: #555;
-    background: #f5f5f5;
-    pointer-events: none;
-    font-size: 0.5em;
-}
-.form-group img{
-    display: none;
-    max-width: 350px;
-    max-height: 300px;
-}*/
-
-
-
-
-
-/*טבלת נתוני חיפוש*/
-#searchResultsContainer {
-    max-height: 400px; /* גובה קבוע לאזור התוצאות */
-    overflow-y: auto; /* גלילה אנכית */
-    overflow-x: auto; /* גלילה אופקית במידת הצורך */
-    margin-top: 10px;
 }
 
-#resultsTable {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.preferences-modal-content button:hover {
+    background-color: #0056b3;
 }
-
-#resultsTable thead {
-    background-color: #007BFF; /* צבע רקע לכותרות */
-    color: #fff;
-}
-
-#resultsTable thead th {
-    position: sticky; /* מקבע את הכותרות */
-    top: 0;
-    background-color: #007BFF; /* צבע רקע לכותרות */
-    color: #fff;
-    z-index: 1;
-}
-
-#resultsTable th, #resultsTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    font-size: 25px; /* גודל כיתוב ברשומות */
-}
-
-#resultsTable thead th {
-    font-size: 25px; /* גודל כיתוב לכותרות הטבלה */
-}
-
-
-#resultsTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* צבע רקע לשורות זוגיות */
-}
-
-/* עיצוב כללי עבור השדות */
-.preference-form-group {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.preference-form-group label {
-    margin-left: 10px;
-    text-align: right;
-    width: 100px; /* התאם לפי הצורך */
-}
-
-.preference-form-group input, .preference-form-group select {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: right;
-}
-
-
 
 
 

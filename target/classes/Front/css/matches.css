@@ -280,6 +280,24 @@ table tbody tr:hover {
 
 }
 
+.form-group-inline {
+    display: flex !important;
+    flex-direction: row-reverse !important; /* הכיתוב מצד ימין והשדה מצד שמאל */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group-inline label {
+    margin-left: 20px !important; /* מרווח קטן בין ה-label ל-input */
+    text-align: right !important; /* הכיתוב יהיה מימין לשמאל */
+    width: 120px !important; /* רוחב קבוע לכיתוב */
+}
+.form-group-inline input[type="number"] {
+    width: 120px;
+        margin-left: 10px !important; /* מרווח בין ה-input לכותרת */
+        margin-right: 20px !important; /* מרווח נוסף בצד ימין של ה-input */
+        text-align: right;
+}
 /* עיצוב התמונות */
 .modal img {
     max-width: 300%;
