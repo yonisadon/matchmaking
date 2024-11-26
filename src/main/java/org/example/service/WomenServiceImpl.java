@@ -1,6 +1,9 @@
 package org.example.service;
 
 
+import org.example.DTO.MatchDto;
+import org.example.DTO.MatchDtoForMen;
+import org.example.DTO.MatchDtoForWomen;
 import org.example.exception.ResourceNotFoundException;
 import org.example.model.*;
 import org.example.model.Women;
@@ -13,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.example.controller.MenController.saveFile;
@@ -152,6 +153,56 @@ public class WomenServiceImpl implements WomenService {
     }
 
 
+    public List<MatchDto> findMatchesForWomen() {
+        List<Women> womenList = womenRepository.findAll();  // רשימה של נשים
+        List<Men> menList = menRepository.findAll();  // רשימה של גברים
+
+        List<MatchDto> matches = new ArrayList<>();
+
+        for (Women women : womenList) {
+            PreferencesWomen preferences = preferencesWomenRepository.findByWomenId(women.getId()) // אם יש לך העדפות לנשים
+                    .orElseThrow(() -> new ResourceNotFoundException("לא נמצאו העדפות לאישה עם id: " + women.getId()));
+
+            for (Men men : menList) {
+                // השתמש בפונקציה matchesPreferences כדי לבדוק את ההתאמה
+                if (matchesPreferences(preferences, men)) {
+                    MatchDtoForWomen womenDto = new MatchDtoForWomen(
+                            women.getId(),
+                            women.getFirstName(),
+                            women.getLastName(),
+                            women.getAge(),
+                            women.getHeight(),
+                            women.getStatus(),
+                            women.getStyle()
+                    );
+                    MatchDtoForMen menDto = new MatchDtoForMen(
+                            men.getId(),
+                            men.getFirstName(),
+                            men.getLastName(),
+                            men.getAge(),
+                            men.getHeight(),
+                            men.getStatus(),
+                            men.getStyle()
+                    );
+
+                    MatchDto matchDto = new MatchDto(menDto, womenDto);
+
+                    // אם יש התאמה, צור את ה-DTO
+//                    MatchDto match = new MatchDto(
+//                            women.getId(), women.getFirstName(), women.getLastName(), women.getAge(), women.getHeight(), women.getStatus(), women.getStyle(),
+//                            men.getId(), men.getFirstName(), men.getLastName(), men.getAge(), men.getHeight(), men.getStatus(), men.getStyle()
+//                    );
+                    System.out.println("Women: " + women.getFirstName() + ", Men: " + men.getFirstName());
+                    matches.add(matchDto);
+
+                    //matches.add(match);
+                }
+            }
+        }
+        return matches;
+    }
+
+
 
     public List<Men> findMatchesByWomenPreferences(int womenId) {
         Women women = womenRepository.findById(womenId).orElseThrow(() -> new ResourceNotFoundException("Women not found"));
@@ -172,7 +223,9 @@ public class WomenServiceImpl implements WomenService {
                 isHeightMatch(preferences, men) &&
                 isDeviceMatch(preferences, men) &&
                 isStyleMatch(preferences, men) &&
-                isHeadCoveringMatch(preferences, men);
+                isHeadCoveringMatch(preferences, men)
+                && isSimpleStudyMatch(preferences, men)
+                ;
     }
 
     private boolean isRegionMatch(PreferencesWomen preferencesWomen, Men men){
@@ -241,6 +294,98 @@ public class WomenServiceImpl implements WomenService {
         }
         return preferences.getHandkerchiefOrWig().equals(men.getHeadCovering());
     }
+
+    private boolean isSimpleStudyMatch(PreferencesWomen preferences, Men men) {
+        String preferredStudies = preferences.getPreferredStudies();
+        String menStudies = men.getStudies();
+
+        if (preferredStudies.isEmpty() || menStudies.isEmpty()) {
+            return true;
+        }
+
+        // מילות המפתח של הלימודים שיכולים להתאים
+        List<String> validStudies = Arrays.asList("אברך", "לומד תורה", "תואר", "אקדמאי");
+
+        // המרת המילים בשני השדות לרשימות של מילים
+        List<String> preferredStudiesWords = Arrays.asList(preferredStudies.split("\\s+"));
+        List<String> menStudiesWords = Arrays.asList(menStudies.split("\\s+"));
+
+        // בדיקה אם יש מילה מתאימה בשני השדות
+        boolean preferredHasSpecialStudy = containsAny(preferredStudiesWords, validStudies);
+        boolean menHasSpecialStudy = containsAny(menStudiesWords, validStudies);
+
+        // אם המילה בהעדפות לא נמצאה בשדה לימודים של האישה, נחזיר false
+        if (preferredHasSpecialStudy && !menHasSpecialStudy) {
+            return false;
+        }
+
+        // אם יש מילים מתאימות בשני השדות, מחזירים true
+        if (preferredHasSpecialStudy && menHasSpecialStudy) {
+            return true;
+        }
+
+        // אם לא מצאנו התאמה, נחשב לתאמה (כמו שציינת)
+        return true;
+    }
+
+    // פונקציה לעזור לבדוק אם שדה מכיל אחד מהמונחים המיוחדים
+    private boolean containsAny(List<String> words, List<String> validStudies) {
+        for (String word : words) {
+            if (validStudies.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+//    private boolean isFlexibleMatch(PreferencesWomen preferences, Men men) {
+//        int matchCount = 0;
+//
+//        // בדיקה אם יש חפיפה בשדה "לימודים" בין העדפות הגבר לבין האישה
+//        if (isWordMatch(preferences.getPreferredStudies(), men.getStudies())) {
+//            matchCount++;
+//        }
+//
+//        // בדיקה אם יש חפיפה בשדה "עבודה" בין העדפות הגבר לבין האישה
+//        if (isWordMatch(preferences.getPreferredWork(), men.getWork())) {
+//            matchCount++;
+//        }
+//
+//        // בדיקה חוצה בין "לימודים" של הגבר ל"עבודה" של האישה
+//        if (isWordMatch(preferences.getPreferredStudies(), men.getWork())) {
+//            matchCount++;
+//        }
+//
+//        // בדיקה חוצה בין "עבודה" של הגבר ל"לימודים" של האישה
+//        if (isWordMatch(preferences.getPreferredWork(), men.getStudies())) {
+//            matchCount++;
+//        }
+//
+//        // החזרת התאמה אם נמצאו לפחות שתי חפיפות
+//        return matchCount >= 2;
+//    }
+//
+//    // פונקציה לבדיקת התאמה לפי מילות מפתח בשדה, תוך התעלמות משדות ריקים
+//    private boolean isWordMatch(String preferenceField, String personField) {
+//        // אם אחד השדות ריק או חסר, להתעלם ולהחזיר "התאמה"
+//        if ((preferenceField == null || preferenceField.isEmpty()) ||
+//                (personField == null || personField.isEmpty())) {
+//            return true;
+//        }
+//
+//        // פיצול הטקסט למילים נפרדות
+//        Set<String> preferenceWords = new HashSet<>(Arrays.asList(preferenceField.split("\\s+")));
+//        Set<String> personWords = new HashSet<>(Arrays.asList(personField.split("\\s+")));
+//
+//        // בדיקה אם יש לפחות מילה אחת משותפת
+//        for (String word : preferenceWords) {
+//            if (personWords.contains(word)) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+
 
     public Women findShowSelectedImages(int id) {
         return womenRepository.findById(id).orElse(null);

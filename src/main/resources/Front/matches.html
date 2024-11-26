@@ -18,6 +18,7 @@
         <div class="search-container">
             <button id="displayPictures" onclick="showSelectedImages()">הצג תמונות</button>
             <button id="searchMatches" onclick="searchMatchesSelected()">חפש התאמה</button>
+            <button id="reportMatches" onclick="reportMatches()">דוח התאמות</button>
             <button id="updatePreferenceButton" onclick="updateSelected()">עדכון העדפות</button>
             <div id="inputContainer">
                 <input type="text" id="searchInput" placeholder="הערך לחיפוש">
@@ -61,6 +62,8 @@
         <table id="resultsTable" class="right-table">
             <thead>
             <tr data-side="right">
+                <th>לימודים</th>
+                <th>עבודה</th>
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -85,6 +88,8 @@
         <table id="tableFromFindingOtherSide" class="right-table">
             <thead>
             <tr data-side="left">
+                <th>לימודים</th>
+                <th>עבודה</th>
                 <th>גובה</th>
                 <th>סטטוס</th>
                 <th>מיקום</th>
@@ -113,11 +118,13 @@
                 <tr>
                     <th>טווח גילאים</th>
                     <th>טווח גובה</th>
+                    <th>עבודה</th>
+                    <th>לימודים</th>
                     <th>עדה</th>
                     <th>מכשיר</th>
-                    <th>סטטוס</th>
                     <th>מיקום</th>
                     <th>מטפחת</th>
+                    <th>סטטוס</th>
                     <th>סגנון</th>
                     <th>מסד-העדפות</th>
                     <th>מס"ד</th>
@@ -135,11 +142,13 @@
                 <tr>
                     <th>טווח גילאים</th>
                     <th>טווח גובה</th>
+                    <th>עבודה</th>
+                    <th>לימודים</th>
                     <th>עדה</th>
                     <th>מכשיר</th>
-                    <th>סטטוס</th>
                     <th>מיקום</th>
                     <th>מטפחת</th>
+                    <th>סטטוס</th>
                     <th>סגנון</th>
                     <th>מסד-העדפות</th>
                     <th>מס"ד</th>
@@ -164,14 +173,26 @@
                 <label for="preferredCommunity">:עדה</label>
                 <input type="text" id="preferredCommunity">
             </div>
-            <div class="form-group">
-                <label for="preferredAgeRange">טווח גילאים:</label>
-                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">
+            <div class="form-group-inline">
+                <label for="preferredAgeFrom">:מגיל</label>
+                <input type="number" id="preferredAgeFrom" required min="0">
+                <label for="preferredAgeTo">:עד גיל</label>
+                <input type="number" id="preferredAgeTo"  required min="0">
             </div>
-            <div class="form-group">
-                <label for="preferredHeightRange">טווח גובה:</label>
-                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">
+            <div class="form-group-inline">
+                <label for="preferredHeightFrom">:מגובה</label>
+                <input type="number" id="preferredHeightFrom"  required min="0">
+                <label for="preferredHeightTo">:עד גובה</label>
+                <input type="number" id="preferredHeightTo"  required min="0">
             </div>
+<!--            <div class="form-group">-->
+<!--                <label for="preferredAgeRange">טווח גילאים:</label>-->
+<!--                <input type="text" id="preferredAgeRange" placeholder="לדוגמה: 25-30">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="preferredHeightRange">טווח גובה:</label>-->
+<!--                <input type="text" id="preferredHeightRange" placeholder="לדוגמה: 160-180">-->
+<!--            </div>-->
             <div class="form-group">
                 <label for="handkerchiefOrWig">:כיסוי ראש/מטפחת</label>
                 <select id="handkerchiefOrWig">
@@ -181,14 +202,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStyle">סטטוס</label>
+                <label for="preferredStyle">סגנון</label>
                 <select id="preferredStyle">
                     <option></option>
-                    <option value="רווק/ה">רווק/ה</option>
-                    <option value="גרוש/ה">גרוש/ה</option>
-                    <option value="אלמן/ה">אלמן/ה</option>
-                    <option value="נשוי/אה">נשוי/אה</option>
-                    <option value="לא רלוונטי">לא רלוונטי</option>
+                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
+                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
+                    <option value="חרדי/ת">חרדי/ת</option>
+                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
+                    <option value="דתי/יה">דתי/יה</option>
+                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
+                    <option value="חבדניק/ית">חבדניק/ית</option>
+                    <option value="ברסלב/ית">ברסלב/ית</option>
                 </select>
             </div>
             <div class="form-group">
@@ -201,18 +225,23 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="preferredStatus">סגנון</label>
+                <label for="preferredStatus">סטטוס</label>
                 <select id="preferredStatus">
                     <option></option>
-                    <option value="חרדי/ת ספרדי/ת">חרדי/ת ספרדי/ת</option>
-                    <option value="חרדי/ת אשכנזי/ת">חרדי/ת אשכנזי/ת</option>
-                    <option value="חרדי/ת">חרדי/ת</option>
-                    <option value="חרדי/ת-מודרני">חרדי/ת-מודרני</option>
-                    <option value="דתי/יה">דתי/יה</option>
-                    <option value="דתי/יה לאומי/ת">דתי/יה לאומי/ת</option>
-                    <option value="חבדניק/ית">חבדניק/ית</option>
-                    <option value="ברסלב/ית">ברסלב/ית</option>
+                    <option value="רווק/ה">רווק/ה</option>
+                    <option value="גרוש/ה">גרוש/ה</option>
+                    <option value="אלמן/ה">אלמן/ה</option>
+                    <option value="נשוי/אה">נשוי/אה</option>
+                    <option value="לא רלוונטי">לא רלוונטי</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="preferredWork">עבודה</label>
+                <input type="text" id="preferredWork">
+            </div>
+            <div class="form-group">
+                <label for="preferredStudies">לימודים</label>
+                <input type="text" id="preferredStudies">
             </div>
             <button type="button" onclick="closeModal('updateModal')">סגור</button>
             <button type="button" onclick="saveUpdateData()">שמור</button>

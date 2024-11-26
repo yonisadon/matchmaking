@@ -95,7 +95,7 @@ function handleCriteriaChange() {
         }
 
         console.log(`Fetching: ${url}`);
-        const columns =  ['height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
+        const columns =  ['studies' ,'work' ,'height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
         FetchService.fetchData(url, 'GET')
          .then(data => {
                     if (data.length === 0) {
@@ -221,15 +221,21 @@ console.log("Selected Gender:", selectedGender); // בדוק את הערך בש�
         const row = document.createElement('tr');
         const ageRange = `${data.preferredAgeFrom || ''}-${data.preferredAgeTo || ''}`;
         const heightRange = `${data.preferredHeightFrom || ''}-${data.preferredHeightTo || ''}`;
+        console.log(data.preferredStatus);
+        console.log(data.preferredStyle);
 
         row.innerHTML = `
             <td>${ageRange}</td>
             <td>${heightRange}</td>
+            <td>${data.preferredWork || ''}</td>
+            <td>${data.preferredStudies || ''}</td>
             <td>${data.preferredCommunity || ''}</td>
             <td>${data.kosherOrNonKosherDevice || ''}</td>
-            <td>${data.preferredStatus || ''}</td>
+
             <td>${data.preferredRegion || ''}</td>
             <td>${data.handkerchiefOrWig || ''}</td>
+
+            <td>${data.preferredStatus || ''}</td>
             <td>${data.preferredStyle || ''}</td>
             ${selectedGender === 'men' ? `<td>${data.idPreferencesMen || ''}</td>` : `<td>${data.idPreferencesWomen || ''}</td>`}
             ${selectedGender === 'men' ? `<td>${data.menId || ''}</td>` : `<td>${data.womenId || ''}</td>`}
@@ -246,16 +252,20 @@ console.log("Selected Gender:", selectedGender); // בדוק את הערך בש�
             const row = document.createElement('tr');
             const ageRange = `${data.preferredAgeFrom || ''}-${data.preferredAgeTo || ''}`;
             const heightRange = `${data.preferredHeightFrom || ''}-${data.preferredHeightTo || ''}`;
-
+            console.log(data.preferredStyle);
                 row.innerHTML = `
+
                 <td>${ageRange}</td>
                 <td>${heightRange}</td>
+                <td>${data.preferredWork || ''}</td>
+                <td>${data.preferredStudies || ''}</td>
                 <td>${data.preferredCommunity || ''}</td>
                 <td>${data.kosherOrNonKosherDevice || ''}</td>
-                <td>${data.preferredStatus || ''}</td>
                 <td>${data.preferredRegion || ''}</td>
                 <td>${data.handkerchiefOrWig || ''}</td>
+                <td>${data.preferredStatus || ''}</td>
                 <td>${data.preferredStyle || ''}</td>
+
                 ${selectedGender === 'women' ? `<td>${data.idPreferencesMen || ''}</td>` : `<td>${data.idPreferencesWomen || ''}</td>`}
                 ${selectedGender === 'women' ? `<td>${data.menId || ''}</td>` : `<td>${data.womenId || ''}</td>`}
             `;
@@ -301,19 +311,22 @@ console.log("Selected Gender:", selectedGender); // בדוק את הערך בש�
     .then(data => {
     console.log(data);
 
-    document.getElementById('preferredRegion').value = data.preferredRegion || '';
+    document.getElementById("preferredAgeFrom").value = data.preferredAgeFrom || '';
+    document.getElementById("preferredAgeTo").value = data.preferredAgeTo || '';
+    document.getElementById("preferredHeightFrom").value = data.preferredHeightFrom || '';
+    document.getElementById("preferredHeightTo").value = data.preferredHeightTo || '';
+    document.getElementById("preferredWork").value = data.preferredWork || '';
+    document.getElementById("preferredStudies").value = data.preferredStudies || '';
     document.getElementById('preferredCommunity').value = data.preferredCommunity || '';
-
-    const ageRange = `${data.preferredAgeFrom}-${data.preferredAgeTo}`;
-        document.getElementById('preferredAgeRange').value = ageRange;
-
-    const heightRange = `${data.preferredHeightFrom}-${data.preferredHeightTo}`;
-        document.getElementById('preferredHeightRange').value = heightRange;
-
-    document.getElementById('handkerchiefOrWig').value = data.handkerchiefOrWig || '';
-    document.getElementById('preferredStyle').value = data.preferredStyle || '';
     document.getElementById('kosherOrNonKosherDevice').value = data.kosherOrNonKosherDevice || '';
+    console.log(data.preferredStatus);
+    console.log(data.preferredStyle);
+
     document.getElementById('preferredStatus').value = data.preferredStatus || '';
+    document.getElementById('preferredStyle').value = data.preferredStyle || '';
+    document.getElementById('preferredRegion').value = data.preferredRegion || '';
+    document.getElementById('handkerchiefOrWig').value = data.handkerchiefOrWig || '';
+
 
 })
 
@@ -324,53 +337,45 @@ console.log("Selected Gender:", selectedGender); // בדוק את הערך בש�
 
 function saveUpdateData() {
 
-    var preferredAgeRange = document.getElementById('preferredAgeRange').value.trim();
-    var preferredHeightRange = document.getElementById('preferredHeightRange').value.trim();
+    var preferredAgeFrom = parseInt(document.getElementById("preferredAgeFrom").value.trim());
+    var preferredAgeTo = parseInt(document.getElementById("preferredAgeTo").value.trim());
+    var preferredHeightFrom = parseInt(document.getElementById("preferredHeightFrom").value.trim());
+    var preferredHeightTo = parseInt(document.getElementById("preferredHeightTo").value.trim());
 
-    //if(preferredAgeRange){
-         if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
-             alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
-             return;
-         }
-    //}
-    //if(preferredHeightRange){
-         if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
-             alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
-                return;
-        }
-    //}
-
-    var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => parseInt(age.trim()));
-    var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => parseInt(height.trim()));
-
-    if (preferredAgeFrom > preferredAgeTo) {
-        alert('הגיל ההתחלתי לא יכול להיות גדול מהגיל הסופי');
+    // בדיקת חובה והאם הערכים תקינים עבור טווח גילאים
+    if (isNaN(preferredAgeFrom) || isNaN(preferredAgeTo) || preferredAgeFrom > preferredAgeTo) {
+        alert('אנא הכנס טווח גילאים תקין');
         return;
     }
 
-    if (preferredHeightFrom > preferredHeightTo) {
-        alert('הגובה ההתחלתי לא יכול להיות גדול מהגובה הסופי');
+    // בדיקת חובה והאם הערכים תקינים עבור טווח גובה
+    if (isNaN(preferredHeightFrom) || isNaN(preferredHeightTo) || preferredHeightFrom > preferredHeightTo) {
+        alert('אנא הכנס טווח גובה תקין');
         return;
     }
-
     var preferredRegion = document.getElementById('preferredRegion').value;
     var preferredCommunity = document.getElementById('preferredCommunity').value;
     var handkerchiefOrWig = document.getElementById('handkerchiefOrWig').value;
+    var preferredStatus = document.getElementById('preferredStatus').value;
     var preferredStyle = document.getElementById('preferredStyle').value;
     var kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
-    var preferredStatus = document.getElementById('preferredStatus').value;
-
+    var preferredWork = document.getElementById('preferredWork').value;
+    var preferredStudies = document.getElementById('preferredStudies').value;
+     console.log(preferredStatus);
+     console.log(preferredStyle);
         const updatedData = {
-             preferredAgeFrom: preferredAgeFrom,
+                            preferredAgeFrom: preferredAgeFrom,
                             preferredAgeTo: preferredAgeTo,
                             preferredHeightFrom: preferredHeightFrom,
                             preferredHeightTo: preferredHeightTo,
                             preferredRegion: preferredRegion,
                             preferredCommunity: preferredCommunity,
                             handkerchiefOrWig: handkerchiefOrWig,
+                            preferredStatus: preferredStatus,
                             preferredStyle: preferredStyle,
                             kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-                            preferredStatus: preferredStatus
+                            preferredWork: preferredWork,
+                            preferredStudies: preferredStudies
         };
         console.log(selectedRecordId);
             let url;
@@ -421,7 +426,7 @@ deleteParamsInTableMatch();
                return;
            }
     console.log("url", url);
-    const columns =  ['height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
+    const columns =  ['studies' ,'work' ,'height', 'status', 'location', 'age', 'lastName', 'firstName', 'style', 'community', 'headCovering', 'device', 'id'];
     FetchService.fetchData(url, 'GET')
 
         .then(data => {
@@ -441,9 +446,17 @@ function showSelectedImages() {
         alert("אנא בחר רשומה קודם.");
         return;
     }
+    let url;
+        console.log(selectedRecordId);
+        console.log(sideElement);
+        console.log(url);
 
-    let url = selectedGender === 'men' ? `http://localhost:8080/api/men/getImages/${selectedRecordId}` : `http://localhost:8080/api/women/getImages/${selectedRecordId}`;
-
+                if (sideElement === 'rightA') {
+     url = selectedGender === 'men' ? `http://localhost:8080/api/men/getImages/${selectedRecordId}` : `http://localhost:8080/api/women/getImages/${selectedRecordId}`;
+                } else if (sideElement === 'rightB') {
+     url = selectedGender === 'men' ? `http://localhost:8080/api/women/getImages/${selectedRecordId}` : `http://localhost:8080/api/men/getImages/${selectedRecordId}`;
+                }
+console.log(url);
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -489,7 +502,7 @@ console.log(data.additionalPictureUrl);
         });
 }
         function closeModal(modalId) {
-            //resetFormFields();
+            resetFormFields();
             const modal = document.getElementById(modalId);
             modal.style.display = "none";
         }
@@ -498,6 +511,43 @@ console.log(data.additionalPictureUrl);
             const modal = document.getElementById(closeModalImageModal);
             modal.style.display = "none";
         }
+
+function reportMatches(gender) {
+
+    gender = document.querySelector('input[name="gender"]:checked').value;
+    console.log(gender);
+
+    // מבנה הבקשה
+//let url = "/reports/generate-matches-report?type=" + gender;
+//let url = "/reports/generate-matches-report";
+let url = "http://localhost:8080/reports/generate-matches-report?type=" + gender;
+    console.log(url);
+
+    // ביצוע הבקשה
+    fetch(url, {
+             method: 'GET'
+          })
+        .then(response => {
+        if (response.ok) {
+            return response.blob();
+        }
+                throw new Error("שגיאה ביצירת הדוח");
+
+        })
+        .then(blob => {
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `matches_report_${gender}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        })
+            .catch(error => console.error(error));
+}
+
+
 
        function deleteParamsInTable(){
             const rightATableBody = document.querySelector('#resultsTable tbody');
@@ -524,8 +574,12 @@ function resetFormFields() {
     document.getElementById("preferredStyle").value = "";
     document.getElementById("kosherOrNonKosherDevice").value = "";
     document.getElementById("preferredStatus").value = "";
-    document.getElementById("preferredAgeRange").value = "";
-    document.getElementById("preferredHeightRange").value = "";
+    document.getElementById("preferredWork").value = "";
+    document.getElementById("preferredStudies").value = "";
+    document.getElementById("preferredAgeFrom").value = "";
+    document.getElementById("preferredAgeTo").value = "";
+    document.getElementById("preferredHeightFrom").value = "";
+    document.getElementById("preferredHeightTo").value = "";
      }
 
     window.search = search;
@@ -534,6 +588,7 @@ function resetFormFields() {
     window.saveUpdateData = saveUpdateData;
     window.searchMatchesSelected = searchMatchesSelected;
     window.showSelectedImages = showSelectedImages;
+    window.reportMatches = reportMatches;
     window.closeModal = closeModal;
     window.closeModalImageModal = closeModalImageModal;
 

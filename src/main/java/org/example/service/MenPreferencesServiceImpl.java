@@ -66,6 +66,9 @@ public class MenPreferencesServiceImpl {
 //            throw new IllegalArgumentException("Age must be between 1 and 120");
 //        }
         // עדכון השדות
+        System.out.println(updatePreferences.getPreferredStyle());
+        System.out.println(updatePreferences.getPreferredStatus());
+
         existingUpMen.setPreferredRegion(updatePreferences.getPreferredRegion());
         existingUpMen.setPreferredCommunity(updatePreferences.getPreferredCommunity());
         existingUpMen.setHandkerchiefOrWig(updatePreferences.getHandkerchiefOrWig());
@@ -74,7 +77,8 @@ public class MenPreferencesServiceImpl {
         existingUpMen.setPreferredStatus(updatePreferences.getPreferredStatus());
         existingUpMen.setPreferredAgeFrom(updatePreferences.getPreferredAgeFrom());
         existingUpMen.setPreferredAgeTo(updatePreferences.getPreferredAgeTo());
-
+        existingUpMen.setPreferredWork(updatePreferences.getPreferredWork());
+        existingUpMen.setPreferredStudies(updatePreferences.getPreferredStudies());
         existingUpMen.setPreferredHeightFrom(updatePreferences.getPreferredHeightFrom());
         existingUpMen.setPreferredHeightTo(updatePreferences.getPreferredHeightTo());
         return preferencesMenRepository.save(existingUpMen);

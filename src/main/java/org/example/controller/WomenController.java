@@ -312,7 +312,8 @@ public ResponseEntity<?> deleteWomen(@PathVariable int id) {
         dto.setPreferredStatus(preferences.getPreferredStatus());
         dto.setPreferredAgeFrom(preferences.getPreferredAgeFrom());
         dto.setPreferredAgeTo(preferences.getPreferredAgeTo());
-
+        dto.setPreferredWork(preferences.getPreferredWork());
+        dto.setPreferredStudies(preferences.getPreferredStudies());
         dto.setPreferredHeightFrom(preferences.getPreferredHeightFrom());
         dto.setPreferredHeightTo(preferences.getPreferredHeightTo());
         dto.setWomenId(preferences.getWomen() != null ? preferences.getWomen().getId() : 0);

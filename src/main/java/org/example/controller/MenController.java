@@ -341,10 +341,12 @@ public class MenController {
             dto.setHandkerchiefOrWig(preferences.getHandkerchiefOrWig());
             dto.setPreferredStyle(preferences.getPreferredStyle());
             dto.setKosherOrNonKosherDevice(preferences.getKosherOrNonKosherDevice());
+            System.out.println(preferences.getPreferredStatus());
             dto.setPreferredStatus(preferences.getPreferredStatus());
             dto.setPreferredAgeFrom(preferences.getPreferredAgeFrom());
             dto.setPreferredAgeTo(preferences.getPreferredAgeTo());
-
+            dto.setPreferredWork(preferences.getPreferredWork());
+            dto.setPreferredStudies(preferences.getPreferredStudies());
             dto.setPreferredHeightFrom(preferences.getPreferredHeightFrom());
             dto.setPreferredHeightTo(preferences.getPreferredHeightTo());
             dto.setMenId(preferences.getMen() != null ? preferences.getMen().getId() : 0);

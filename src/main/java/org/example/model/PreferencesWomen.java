@@ -53,6 +53,8 @@ public class PreferencesWomen {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    private String preferredWork;
+    private String preferredStudies;
 
     @PrePersist
     protected void onCreate() {
@@ -69,7 +71,7 @@ public class PreferencesWomen {
     }
 
     public PreferencesWomen(Women women, String preferredRegion, String preferredCommunity, String handkerchiefOrWig, String preferredStyle, String kosherOrNonKosherDevice, String preferredStatus, int preferredAgeFrom, int preferredAgeTo, float preferredHeightFrom,
-                            float preferredHeightTo) {
+                            float preferredHeightTo, String preferredWork, String preferredStudies) {
 
         this.women = women;
         this.preferredRegion = preferredRegion;
@@ -82,6 +84,8 @@ public class PreferencesWomen {
         this.preferredAgeTo = preferredAgeTo;
         this.preferredHeightFrom = preferredHeightFrom;
         this.preferredHeightTo = preferredHeightTo;
+        this.preferredWork = preferredWork;
+        this.preferredStudies = preferredStudies;
     }
 
     public int getIdPreferencesWomen() {
@@ -184,6 +188,22 @@ public class PreferencesWomen {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getPreferredWork() {
+        return preferredWork;
+    }
+
+    public void setPreferredWork(String preferredWork) {
+        this.preferredWork = preferredWork;
+    }
+
+    public String getPreferredStudies() {
+        return preferredStudies;
+    }
+
+    public void setPreferredStudies(String preferredStudies) {
+        this.preferredStudies = preferredStudies;
     }
 }
 

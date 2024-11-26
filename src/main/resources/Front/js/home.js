@@ -265,34 +265,55 @@ function openPreferencesModal() {
 }
 
 function savePreferencesData() {
-    var preferredAgeRange = document.getElementById('preferredAgeRange').value.trim();
-    var preferredHeightRange = document.getElementById('preferredHeightRange').value.trim();
+    var preferredAgeFrom = parseInt(document.getElementById("preferredAgeFrom").value.trim());
+    var preferredAgeTo = parseInt(document.getElementById("preferredAgeTo").value.trim());
+    var preferredHeightFrom = parseInt(document.getElementById("preferredHeightFrom").value.trim());
+    var preferredHeightTo = parseInt(document.getElementById("preferredHeightTo").value.trim());
+
+    // בדיקת חובה והאם הערכים תקינים עבור טווח גילאים
+    if (isNaN(preferredAgeFrom) || isNaN(preferredAgeTo) || preferredAgeFrom > preferredAgeTo) {
+        alert('אנא הכנס טווח גילאים תקין');
+        return;
+    }
+
+    // בדיקת חובה והאם הערכים תקינים עבור טווח גובה
+    if (isNaN(preferredHeightFrom) || isNaN(preferredHeightTo) || preferredHeightFrom > preferredHeightTo) {
+        alert('אנא הכנס טווח גובה תקין');
+        return;
+    }
+
+    // איחוד השדות לפורמט מתאים עבור שליחה לבסיס הנתונים
+//    let preferredAgeRange = `${preferredAgeFrom}-${preferredAgeTo}`;
+//    let preferredHeightRange = `${preferredHeightFrom}-${preferredHeightTo}`;
+
+//    var preferredAgeRange = document.getElementById('preferredAgeRange').value.trim();
+//    var preferredHeightRange = document.getElementById('preferredHeightRange').value.trim();
 
     //if(preferredAgeRange){
-         if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
-             alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
-             return;
-         }
+//         if (!/^\d+\s*-\s*\d+$/.test(preferredAgeRange)) {
+//             alert('הכנס טווח גילאים בפורמט תקין (לדוגמה: 20-30)');
+//             return;
+//         }
+//    //}
+//    //if(preferredHeightRange){
+//         if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
+//             alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
+//                return;
+//        }
     //}
-    //if(preferredHeightRange){
-         if (!/^\d+\s*-\s*\d+$/.test(preferredHeightRange)) {
-             alert('הכנס טווח גובה בפורמט תקין (לדוגמה: 160-180)');
-                return;
-        }
-    //}
 
-    var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => parseInt(age.trim()));
-    var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => parseInt(height.trim()));
+//    var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => parseInt(age.trim()));
+//    var [preferredHeightFrom, preferredHeightTo] = preferredHeightRange.split('-').map(height => parseInt(height.trim()));
 
-    if (preferredAgeFrom > preferredAgeTo) {
-        alert('הגיל ההתחלתי לא יכול להיות גדול מהגיל הסופי');
-        return;
-    }
-
-    if (preferredHeightFrom > preferredHeightTo) {
-        alert('הגובה ההתחלתי לא יכול להיות גדול מהגובה הסופי');
-        return;
-    }
+//    if (preferredAgeFrom > preferredAgeTo) {
+//        alert('הגיל ההתחלתי לא יכול להיות גדול מהגיל הסופי');
+//        return;
+//    }
+//
+//    if (preferredHeightFrom > preferredHeightTo) {
+//        alert('הגובה ההתחלתי לא יכול להיות גדול מהגובה הסופי');
+//        return;
+//    }
     //var preferredAgeRange = document.getElementById('preferredAgeRange').value;
         //var [preferredAgeFrom, preferredAgeTo] = preferredAgeRange.split('-').map(age => age.trim());
     //var preferredHeightRange = document.getElementById('preferredHeightRange').value;
@@ -300,9 +321,12 @@ function savePreferencesData() {
     var preferredRegion = document.getElementById('preferredRegion').value;
     var preferredCommunity = document.getElementById('preferredCommunity').value;
     var handkerchiefOrWig = document.getElementById('handkerchiefOrWig').value;
-    var preferredStyle = document.getElementById('preferredStyle').value;
+
     var kosherOrNonKosherDevice = document.getElementById('kosherOrNonKosherDevice').value;
     var preferredStatus = document.getElementById('preferredStatus').value;
+    var preferredWork = document.getElementById('preferredWork').value;
+    var preferredStyle = document.getElementById('preferredStyle').value;
+    var preferredStudies = document.getElementById('preferredStudies').value;
 
     var preferencesData;
         if (currentGender === 'men') {
@@ -315,9 +339,11 @@ function savePreferencesData() {
                 preferredRegion: preferredRegion,
                 preferredCommunity: preferredCommunity,
                 handkerchiefOrWig: handkerchiefOrWig,
-                preferredStyle: preferredStyle,
                 kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-                preferredStatus: preferredStatus
+                preferredStatus: preferredStatus,
+                preferredStyle: preferredStyle,
+                preferredWork: preferredWork,
+                preferredStudies: preferredStudies
             };
         } else {
             preferencesData = {
@@ -329,9 +355,11 @@ function savePreferencesData() {
                 preferredRegion: preferredRegion,
                 preferredCommunity: preferredCommunity,
                 handkerchiefOrWig: handkerchiefOrWig,
-                preferredStyle: preferredStyle,
                 kosherOrNonKosherDevice: kosherOrNonKosherDevice,
-                preferredStatus: preferredStatus
+                preferredStatus: preferredStatus,
+                preferredStyle: preferredStyle,
+                preferredWork: preferredWork,
+                preferredStudies: preferredStudies
             };
         }
     console.log('Preferences to be sent:', preferencesData);
@@ -388,9 +416,15 @@ function resetFormField() {
     document.getElementById("preferredStyle").value = "";
     document.getElementById("kosherOrNonKosherDevice").value = "";
     document.getElementById("preferredStatus").value = "";
-    document.getElementById("preferredAgeRange").value = "";
-    document.getElementById("preferredHeightRange").value = "";
+//    document.getElementById("preferredAgeRange").value = "";
+//    document.getElementById("preferredHeightRange").value = "";
+    document.getElementById("preferredWork").value = "";
+    document.getElementById("preferredStudies").value = "";
 
+    document.getElementById("preferredAgeFrom").value = "";
+    document.getElementById("preferredAgeTo").value = "";
+    document.getElementById("preferredHeightFrom").value = "";
+    document.getElementById("preferredHeightTo").value = "";
 
     document.getElementById("womenStatus").value = "";
     document.getElementById("womenFirstName").value = "";
