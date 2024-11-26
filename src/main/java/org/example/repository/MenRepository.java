@@ -19,7 +19,7 @@ public interface MenRepository extends JpaRepository<Men, Integer> {
     List<Men> findByStatus(String status);
     List<Men> findByStyle(String style);
     List<Men> findByHeight(Float height);
-    List<Men> findByID(int id);
+    //List<Men> findByID(int id);
 
 
 //    @Query("SELECT new org.example.dto.ManMatchDto(" +
